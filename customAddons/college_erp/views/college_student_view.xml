@@ -35,7 +35,7 @@
                             <field name="age"/>
                             <field name="first_name"/>
                             <field name="last_name"/>
-                            <field name="gender" readonly="display_gender"/>
+                            <field name="gender" readonly="not context.get('main_view')" force_save="1"/>
                             <field name="father_name"/>
                             <field name="email"/>
                             <field name="mother_name"/>

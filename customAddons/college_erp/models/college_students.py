@@ -32,18 +32,9 @@ class collegeStudent(models.Model):
     same_as_communication= fields.Boolean(string="Same as Communication", default=True)
     image_1920=fields.Image(string="Upload Student's image")
     gender=fields.Selection([('male','Male'),('female','Female')],string="Gender")
-    display_gender=fields.Boolean(string="Display Gender",compute="_compute_display_gender")
     active=fields.Boolean(string="active")
 
 
-
-    def _compute_display_gender(self):
-        con=self.env.context.get("main_view",False)
-        for rec in self:
-            if con:
-                rec.display_gender=True
-            else:
-                rec.display_gender=False
 
 
 
