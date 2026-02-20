@@ -6,18 +6,19 @@ class collegeStudent(models.Model):
     _name="college.student"
     _description= "College Student"
     _order = "first_name desc"
+    _rec_name="first_name"
     _sql_constraints=[
         ('personal_number_unique',
           'unique(personal_number)',
            'შეცდომა: სტუდენტი ამ პირადი ნომრით უკვე არსებობს')
     ]
 
-    personal_number=fields.Char(string="Personal Number",required=True)
-    born_date=fields.Date(string="Born Date",required=True)
+    personal_number=fields.Char(string="Personal Number")
+    born_date=fields.Date(string="Born Date")
     age=fields.Integer(string="Age",compute='_compute_age',store=True)
-    entery_date=fields.Date(string="entery Date",required=True)
-    first_name=fields.Char(string="First Name",required=True)
-    last_name=fields.Char(string="Last Name",required=True)
+    entery_date=fields.Date(string="entery Date")
+    first_name=fields.Char(string="First Name")
+    last_name=fields.Char(string="Last Name")
     father_name = fields.Char(string="Father's Name")
     mother_name = fields.Char(string="Mother's Name")
     coomunication_addr=fields.Text(string="Communication Addres")
@@ -33,6 +34,7 @@ class collegeStudent(models.Model):
     image_1920=fields.Image(string="Upload Student's image")
     gender=fields.Selection([('male','Male'),('female','Female')],string="Gender")
     active=fields.Boolean(string="active")
+    status=fields.Selection([('active','Active'),('nonactive','Nonactive')],string="Status", default="active")
 
 
 
@@ -62,3 +64,12 @@ class collegeStudent(models.Model):
 
 
 
+    def action_test(self):
+        print("Clicked Succsesfull!!!")
+        return {
+            'effect': {
+                'fadeout':'slow',
+                'message':'Click succesfull',
+                'type':'rainbow_man',
+            }
+        }
