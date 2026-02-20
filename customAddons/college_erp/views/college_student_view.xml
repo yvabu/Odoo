@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<!-- create tree view -->
+<record id="college_student_view_tree" model="ir.ui.view">
+    <field name="name">college.student.tree.view</field>
+    <field name="model">college.student</field>
+    <field name="arch" type="xml">
+        <list>
+            <field name="first_name"/>
+            <field name="last_name"/>
+            <field name="personal_number"/>
+            <field name="entery_date"/>
+            <field name="born_date"/>
+            <field name="age"/>
+            <field name="gender"/>
+            <field name="image_1920" widget="image" options="{'size': [80, 80]}"/>
+        </list>
+    </field>
+</record>
+
+
+    <!--Create form view -->
+    <record id="college_student_view_form" model="ir.ui.view">
+        <field name="name">college.student.view.form</field>
+        <field name="model">college.student</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <field name="image_1920" class="oe_avatar" widget="image" />
+                    <group>
+                        <group>
+                            <field name="personal_number"/>
+                            <field name="entery_date"/>
+                            <field name="born_date" />
+                            <field name="age"/>
+                            <field name="first_name"/>
+                            <field name="last_name"/>
+                            <field name="gender" readonly="display_gender"/>
+                            <field name="father_name"/>
+                            <field name="email"/>
+                            <field name="mother_name"/>
+                        </group>
+                        <group>
+                            <field name="phone"/>
+                            <field name="coomunication_addr"/>
+                            <field name="same_as_communication" widget="boolean_toggle"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+
+                    <!-- Notebook and Page creation -->
+
+                    <notebook>
+                        <page string="Permanent address" name="permanent_addres" invisible="same_as_communication">
+                            <div class="o_address_format">
+                                <field name="street" placeholder="Street..." class="o_address_street"/>
+                                <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                <field name="city" placeholder="City" class="o_address_city"/>
+                                <field name="state_id" class="o_address_state" placeholder="State"/>
+                                <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                                <field name="country_id" placeholder="Country..."/>
+                            </div>
+                       </page>
+                   </notebook>
+
+            </sheet>
+
+        </form>
+    </field>
+</record>
+<!--Creating Search view -->
+<record id="college_student_view_search" model="ir.ui.view">
+    <field name="name">college.student.search.view</field>
+    <field name="model">college.student</field>
+    <field name="arch" type="xml">
+        <search>
+            <field name="first_name" filter_domain=
+             "['|','|','|',('first_name','ilike', self ),('last_name','ilike', self),('personal_number','ilike',self),('entery_date','ilike', self )]"/>
+            <field name="last_name"/>
+            <field name="personal_number"/>
+            <field name="entery_date"/>
+            <filter name="filter_male" string="Male" domain="[('gender','=','male')]"/>
+            <filter name="filter_female" string="Female" domain="[('gender','=', 'female' )]"/>
+            <separator/>
+            <group expand="0" string="Group By">
+               <filter name="group_by_gender" string="Gender" context="{'group_by':'gender'}"/>
+               <filter name="group_by_age" string="Entery date" context="{'group_by':'entery_date:year'}"/>
+            </group>
+            <filter name="filter_archived" string="archived" domain="[('active','=',False)]"/>
+         <searchpanel>
+             <field name="gender" icon="fa-users" select="multi" color="#875A7B" enable_counters="1"/>
+         </searchpanel>
+        </search>
+    </field>
+</record>
+
+
+
+        <!-- Window action -->
+<record id="action_college_erp" model="ir.actions.act_window">
+   <field name="name">Students of College</field>
+   <field name="res_model">college.student</field>
+   <field name="context">{'search_default_first_name': 1,'main_view': True}</field>
+   <field name="view_mode">list,form,kanban</field>
+   <field name="help" type="html">
+    <p class="o_view_nocontent_similing_face">
+        Create your first Student
+    </p>
+   </field>
+</record>
+        </odoo>

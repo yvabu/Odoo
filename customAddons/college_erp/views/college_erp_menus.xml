@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<!--Main menu -->
+    <menuitem id="menu_college_erp_root"
+              name="college ERP"
+              sequence="1"/>
+
+<!--Submenu without action -->
+    <menuitem id="menu_college_erp_Student_detail"
+              name="StudentDetail"
+              parent="menu_college_erp_root"
+              sequence="1"
+              />
+<!--Submenu with action -->
+    <menuitem id="menu_college_erp_Student_detail_Students"
+              name="Students"
+              parent="menu_college_erp_Student_detail"
+              action="action_college_erp"
+              sequence="1"/>
+    <menuitem id="menu_college_erp_Student_detail_female_students"
+              name="Female Students"
+              parent="menu_college_erp_Student_detail"
+              action="action_female_students"
+              sequence="2"
+    />
+    <menuitem id="menu_college_erp_Student_detail_male_students"
+              name="Male Students"
+              parent="menu_college_erp_Student_detail"
+              action="action_male_students"
+              sequence="3"
+    />
+    <menuitem id="menu_college_erp_Student_detail_first_course"
+              name="First Course Students"
+              parent="menu_college_erp_Student_detail"
+              action="action_first_course"
+              sequence="4"
+
+    />
+</odoo>
