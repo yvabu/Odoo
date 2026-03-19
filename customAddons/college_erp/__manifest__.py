@@ -8,19 +8,28 @@
     'website': "www.sabakobalia.com",
     'category': "education",
     'sequence': 1,
-    'depends': ["base"],
-    'data':[
-    "security/college_erp_security.xml",
-    "security/ir.model.access.csv",
-    "views/college_student_view.xml",
-    "views/female_student_view.xml",
-    "views/male_student_view.xml",
-    "views/first_course_view.xml",
-    "views/college_erp_menus.xml",
+    'depends': ["base","website"],
+'data':[
+        "security/college_erp_security.xml",
+        "security/ir.model.access.csv",
+        "data/subject_data.xml",
+        "views/college_student_view.xml",
+        "views/female_student_view.xml",
+        "views/male_student_view.xml",
+        "views/first_course_view.xml",
+        "views/for_student_view.xml",
+        "views/college_subject_view.xml",
+        "views/college_teacher_view.xml",
+        "views/college_marks_view.xml",
+        "views/college_erp_menus.xml",
+        "views/templates.xml",
+        "views/website_student.xml",
+        "views/student_mark_template.xml",
+        "views/teacher_template.xml",
+        "views/teacher_mark_template.xml",
+        "views/teacher_student_list.xml"
     ],
     'application': True,
-    'auto_install': True,
-    'installable': True,
-
-
+    'auto_install': False,
+    'installable': True
 }

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<!-- Tree view -->
+<record id="for_student_view_tree" model="ir.ui.view">
+    <field name="name">for.student.tree.view</field>
+    <field name="model">for.student</field>
+    <field name="arch" type="xml">
+        <list>
+          <field name="student_id"/>
+          <field name="student_pers_num"/>
+          <field name="student_email"/>
+          <field name="student_img"/>
+        </list>
+    </field>
+</record>
+<!--view form -->
+
+    <record id="view_for_student_form_with_marks" model="ir.ui.view">
+    <field name="name">for.student.form.marks</field>
+    <field name="model">for.student</field>
+    <field name="arch" type="xml">
+        <form string="სტუდენტის ბარათი">
+            <sheet>
+                <group>
+                    <group>
+                        <field name="student_id" />
+                        <field name="student_pers_num"/>
+                        <field name="student_email"/>
+                        <field name="student_img"/>
+                    </group>
+                </group>
+
+                <notebook>
+                    <page string="ჩემი საგნები">
+                        <group>
+                        <field name="subject_ids" domain="[('student_ids','in',[student_id])]"    widget="many2many_tags"/>
+                        </group>
+                    </page>
+                    <page string="ჩემი შეფასებები">
+                        <group>
+                        <field name="mark_ids" domain="[('student_id','=',student_id)]"/>
+                        </group>
+                    </page>
+                </notebook>
+            </sheet>
+        </form>
+    </field>
+</record>
+
+    <record id="action_for_student" model="ir.actions.act_window">
+        <field name="name">For Students</field>
+        <field name="res_model">for.student</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

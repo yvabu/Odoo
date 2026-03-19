@@ -11,6 +11,12 @@
               parent="menu_college_erp_root"
               sequence="1"
               />
+    <menuitem id="menu_college_erp_Student_envaironment"
+              name="MyProfile"
+              parent="menu_college_erp_root"
+              sequence="2"
+              groups="base.group_system"
+              />
 <!--Submenu with action -->
     <menuitem id="menu_college_erp_Student_detail_Students"
               name="Students"
@@ -27,13 +33,16 @@
               name="Male Students"
               parent="menu_college_erp_Student_detail"
               action="action_male_students"
-              sequence="3"
-    />
+              sequence="3"/>
     <menuitem id="menu_college_erp_Student_detail_first_course"
               name="First Course Students"
               parent="menu_college_erp_Student_detail"
               action="action_first_course"
-              sequence="4"
-
-    />
+              sequence="4"/>
+    <menuitem id="menu_college_erp_Student_My-Form"
+              name="My environment"
+              parent="menu_college_erp_Student_envaironment"
+              action="action_for_student"
+              sequence="1"
+              />
 </odoo>

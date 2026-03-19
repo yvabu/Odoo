@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="student_marks_template" name="საგნის ქულები">
+    <t t-call="website.layout">
+        <div class="container mt-4">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">მთავარი</a></li>
+                    <li class="breadcrumb-item active"><t t-out="mark.subject_id.subject_name"/></li>
+                </ol>
+            </nav>
+
+            <div class="card shadow border-0 overflow-hidden">
+                <div class="card-header bg-primary text-white p-4">
+                    <h2 class="mb-0"><t t-out="mark.subject_id.subject_name"/></h2>
+                    <p class="mb-0 opacity-75">ლექტორი: <t t-out="mark.teacher_id.name"/> <t t-out="mark.teacher_id.last_name"/></p>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-hover mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="ps-4">შეფასების კრიტერიუმი</th>
+                                <th class="text-center">შეფასება</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="ps-4">სამუშაო ჯგუფში აქტიურობა1(MAX:3)</td>
+                                <td class="text-center fw-bold"><t t-out="mark.w1"/></td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4">სამუშაო ჯგუფში აქტიურობა2(MAX:3)</td>
+                                <td class="text-center fw-bold"><t t-out="mark.w2"/></td>
+                            </tr>
+                             <tr>
+                                <td class="ps-4">სამუშაო ჯგუფში აქტიურობა3(MAX:3)</td>
+                                <td class="text-center fw-bold"><t t-out="mark.w3"/></td>
+                             </tr>
+                              <tr>
+                                <td class="ps-4">სამუშაო ჯგუფში აქტიურობა4(MAX:3)</td>
+                                <td class="text-center fw-bold"><t t-out="mark.w4"/></td>
+                              </tr>
+                               <tr>
+                                 <td class="ps-4">სამუშაო ჯგუფში აქტიურობა5(MAX:3)</td>
+                                 <td class="text-center fw-bold"><t t-out="mark.w5"/></td>
+                               </tr>
+                                <tr>
+                                  <td class="ps-4">სამუშაო ჯგუფში აქტიურობა6(MAX:3)</td>
+                                  <td class="text-center fw-bold"><t t-out="mark.w6"/></td>
+                                </tr>
+                                 <tr>
+                                   <td class="ps-4">სამუშაო ჯგუფში აქტიურობა7(MAX:3)</td>
+                                   <td class="text-center fw-bold"><t t-out="mark.w7"/></td>
+                                 </tr>
+                                  <tr>
+                                    <td class="ps-4">სამუშაო ჯგუფში აქტიურობა8(MAX:3)</td>
+                                    <td class="text-center fw-bold"><t t-out="mark.w8"/></td>
+                                  </tr>
+                                   <tr>
+                                     <td class="ps-4">სამუშაო ჯგუფში აქტიურობა9(MAX:3)</td>
+                                     <td class="text-center fw-bold"><t t-out="mark.w9"/></td>
+                                   </tr>
+                                    <tr>
+                                      <td class="ps-4">სამუშაო ჯგუფში აქტიურობა10(MAX:3)</td>
+                                      <td class="text-center fw-bold"><t t-out="mark.w10"/></td>
+                                    </tr>
+                                     <tr>
+                                       <td class="ps-4">შუალედური გამოცდის შეფასება(MAX:30)</td>
+                                       <td class="text-center fw-bold"><t t-out="mark.shualeduri"/></td>
+                                     </tr>
+                                     <tr>
+                                       <td class="ps-4">ფინალური გამოცდის შეფასება(MAX:30)</td>
+                                       <td class="text-center fw-bold"><t t-out="mark.final"/></td>
+                                     </tr>
+
+
+                                     <tr class="table-info">
+                                       <td class="ps-4 fw-bold text-uppercase">საბოლოო შეფასება</td>
+                                       <td class="text-center fw-bold fs-5"><t t-out="mark.total_marks"/> / 100</td>
+                                     </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <t t-if="mark.comment">
+                        <div class="card-footer bg-light p-4">
+                            <h6 class="font-weight-bold text-muted mb-2"><i class="fa fa-info-circle mr-2"/>ლექტორის შენიშვნა:</h6>
+                            <div class="p-3 bg-white border shadow-sm" style="border-radius: 12px; font-style: italic;">
+                                "<t t-esc="mark.comment"/>"
+                            </div>
+                        </div>
+                    </t>
+            </div>
+        </div>
+    </t>
+</template>
+</odoo>

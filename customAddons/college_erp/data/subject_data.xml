@@ -1,0 +1,27 @@
+<odoo>
+    <data noupdate="1">
+        <record id="subj_georgian" model="college.subjects">
+            <field name="subject_name">ქართული ენა</field>
+        </record>
+
+        <record id="subj_math" model="college.subjects">
+            <field name="subject_name">მათემატიკა</field>
+        </record>
+
+        <record id="subj_english" model="college.subjects">
+            <field name="subject_name">ინგლისური ენა</field>
+        </record>
+
+        <record id="subj_python" model="college.subjects">
+            <field name="subject_name">Python პროგრამირება</field>
+        </record>
+
+        <record id="subj_cpp" model="college.subjects">
+            <field name="subject_name">C++</field>
+        </record>
+
+        <record id="subj_csharp" model="college.subjects">
+            <field name="subject_name">C#</field>
+        </record>
+    </data>
+</odoo>

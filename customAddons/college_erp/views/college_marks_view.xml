@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<!--form view -->
+ <record id="college_student_mark_view_form" model="ir.ui.view">
+        <field name="name">college.mark.view.form</field>
+        <field name="model">college.mark</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="subject_id" options="{'no_create': True}" />
+                        </group>
+                        <group>
+                            <field name="student_id" domain="[('subject_ids','in',[subject_id])]" options="{'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="teacher_id" readonly="1" />
+                        </group>
+                    </group>
+
+                    <!-- Notebook and Page creation -->
+
+                    <notebook>
+                        <page string="ნიშნების უწყისი" name="for_marks">
+                            <div class="o_address_format">
+                                <group>
+                                   <field name="w1" placeholder="პირველი კვირის ქულა"/><field name="w2" placeholder="მეორე კვირის ქულა"/>
+                                   <field name="w3" placeholder="მესამე კვირის ქულა"/><field name="w4" placeholder="მეოთხე კვირის ქულა"/>
+                                   <field name="w5" placeholder="მეხუთე კვირის ქულა"/><field name="w6" placeholder="მეექვსე კვირის ქულა"/>
+                                   <field name="w7" placeholder="მეშვიდე კვირის ქულა"/><field name="w8" placeholder="მერვე კვირის ქულა"/>
+                                   <field name="w9" placeholder="მეცხრე კვირის ქულა"/><field name="w10" placeholder="მეათე კვირის ქულა"/>
+                                 </group>
+                                <group>
+                                    <field name="shualeduri" placeholder="შუალედური გამოცდის ქულა" decoration-bf="1" decoration-info="1"/>
+                                    <field name="final" placeholder="ფინალური გამოცდის ქულა" decoration-bf="1" decoration-primary="1"/>
+                                    <field name="total_marks"  placeholder="სულ" font-weight="bold"
+                                      decoration-success="total_marks &gt;= 51"
+                                      decoration-danger="total_marks &lt;= 51"/>
+                                 </group>
+                            </div>
+                       </page>
+                   </notebook>
+
+            </sheet>
+
+        </form>
+    </field>
+</record>
+
+
+
+<!--window action -->
+    <record id="action_college_students_marks" model="ir.actions.act_window">
+    <field name="name">ნიშნების ჟურნალი</field>
+    <field name="res_model">college.mark</field>
+    <field name="view_mode">list,form</field>
+    <field name="context">{'search_default_group_by_subject': 1}</field>
+    <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            აქ გამოჩნდება სტუდენტების ნიშნები.
+        </p>
+    </field>
+</record>
+    <menuitem id="menu_student_marks"
+          name="ნიშნების ჟურნალი"
+          parent="menu_college_erp_root"
+          action="action_college_students_marks"
+          sequence="12"
+          groups="college_erp.group_college_erp_student,base.group_system"/>
+
+</odoo>

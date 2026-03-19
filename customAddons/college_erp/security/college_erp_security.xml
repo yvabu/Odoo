@@ -1,18 +1,75 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-<record id="module_category_college_erp" model="ir.module.category">
-    <field name="name">College ERP</field>
-    <field name="description">
-        This is category for College_erp Module named College ERP
-    </field>
+<data>
+    <record id="module_category_college_erp" model="ir.module.category">
+       <field name="name">College ERP</field>
+        <field name="description">
+          This is category for College_erp Module named College ERP
+       </field>
+    </record>
+    <record id="group_college_erp_teacher" model="res.groups">
+      <field name="name">Teacher</field>
+      <field name="category_id" ref="module_category_college_erp"/>
+    </record>
+    <record id="group_college_erp_student" model="res.groups">
+       <field name="name">Student</field>
+       <field name="category_id" ref="module_category_college_erp"/>
+    </record>
 
-</record>
-<record id="group_college_erp_teacher" model="res.groups">
-    <field name="name">Teacher</field>
-    <field name="category_id" ref="module_category_college_erp"/>
-</record>
-<record id="group_college_erp_student" model="res.groups">
-    <field name="name">Student</field>
-    <field name="category_id" ref="module_category_college_erp"/>
-</record>
+
+ <!--აქედან ვიწყებ record rules გაწერას,ანუ იმას თუ ვინ რას დაინახავს -->
+
+    <record id="rule_college_teacher_admin" model="ir.rule">
+        <field name="name">ადმინის სრული უფლება teacher მოდელზე</field>
+        <field name="model_id" ref="model_college_teacher"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4,ref('base.group_system'))]"/>
+    </record>
+
+
+    <record id="rule_college_mark_admin" model="ir.rule">
+        <field name="name">ადმინის სრული წვდომა ნიშნებზე</field>
+        <field name="model_id" ref="model_college_mark"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4,ref('base.group_system'))]"/>
+    </record>
+
+    <record id="rule_college_for_student_admin" model="ir.rule">
+        <field name="name">ადმინის სრული წვდომა for_student მოდელზე</field>
+        <field name="model_id" ref="model_for_student"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4,ref('base.group_system'))]"/>
+    </record>
+
+
+
+    <record id="rule_college_mark_student" model="ir.rule">
+        <field name="name">სტუდენტი: საკუთარი ნიშნების ხილვა</field>
+        <field name="model_id" ref="model_college_mark"/>
+        <field name="domain_force">[('student_id.user_id','=',user.id)]</field>
+        <field name="groups" eval="[(4,ref('group_college_erp_student'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="rule_college_mark_for_teacher" model="ir.rule">
+        <field name="name">მასწავლებელი: ნიშნების მართვა მის საგანში</field>
+        <field name="model_id" ref="model_college_mark"/>
+        <field name="domain_force">[('teacher_id.user_id','=',user.id)]</field>
+        <field name="groups" eval="[(4,ref('group_college_erp_teacher'))]"/>
+        <field name="perm_read"   eval="True"/>
+        <field name="perm_write"  eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="rule_college_teacher_for_teacher" model="ir.rule">
+           <field name="name">მასწავლებელი ხედავს college_teacher მოდელს</field>
+           <field name="model_id" ref="model_college_teacher"/>
+           <field name="domain_force">[('user_id','=',user.id)]</field>
+           <field name="groups" eval="[(4,ref('group_college_erp_teacher'))]"/>
+    </record>
+</data>
 </odoo>
