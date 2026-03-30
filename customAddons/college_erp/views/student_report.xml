@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="action_report_student_mark" model="ir.actions.report">
+        <field name="name">ნიშნების ფურცელი</field>
+        <field name="model">college.student</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">college_erp.report_student_template</field>
+        <field name="report_file">college_erp.report_student_template</field>
+        <field name="print_report_name">'ნიშნები - %s' % (object.first_name)</field>
+        <field name="binding_model_id" ref="model_college_student"/>
+        <field name="binding_type">report</field>
+    </record>
+
+
+<!-- ვქმნით pdf ისთვის დიზაინს -->
+<template id="report_student_template">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="web.external_layout">
+                <div class="page" style="font-family: 'Helvetica'">
+                   <div class="text-center mt-4">
+                       <h2>აკადემიური მოსწრების ბარათი</h2>
+                       <hr/>
+                   </div>
+                   <div class="row mt-4">
+                       <div class="col-6">
+                           <strong>სტუდენტი:</strong><span t-field="o.first_name"/> <span t-field="o.last_name"/> <br/>
+                           <strong>პირადი ნომერი:</strong><span t-field="o.personal_number"/>
+                       </div>
+                       <div class="col-6 text-right">
+                           <strong>თარიღი:</strong><span t-out="datetime.date.today()"/>
+                       </div>
+                   </div>
+                </div>
+                <table class="table table-bordered mt-5">
+                    <thead style="background-color:#f2f2f2">
+                        <tr>
+                            <th>საგანი</th>
+                            <th>პირველი კვირის ქულა</th>
+                            <th>მეორე კვირის ქულა</th>
+                            <th>მესამე კვირის ქულა</th>
+                            <th>მეოთხე კვირის ქულა</th>
+                            <th>მეხუთე კვირის ქულა</th>
+                            <th>მეექვსე კვირის ქულა</th>
+                            <th>მეშვიდე კვირის ქულა</th>
+                            <th>მერვე კვირის ქულა</th>
+                            <th>მეცხრე კვირის ქულა</th>
+                            <th>მეათე კვირის ქულა</th>
+                            <th>შუალედური გამოცდის ქულა</th>
+                            <th>ფინალური გამოცდის ქულა</th>
+                            <th>საბოლოო ქულა</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="o.mark_ids" t-as="m">
+                            <tr>
+                                <td><span t-field="m.subject_id.subject_name"/></td>
+                                <td class="text-center"><span t-field="m.w1"/></td>
+                                <td class="text-center"><span t-field="m.w2"/></td>
+                                <td class="text-center"><span t-field="m.w3"/></td>
+                                <td class="text-center"><span t-field="m.w4"/></td>
+                                <td class="text-center"><span t-field="m.w5"/></td>
+                                <td class="text-center"><span t-field="m.w6"/></td>
+                                <td class="text-center"><span t-field="m.w7"/></td>
+                                <td class="text-center"><span t-field="m.w8"/></td>
+                                <td class="text-center"><span t-field="m.w9"/></td>
+                                <td class="text-center"><span t-field="m.w10"/></td>
+                                <td class="text-center"><span t-field="m.shualeduri"/></td>
+                                <td class="text-center"><span t-field="m.final"/></td>
+                                <td class="text-center"><span t-field="m.total_marks"/></td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+                <div class="mt-5 text-right">
+                    <p>ბეჭედი და ხელმოწერა: ---ს.ქობალია---</p>
+                </div>
+            </t>
+        </t>
+
+    </t>
+
+</template>
+</odoo>

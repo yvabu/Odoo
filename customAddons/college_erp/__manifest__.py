@@ -17,7 +17,6 @@
         "views/female_student_view.xml",
         "views/male_student_view.xml",
         "views/first_course_view.xml",
-        "views/for_student_view.xml",
         "views/college_subject_view.xml",
         "views/college_teacher_view.xml",
         "views/college_marks_view.xml",
@@ -27,7 +26,8 @@
         "views/student_mark_template.xml",
         "views/teacher_template.xml",
         "views/teacher_mark_template.xml",
-        "views/teacher_student_list.xml"
+        "views/teacher_student_list.xml",
+        "views/student_report.xml"
     ],
     'application': True,
     'auto_install': False,

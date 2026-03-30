@@ -2,12 +2,10 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_college_student,access.college.student,model_college_student,base.group_system,1,1,1,1
 access_college_subjects,access.college.subjects,model_college_subjects,base.group_system,1,1,1,1
 access_college_subject_selection,access.college.subject.selection,model_college_subject_selection,base.group_system,1,1,1,1
-access_for_student_for_admin,access.for.student.for.admin,model_for_student,base.group_system,1,1,1,1
 access_college_teacher_for_admin,access.college.teacher.for.admin,model_college_teacher,base.group_system,1,1,1,1
 access_college_marks_for_admin,access.college.marks.for.admin,model_college_mark,base.group_system,1,1,1,1
-access_for_student,access.for.student,model_for_student,college_erp.group_college_erp_student,1,0,0,0
 access_college_marks_for_student,access.college.marks.for.student,model_college_mark,college_erp.group_college_erp_student,1,0,0,0
 access_college_teacher,access.college.teacher,model_college_teacher,college_erp.group_college_erp_teacher,1,0,0,0
 access_college_marks_for_teacher,access.college.marks.for.teacher,model_college_mark,college_erp.group_college_erp_teacher,1,1,1,0
 access_college_student_for_teacher,access.college.student.for.teacher,model_college_student,college_erp.group_college_erp_teacher,1,0,0,0
-access_for_student_for_teacher,access.for.student.for.teacher,model_for_student,college_erp.group_college_erp_teacher,1,0,0,0
+access_college_student_all,college.student,model_college_student,college_erp.group_college_erp_student,1,0,0,0

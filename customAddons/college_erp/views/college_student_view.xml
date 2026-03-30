@@ -113,6 +113,20 @@
                                 <field name="country_id" placeholder="Country..."/>
                             </div>
                        </page>
+                       <page string="ჩემი საგნები">
+                            <group>
+                              <field name="subject_ids" widget="many2many_tags" domain="[('student_ids','in',id)]"/>
+                            </group>
+                       </page>
+                        <page string="ჩემი შეფასებები">
+                              <field name="mark_ids" mode="list" readonly="1">
+                                  <list>
+                                   <field name="subject_id"/>
+                                   <field name="total_marks" widget="badge" font_weight="bold"/>
+                                 </list>
+                              </field>
+
+                        </page>
                    </notebook>
 
             </sheet>

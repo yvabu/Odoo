@@ -1,10 +1,11 @@
 from odoo import http
 from odoo.http import request
 
-
+from odoo.addons.website.models.website_form import website_form_model
+from odoo.odoo.addons.base.models.ir_qweb import render
+from odoo.odoo.release import author
 
 class CollegeHome(http.Controller):
-
     @http.route('/', type='http', auth='user', website=True)
     def index(self, **kw):
         user = request.env.user
@@ -27,6 +28,30 @@ class CollegeHome(http.Controller):
                 'subjects': subjects
             })
         return request.render('website.homepage')
+
+class StudentReportController(http.Controller):
+    @http.route(['/student/download/report/<int:student_id>'], type='http', auth="user", website=True)
+    def download_pdf_report(self, student_id, **kw):
+        # ვპოულობთ სტუდენტს ბაზაში
+        student = request.env['college.student'].sudo().browse(student_id)
+
+        # უსაფრთხოება: ვამოწმებთ, რომ სტუდენტი მხოლოდ თავის რეპორტს იწერს
+        if student.user_id != request.env.user:
+            return request.render('website.403')
+
+        # რეპორტის ტექნიკური სახელი (მოდული.id)
+        report_name = 'college_erp.report_student_template'
+
+        # .sudo() აიგნორირებს Access Rights-ს და აგენერირებს PDF-ს
+        pdf_content, _ = request.env['ir.actions.report'].sudo()._render_qweb_pdf(report_name, [student_id])
+
+        # ვაბრუნებთ ფაილს ჩამოსატვირთად
+        pdf_http_headers = [
+            ('Content-Type', 'application/pdf'),
+            ('Content-Length', len(pdf_content)),
+            ('Content-Disposition', 'attachment; filename="Academic_Record.pdf"'),
+        ]
+        return request.make_response(pdf_content, headers=pdf_http_headers)
 class TeacherMarks(http.Controller):
     @http.route('/teacher_marks/<int:mark_id>', type='http', auth='user', website=True, methods=['GET', 'POST'],csrf=True)
     def teacher_mark_web(self, mark_id, **kw):

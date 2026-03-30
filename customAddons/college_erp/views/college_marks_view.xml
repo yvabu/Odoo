@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
+
+<record id="college_student_mark_tree_view" model="ir.ui.view">
+    <field name="name">college.mark.tree.view</field>
+    <field name="model">college.mark</field>
+    <field name="arch" type="xml">
+        <list>
+            <field name="student_id"/>
+            <field name="subject_id"/>
+            <field name="teacher_id"/>
+        </list>
+    </field>
+</record>
+
+
 <!--form view -->
  <record id="college_student_mark_view_form" model="ir.ui.view">
         <field name="name">college.mark.view.form</field>
