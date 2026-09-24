@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<!-- create tree view -->
+<record id="college_student_view_tree" model="ir.ui.view">
+    <field name="name">college.student.tree.view</field>
+    <field name="model">college.student</field>
+    <field name="arch" type="xml">
+        <list decoration-success="status == 'active'"
+              decoration-danger="status == 'nonactive'" multi_edit="1" sample="1">
+            <header>
+                <button name="translate_to_Nonactive" string="Translate Into Nonavtive" type="object"/>
+                <button name="translate_to_Active" string="Translate Into Active" type="object"/>
+            </header>
+            <field name="user_id"/>
+            <field name="id"/>
+            <field name="first_name"/>
+            <field name="last_name"/>
+            <field name="personal_number" optional="show"/>
+            <field name="entery_date"/>
+            <field name="born_date"/>
+            <field name="age" sum="Sum of Age"/>
+            <field name="gender" optional="hide"/>
+            <field name="image_1920" widget="image" options="{'size': [80, 80]}"/>
+            <field name="status"
+                   widget="badge"
+                   decoration-danger="status == 'nonactive'"
+                   decoration-success="status == 'active'" />
+        </list>
+    </field>
+
+</record>
+
+<!--create Calendar view -->
+
+    <record id="college_student_view_calendar" model="ir.ui.view">
+        <field name="name">college.student.calendar.view</field>
+        <field name="model">college.student</field>
+        <field name="arch" type="xml">
+            <calendar string="Student" date_start="entery_date">
+                <field name="first_name"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!--Create form view -->
+    <record id="college_student_view_form" model="ir.ui.view">
+        <field name="name">college.student.view.form</field>
+        <field name="model">college.student</field>
+        <field name="arch" type="xml">
+            <form>
+                 <header>
+                     <field name="status"
+                            widget="statusbar"
+                            nolabel="1"
+                            class="oe_highlight"
+                            options="{'clickable':'1'}"/>
+                      <button name="%(college_erp.action_female_students)d"
+                              string="View Female Students"
+                              type="action"
+                              class="oe_highlight"
+                              widget="statusbar"
+                              help="On Clicking here you will be redirected to Female records"
+                              confrim="Are you sure to open Female view" />
+                      <button name="%(college_erp.action_male_students)d"
+                              string="View Male Students"
+                              type="action"
+                              class="oe_highlight"
+                              widget="statusbar"
+                              help="On clicking here you will be redirected to Male Students Records"
+                              confrim="Are you sure to open Male view"/>
+                     <button name="action_test"
+                             string="Object test"
+                             type="object"
+                             class="oe_highlight"
+                             widget="statusbar" />
+                     
+                 </header>
+
+                <sheet>
+                    <field name="image_1920" class="oe_avatar" widget="image" />
+                    <group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="personal_number"/>
+                            <field name="entery_date"/>
+                            <field name="born_date" />
+                            <field name="age"/>
+                            <field name="first_name"/>
+                            <field name="last_name"/>
+                            <field name="gender" readonly="not context.get('main_view')" force_save="1" widget="radio"/>
+                            <field name="father_name"/>
+                            <field name="email"/>
+                            <field name="mother_name"/>
+                        </group>
+                        <group>
+                            <field name="phone"/>
+                            <field name="coomunication_addr"/>
+                            <field name="same_as_communication" widget="boolean_toggle"/>
+                            <field name="subject_ids" widget="many2many" />
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+
+                    <!-- Notebook and Page creation -->
+
+                    <notebook>
+                        <page string="Permanent address" name="permanent_addres" invisible="same_as_communication">
+                            <div class="o_address_format">
+                                <field name="street" placeholder="Street..." class="o_address_street"/>
+                                <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                <field name="city" placeholder="City" class="o_address_city"/>
+                                <field name="state_id" class="o_address_state" placeholder="State"/>
+                                <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                                <field name="country_id" placeholder="Country..."/>
+                            </div>
+                       </page>
+                       <page string="ჩემი საგნები">
+                            <group>
+                              <field name="subject_ids" widget="many2many_tags" domain="[('student_ids','in',id)]"/>
+                            </group>
+                       </page>
+                        <page string="ჩემი შეფასებები">
+                              <field name="mark_ids" mode="list" readonly="1">
+                                  <list>
+                                   <field name="subject_id"/>
+                                   <field name="total_marks" widget="badge" font_weight="bold"/>
+                                 </list>
+                              </field>
+
+                        </page>
+                   </notebook>
+
+            </sheet>
+                <!--chetter -->
+                <chatter/>
+        </form>
+    </field>
+</record>
+<!--Creating Search view -->
+<record id="college_student_view_search" model="ir.ui.view">
+    <field name="name">college.student.search.view</field>
+    <field name="model">college.student</field>
+    <field name="arch" type="xml">
+        <search>
+            <field name="first_name" filter_domain=
+             "['|','|','|',('first_name','ilike', self ),('last_name','ilike', self),('personal_number','ilike',self),('entery_date','ilike', self )]"/>
+            <field name="last_name"/>
+            <field name="personal_number"/>
+            <field name="entery_date"/>
+            <filter name="filter_male" string="Male" domain="[('gender','=','male')]"/>
+            <filter name="filter_female" string="Female" domain="[('gender','=', 'female' )]"/>
+            <separator/>
+            <group expand="0" string="Group By">
+               <filter name="group_by_gender" string="Gender" context="{'group_by':'gender'}"/>
+               <filter name="group_by_age" string="Entery date" context="{'group_by':'entery_date:year'}"/>
+            </group>
+            <filter name="filter_archived" string="archived" domain="[('active','=',False)]"/>
+         <searchpanel>
+             <field name="gender" icon="fa-users" select="multi" color="#875A7B" enable_counters="1"/>
+         </searchpanel>
+        </search>
+    </field>
+</record>
+
+        <!-- Window action -->
+<record id="action_college_erp" model="ir.actions.act_window">
+   <field name="name">Students of College</field>
+   <field name="res_model">college.student</field>
+   <field name="context">{'search_default_first_name': 1,'main_view': True}</field>
+   <field name="view_mode">list,form,kanban,calendar</field>
+   <field name="help" type="html">
+    <p class="o_view_nocontent_similing_face">
+        Create your first Student
+    </p>
+   </field>
+</record>
+</odoo>

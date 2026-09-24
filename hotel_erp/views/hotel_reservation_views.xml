@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<!--tree view-->
+    <record id="hotel_reservation_tree_view" model="ir.ui.view">
+        <field name="name">hotel.reservation.tree.view</field>
+        <field name="model">hotel.reservation</field>
+        <field name="arch" type="xml">
+          <list>
+              <field name="name"/>
+              <field name="room_id"/>
+              <field name="check_in"/>
+              <field name="check_out"/>
+              <field name="total_price"/>
+              <!-- 🎨 ლამაზი Badge სტატუსებისთვის -->
+              <field name="state"
+                     widget="badge"
+                     decoration-warning="state == 'checked_out'"/>
+          </list>
+        </field>
+    </record>
+<!-- form view -->
+    <record id="hotel_reservation_form_view" model="ir.ui.view">
+        <field name="name">hotel.reservation.form.view</field>
+        <field name="model">hotel.reservation</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_confirm" string="Set Confirm" type="object" class="oe_highlight" invisible="state !='draft'"/>
+                    <button name="action_check_in" string="Check In" type="object" class="oe_highlight" invisible="state !='confirmed'"/>
+                    <button name="action_check_out" string="Check Out" type="object" class="oe_highlight" invisible="state !='checked_in'"/>
+                    <button name="action_cancel" string="Set cancelled" type="object"  invisible="state != 'draft' and state !='confirmed'"/>
+                    <button name="action_create_invoice" string="Create Invoice" type="object" class="oe_highlight" invisible="invoice_id or state in('draft','cancelled')"/>
+
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,checked_in,checked_out,cancelled"/>
+                    <field name="payment_status" widget="badge" decoration-danger="payment_status=='unpaid'" decoration-warning="payment_status=='partial'" decoration-success="payment_status=='paid'" decoration-info="payment_status=='overpaid'" />
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Paid" bg_color="text-bg-success" invisible="payment_status != 'paid'"/>
+                    <widget name="web_ribbon" title="Checked Out" bg_color="text-bg-info" invisible="state != 'checked_out'"/>
+
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_invoice"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-pencil-square-o"
+                                invisible="not invoice_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Invoice</span>
+                            </div>
+                        </button>
+
+                    </div>
+                    <group readonly="state=='checked_out'">
+                        <group>
+                            <field name="name" readonly="1"/>
+                            <field name="guest_id"/>
+                            <field name="room_id" domain="[('housekeeping_status','=','clean')]" options="{'no_open': True}"/>
+                            <field name="room_price"/>
+                        </group>
+                        <group>
+                            <field name="check_in" />
+                            <field name="check_out" />
+
+                            <field name="total_price" readonly="1"/>
+                            <field name="invoice_id" invisible="1"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page name="services" string="Services">
+                            <field name="service_line_ids">
+                                <list editable="bottom">
+                                    <field name="service_id"/>
+                                    <field name="quantity"/>
+                                    <field name="price_unit"/>
+                                    <field name="price_subtotal"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page name="payments" string="Payments">
+                            <field name="payment_ids" readonly="1">
+                                <list editable="bottom">
+                                    <field name="date"/>
+                                    <field name="name"/>
+                                    <field name="journal_id"/>
+                                    <field name="amount"/>
+                                    <field name="state"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="paid_amount" widget="monetary"/>
+                                <field name="residual_amount" widget="monetary" class="oe_subtotal_footer_separator"/>
+                                <field name="amount_due" widget="monetary" invisible="amount_due ==0" class="text-danger fw-bold"/>
+                                <field name="change_to_return" widget="monetary" invisible="change_to_return==0" class="text-warning fw-bold"/>
+                            </group>
+
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+<!--search view -->
+    <record id="hotel_reservation_search_view" model="ir.ui.view">
+        <field name="name">hotel.reservation.search.view</field>
+        <field name="model">hotel.reservation</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="guest_id"/>
+                <field name="room_id"/>
+
+                <filter name="confirmed" string="Confirmed" domain="[('state','=','confirmed')]"/>
+                <filter name="checked_in" string="Checked In" domain="[('state','=','checked_in')]"/>
+                <filter name="invoiced" string="Invoiced" domain="[('invoice_id','!=',False)]"/>
+
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter name="status" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="room" string="Room" context="{'group_by': 'room_id'}"/>
+                    <filter name="guest" string="Guest" context="{'group_by': 'guest_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+<!-- graph view -->
+    <record id="hotel_reservation_graph_view" model="ir.ui.view">
+        <field name="name">hotel.reservation.graph.view</field>
+        <field name="model">hotel.reservation</field>
+        <field name="arch" type="xml">
+            <graph string="Reservation Analysis" type="bar" sample="1">
+                <field name="check_in" interval="month"/>
+                <field name="total_price" type="measure"/>
+                <field name="paid_amount" type="measure"/>
+                <field name="residual_amount" type="measure"/>
+                <field name="room_id"/>
+            </graph>
+        </field>
+
+    </record>
+<!--pivot view -->
+    <record id="hotel_reservation_pivot_view" model="ir.ui.view">
+        <field name="name">hotel.reservation.pivot.view</field>
+        <field name="model">hotel.reservation</field>
+        <field name="arch" type="xml">
+            <pivot string="Reservation Pivot Analysis" sample="1">
+                <field name="payment_status" type="row"/>
+                <field name="check_in" interval="month" type="col"/>
+                <field name="total_price" type="measure"/>
+                <field name="paid_amount" type="measure"/>
+            </pivot>
+        </field>
+
+    </record>
+<!-- calendar view-->
+    <record id="hotel_reservation_calendar_view" model="ir.ui.view">
+        <field name="name">hotel.reservation.calendar.view</field>
+        <field name="model">hotel.reservation</field>
+        <field name="arch" type="xml">
+            <calendar string="Reservation"
+                      date_start="check_in"
+                      date_stop="check_out"
+                      color="room_id"
+                      quick_create="0"
+                      event_open_popup="true">
+                <field name="guest_id"/>
+                <field name="room_id" filters="1"/>
+                <field name="state" filters="1"/>
+            </calendar>
+
+        </field>
+
+    </record>
+<!--window action -->
+    <record id="hotel_reservation_window_action" model="ir.actions.act_window">
+        <field name="name">Booking</field>
+        <field name="res_model">hotel.reservation</field>
+        <field name="view_mode">list,form,calendar,graph,pivot</field>
+
+    </record>
+</odoo>

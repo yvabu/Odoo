@@ -1,0 +1,41 @@
+<odoo>
+    <menuitem
+      id="hotel_erp_menu_root"
+      name="Hotel ERP"
+      sequence='10'
+    />
+
+    <menuitem
+      id="hotel_room_menu"
+      name="Rooms"
+      parent="hotel_erp_menu_root"
+      action="hotel_room_window_action"
+      sequence="1"
+    />
+    <menuitem
+      id="hotel_guest_menu"
+      name="Guest"
+      parent="hotel_erp_menu_root"
+      action="hotel_guest_window_action"
+      sequence="2"
+    />
+    <menuitem
+    id="hotel_reservation_menu"
+    name="Booking"
+    parent="hotel_erp_menu_root"
+    action="hotel_reservation_window_action"
+    sequence="3"
+    />
+    <menuitem
+      id="hotel_service_menu"
+      name="Hotel Service"
+      parent="hotel_erp_menu_root"
+      action="hotel_service_window_action"/>
+
+
+    <menuitem
+       id="hotel_employee_menu"
+       name="Hotel Employees"
+       parent="hotel_erp_menu_root"
+       action="hotel_employee_window_action"/>
+</odoo>

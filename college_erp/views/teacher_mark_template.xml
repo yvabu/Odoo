@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="teacher_mark_web" name="ნიშნების ჟურნალი">
+    <t t-call="website.layout">
+       <div class="container mt-5 mb-5">
+            <form t-attf-action="/teacher_marks/#{mark.id}" method="post">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                <div class="card shadow-lg border-0" style="border-radius: 20px;">
+                    <div class="card-header bg-primary text-white p-4 d-flex justify-content-between align-items-center">
+                        <div>
+                            <h3 class="mb-0"><t t-esc="mark.student_id.first_name"/> <t t-esc="mark.student_id.last_name"/></h3>
+                            <span>საგანი: <t t-esc="mark.subject_id.subject_name"/></span>
+                        </div>
+                        <button type="submit" class="btn btn-light btn-lg shadow-sm">
+                            <i class="fa fa-save mr-2"/>შენახვა
+                        </button>
+                    </div>
+
+                    <div class="card-body p-4">
+                        <t t-if="request.params.get('success')">
+                            <div class="alert alert-success">მონაცემები წარმატებით განახლდა!</div>
+                        </t>
+
+                        <h5 class="text-muted mb-4 border-bottom pb-2">ყოველკვირეული ქულები (0-3)</h5>
+                        <div class="row">
+                            <t t-foreach="range(1, 11)" t-as="num">
+                                <div class="col-md-2 col-6 mb-3">
+                                    <label class="small font-weight-bold text-uppercase">კვირა <t t-esc="num"/></label>
+                                    <input type="number" t-attf-name="w#{num}"
+                                           t-att-value="mark[ 'w' + str(num)]"
+                                           class="form-control text-center" step="0.1" min="0" max="3"/>
+                                </div>
+                            </t>
+                        </div>
+
+                        <h5 class="text-muted mt-4 mb-4 border-bottom pb-2">გამოცდები</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="font-weight-bold">შუალედური (მაქს. 30)</label>
+                                <input type="number" name="shualeduri" t-att-value="mark.shualeduri"
+                                       class="form-control form-control-lg border-info" step="0.1" min="0" max="30"/>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="font-weight-bold">ფინალური (მაქს. 40)</label>
+                                <input type="number" name="final" t-att-value="mark.final"
+                                       class="form-control form-control-lg border-danger" step="0.1" min="0" max="40"/>
+                            </div>
+                            <h5 class="text-muted mt-4 mb-3 border-bottom pb-2">მასწავლებლის შენიშვნა / კომენტარი</h5>
+                            <div class="row">
+                                <div class="col-12">
+                                    <textarea name="comment" class="form-control shadow-sm" rows="4"
+                                              placeholder="ჩაწერეთ შენიშვნა სტუდენტისთვის..."
+                                              style="border-radius: 15px; border: 1px solid #dee2e6;"><t t-esc="mark.comment"/></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-footer bg-light text-right py-3">
+                        <a t-attf-href="/teacher_marks/#{mark.id}" class="btn btn-secondary mr-2">გაუქმება</a>
+                        <button type="submit" class="btn btn-primary">ცვლილებების შენახვა</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </t>
+    </template>
+</odoo>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<record id="action_first_course" model="ir.actions.act_window">
+   <field name="name">First Course Students</field>
+   <field name="res_model">college.student</field>
+   <field name="domain">[('entery_date', '&gt;=', '2023-01-01'), ('entery_date', '&lt;=', '2023-12-31')]</field>
+   <field name="view_mode">list,form,kanban</field>
+   <field name="help" type="html">
+    <p class="o_view_nocontent_similing_face">
+        Add First Year Students!!!
+    </p>
+   </field>
+</record>
+</odoo>

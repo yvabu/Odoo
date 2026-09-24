@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+
+    <template id="student_dashboard_main" name="სტუდენტის მთავარი გვერდი">
+
+        <t t-call="website.layout">
+
+            <div class="container mt-5">
+
+                <div class="row">
+
+                    <div class="col-lg-4 col-md-5 mb-4">
+
+                        <div class="card border-0 shadow text-center p-4" style="border-radius: 15px;">
+
+                            <div class="mb-3">
+
+                                <t t-if="student.image_1920">
+
+                                    <img t-att-src="image_data_uri(student.image_1920)"
+
+                                         class="rounded-circle img-thumbnail shadow-sm"
+
+                                         style="width: 150px; height: 150px; object-fit: cover; border: 3px solid #1a237e;"/>
+
+                                </t>
+
+                            </div>
+
+                            <h3 class="mb-1" style="color: #1a237e; font-weight: bold">
+
+                                <t t-out="student.first_name"/> <t t-out="student.last_name"/>
+
+                            </h3>
+
+                            <p class="text-muted mb-3 font-italic">სტუდენტი</p>
+
+                            <hr/>
+
+                            <div class="text-left small">
+
+                                <p class="mb-2"><strong><i class="fa fa-id-card mr-2"/>პირადი #:</strong> <t t-out="student.personal_number"/></p>
+
+                                <p class="mb-2"><strong><i class="fa fa-envelope mr-2"/>Email:</strong> <t t-out="student.email"/></p>
+
+                                <p class="mb-0"><strong><i class="fa fa-phone mr-2"/>ტელ:</strong> <t t-out="student.phone"/></p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="col-lg-8 col-md-7">
+
+                        <div class="card border-0 shadow" style="border-radius: 15px;">
+
+                            <div class="card-header bg-white border-0 py-4">
+
+                                <h4 class="mb-0" style="color: #1a237e; font-weight: 600;">აკადემიური მოსწრება</h4>
+
+                            </div>
+
+                            <div class="table-responsive">
+
+                                <table class="table table-hover mb-0">
+
+                                    <thead class="bg-light text-secondary uppercase small font-weight-bold">
+
+                                        <tr>
+
+                                            <th class="px-4">საგანი</th>
+
+                                            <th class="text-center">ჯამური ქულა</th>
+
+                                        </tr>
+
+                                    </thead>
+
+                                    <tbody>
+
+                                        <t t-foreach="marks" t-as="mark">
+
+                                            <tr>
+
+                                                <td class="px-4 py-3 align-middle">
+
+
+
+                                                    <div class="font-weight-bold">
+
+                                                        <a t-attf-href="/student_marks/#{mark.id}" style="text-decoration: none; color: #004a99;">
+
+                                                            <t t-out="mark.subject_id.subject_name"/>
+
+                                                        </a>
+
+                                                    </div>
+
+                                                    <div class="small text-muted"><t t-out="mark.teacher_id.name"/> <t t-out="mark.teacher_id.last_name"/></div>
+
+                                                </td>
+
+                                                <td class="text-center align-middle">
+
+                                                    <div class="progress mx-auto" style="height: 12px; width: 80px; border-radius: 10px;">
+
+                                                        <t t-set="score" t-value="mark.total_marks"/>
+
+                                                        <div class="progress-bar" role="progressbar"
+
+                                                             t-attf-style="width: #{score}%; background-color: #{'#28a745' if score >= 51 else '#dc3545'};"
+
+                                                             t-att-aria-valuenow="score" aria-valuemin="0" aria-valuemax="100">
+
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="small mt-1 font-weight-bold"><t t-out="mark.total_marks"/> / 100</div>
+
+                                                </td>
+
+                                            </tr>
+
+                                        </t>
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </t>
+
+    </template>
+
+</odoo>
+

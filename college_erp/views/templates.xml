@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Homepage override -->
+    <template id="college_homepage" inherit_id="website.homepage">
+        <xpath expr="//div[@id='wrap']" position="replace">
+            <div id="wrap">
+                <section class="container mt-5">
+                    <div class="row align-items-center">
+
+                        <div class="col-lg-6">
+                            <h1 class="display-4">Welcome to Our College</h1>
+                            <p class="lead">
+                                ჩვენი კოლეჯი უზრუნველყოფს მაღალი ხარისხის განათლებას,
+                                თანამედროვე ლაბორატორიებს და პროფესიონალ ლექტორებს.
+                            </p>
+                            <a class="btn btn-primary btn-lg" href="/about">
+                                Learn More
+                            </a>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <img src="/college_erp/static/description/icon.png"
+                                 class="img-fluid rounded" alt="College Logo"/>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- Features section -->
+                <section class="container mt-5">
+                    <div class="row text-center">
+
+                        <div class="col-md-4">
+                            <i class="fa fa-graduation-cap fa-3x mb-3"></i>
+                            <h4>Quality Education</h4>
+                            <p>სწავლების თანამედროვე მეთოდები და გამოცდილი მასწავლებლებმა.</p>
+                        </div>
+
+                        <div class="col-md-4">
+                            <i class="fa fa-laptop fa-3x mb-3"></i>
+                            <h4>Modern Labs</h4>
+                            <p>გამორჩეული ლაბორატორიები ინოვაციური ტექნოლოგიებით.</p>
+                        </div>
+
+                        <div class="col-md-4">
+                            <i class="fa fa-users fa-3x mb-3"></i>
+                            <h4>Experienced Staff</h4>
+                            <p>პროფესიონალი და მოტივირებული პერსონალი.</p>
+                        </div>
+
+                    </div>
+                </section>
+
+            </div>
+        </xpath>
+    </template>
+
+</odoo>

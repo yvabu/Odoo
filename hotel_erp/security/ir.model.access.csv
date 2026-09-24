@@ -1,0 +1,18 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hotel_room,access.hotel.room,model_hotel_room,base.group_system,1,1,1,1
+access_hotel_room_manager,access.hotel.room.manager,model_hotel_room,hotel_erp.group_hotel_manager,1,1,1,1
+access_hotel_room_receptionist,access.hotel.room.receptionist,model_hotel_room,hotel_erp.group_hotel_user,1,0,0,0
+access_hotel_guest,access.hotel.guest,model_hotel_guest,base.group_system,1,1,1,1
+access_hotel_reservation,access.hotel.reservation,model_hotel_reservation,base.group_system,1,1,1,1
+access_hotel_reservation_receptionist,access.hotel.reservation.receptionist,model_hotel_reservation,hotel_erp.group_hotel_user,1,1,1,0
+access_hotel_service,access.hotel.service,model_hotel_service,base.group_system,1,1,1,1
+access_hotel_reservation_line,access.hotel.reservation.line,model_hotel_reservation_line,base.group_system,1,1,1,1
+access_hotel_employee,access.hotel.employee,model_hotel_employee,base.group_system,1,1,1,1
+access_hotel_guest_manager,hotel.guest.manager,model_hotel_guest,hotel_erp.group_hotel_manager,1,1,1,1
+access_hotel_reservation_manager,hotel.reservation.manager,model_hotel_reservation,hotel_erp.group_hotel_manager,1,1,1,1
+access_hotel_employee_manager,access.hotel.employee.manager,model_hotel_employee,hotel_erp.group_hotel_manager,0,0,0,0
+access_hotel_service_manager,access.hotel.service.manager,model_hotel_service,hotel_erp.group_hotel_manager,1,1,1,1
+access_hotel_reservation_line_manager,access.hotel.reservation.line.manager,model_hotel_reservation_line,hotel_erp.group_hotel_manager,1,1,1,1
+access_hotel_reservation_line_receptionist,access.hotel.reservation.line.receptionist,model_hotel_reservation_line,hotel_erp.group_hotel_user,1,1,0,0
+access_account_move_manager,account.move manager read,account.model_account_move,hotel_erp.group_hotel_manager,1,1,1,1
+access_account_move_receptionist,account.move receptionist read,account.model_account_move,hotel_erp.group_hotel_user,1,1,,0

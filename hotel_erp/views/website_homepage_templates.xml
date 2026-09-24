@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="hotel_homepage" name="Hotel Homepage">
+        <t t-call="website.layout">
+
+            <!-- 1. HERO CAROUSEL SECTION -->
+            <div id="hotelHeroCarousel" class="carousel slide carousel-fade position-relative" data-bs-ride="carousel" data-bs-interval="3000">
+                <div class="carousel-indicators" style="z-index: 11;">
+                    <button type="button" data-bs-target="#hotelHeroCarousel" data-bs-slide-to="0" class="active"></button>
+                    <button type="button" data-bs-target="#hotelHeroCarousel" data-bs-slide-to="1"></button>
+                    <button type="button" data-bs-target="#hotelHeroCarousel" data-bs-slide-to="2"></button>
+                    <button type="button" data-bs-target="#hotelHeroCarousel" data-bs-slide-to="3"></button>
+                    <button type="button" data-bs-target="#hotelHeroCarousel" data-bs-slide-to="4"></button>
+                </div>
+
+                <div class="carousel-inner" style="max-height: 85vh; min-height: 500px;">
+                    <div class="carousel-item active vh-75">
+                        <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&amp;fit=crop&amp;w=1920&amp;q=80" class="d-block w-100 h-100 object-fit-cover" alt="Exterior"/>
+                    </div>
+                    <div class="carousel-item vh-75">
+                        <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&amp;fit=crop&amp;w=1920&amp;q=80" class="d-block w-100 h-100 object-fit-cover" alt="Room"/>
+                    </div>
+                    <div class="carousel-item vh-75">
+                        <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&amp;fit=crop&amp;w=1920&amp;q=80" class="d-block w-100 h-100 object-fit-cover" alt="Pool"/>
+                    </div>
+                    <div class="carousel-item vh-75">
+                        <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&amp;fit=crop&amp;w=1920&amp;q=80" class="d-block w-100 h-100 object-fit-cover" alt="Spa"/>
+                    </div>
+                    <div class="carousel-item vh-75">
+                        <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&amp;fit=crop&amp;w=1920&amp;q=80" class="d-block w-100 h-100 object-fit-cover" alt="Restaurant"/>
+                    </div>
+                </div>
+
+                <!-- Dark Overlay -->
+                <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-50" style="z-index: 5;"></div>
+
+                <!-- Animated Overlay Content -->
+                <div class="position-absolute top-50 start-50 translate-middle text-center text-white w-100 px-3" style="z-index: 10;">
+                    <h1 class="display-2 fw-bold text-uppercase tracking-wide mb-3 animate-fade-down">
+                        WELCOME TO OUR HOTEL
+                    </h1>
+                    <p class="lead fs-3 fw-light mb-4 animate-fade-up">
+                        Experience unmatched comfort and luxury stay.
+                    </p>
+
+                    <a href="/rooms" class="btn btn-warning btn-lg rounded-pill px-5 py-3 fw-bold shadow-lg text-uppercase tracking-wider hover-scale animate-fade-up-delay">
+                        BOOK A ROOM NOW
+                    </a>
+                </div>
+
+                <button class="carousel-control-prev" type="button" data-bs-target="#hotelHeroCarousel" data-bs-slide="prev" style="z-index: 11;">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#hotelHeroCarousel" data-bs-slide="next" style="z-index: 11;">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
+            </div>
+
+            <!-- 2. ROOMS SECTION -->
+            <div class="container my-5 py-4">
+                <div class="text-center mb-5">
+                    <h2 class="display-5 fw-bold text-dark text-uppercase">OUR ROOMS</h2>
+                    <div class="mx-auto bg-warning mb-2" style="height: 3px; width: 70px;"></div>
+                    <p class="text-muted fs-5">Choose the best room for your relaxed vacation</p>
+                </div>
+
+                <!-- ROOM CARDS GRID (გასწორებული სწორი ინდენტაციით) -->
+                <div class="row g-4">
+                    <t t-foreach="rooms" t-as="r">
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden card-hover position-relative">
+
+                                <!-- ROOM CARD SLIDER -->
+                                <div t-attf-id="roomCarousel_#{r.id}" class="carousel slide position-relative overflow-hidden style-card-img-container" data-bs-ride="carousel" data-bs-interval="3000">
+                                    <div class="carousel-indicators mb-1" style="z-index: 5;">
+                                        <button type="button" t-attf-data-bs-target="#roomCarousel_#{r.id}" data-bs-slide-to="0" class="active"></button>
+                                        <button type="button" t-attf-data-bs-target="#roomCarousel_#{r.id}" data-bs-slide-to="1"></button>
+                                        <button type="button" t-attf-data-bs-target="#roomCarousel_#{r.id}" data-bs-slide-to="2"></button>
+                                    </div>
+
+                                    <div class="carousel-inner h-100">
+                                        <div class="carousel-item active h-100">
+                                            <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&amp;fit=crop&amp;w=800&amp;q=80" class="d-block w-100 h-100 object-fit-cover transition-zoom" alt="Room 1"/>
+                                        </div>
+                                        <div class="carousel-item h-100">
+                                            <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&amp;fit=crop&amp;w=800&amp;q=80" class="d-block w-100 h-100 object-fit-cover transition-zoom" alt="Room 2"/>
+                                        </div>
+                                        <div class="carousel-item h-100">
+                                            <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&amp;fit=crop&amp;w=800&amp;q=80" class="d-block w-100 h-100 object-fit-cover transition-zoom" alt="Room 3"/>
+                                        </div>
+                                    </div>
+
+                                    <button class="carousel-control-prev" type="button" t-attf-data-bs-target="#roomCarousel_#{r.id}" data-bs-slide="prev" style="z-index: 5;">
+                                        <span class="carousel-control-prev-icon" style="width: 20px; height: 20px;"></span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" t-attf-data-bs-target="#roomCarousel_#{r.id}" data-bs-slide="next" style="z-index: 5;">
+                                        <span class="carousel-control-next-icon" style="width: 20px; height: 20px;"></span>
+                                    </button>
+
+                                    <span class="position-absolute top-0 end-0 m-3 badge rounded-pill bg-dark bg-opacity-75 px-3 py-2 fs-6" style="z-index: 5;">
+                                        $<t t-out="r.room_price"/> / night
+                                    </span>
+                                </div>
+
+                                <!-- Card Body -->
+                                <div class="card-body p-4 d-flex flex-column">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h4 class="card-title fw-bold text-dark mb-0"><t t-out="r.room_number"/></h4>
+                                        <span class="badge bg-info text-dark px-2 py-1"><t t-out="r.room_type"/></span>
+                                    </div>
+
+                                    <ul class="list-unstyled text-muted my-3 flex-grow-1">
+                                        <li class="mb-2"><i class="fa fa-users me-2 text-warning"></i>Capacity: <strong><t t-out="r.capacity"/> guests</strong></li>
+                                        <li class="mb-2"><i class="fa fa-check-circle me-2 text-success"></i>Status: <strong><t t-out="r.room_status"/></strong></li>
+                                        <li class="mb-2"><i class="fa fa-magic me-2 text-primary"></i>Cleanliness: <strong><t t-out="r.housekeeping_status"/></strong></li>
+                                    </ul>
+
+                                    <div class="d-flex gap-2 mt-auto">
+                                        <a t-attf-href="/room/#{r.id}" class="btn btn-outline-dark rounded-3 flex-fill fw-semibold stretched-link">
+                                            Details
+                                        </a>
+                                        <a t-attf-href="/booking?room_id=#{r.id}" class="btn btn-warning rounded-3 flex-fill fw-bold position-relative" style="z-index: 5;">
+                                            Book Now
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+
+            <!-- 3. SERVICES SECTION -->
+            <div class="bg-light py-5 my-5">
+                <div class="container">
+                    <div class="text-center mb-5">
+                        <h2 class="display-5 fw-bold text-dark text-uppercase">OUR SERVICES</h2>
+                        <div class="mx-auto bg-warning mb-2" style="height: 3px; width: 70px;"></div>
+                        <p class="text-muted fs-5">Enjoy top-tier amenities during your stay</p>
+                    </div>
+
+                    <div class="row g-4 text-center">
+                        <div class="col-md-3">
+                            <div class="p-4 bg-white rounded-4 shadow-sm h-100">
+                                <i class="fa fa-wifi fa-3x text-warning mb-3"></i>
+                                <h5 class="fw-bold">Free High-Speed Wi-Fi</h5>
+                                <p class="text-muted mb-0">Stay connected everywhere in the hotel.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="p-4 bg-white rounded-4 shadow-sm h-100">
+                                <i class="fa fa-coffee fa-3x text-warning mb-3"></i>
+                                <h5 class="fw-bold">Breakfast Included</h5>
+                                <p class="text-muted mb-0">Fresh buffet breakfast served daily.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="p-4 bg-white rounded-4 shadow-sm h-100">
+                                <i class="fa fa-life-ring fa-3x text-warning mb-3"></i>
+                                <h5 class="fw-bold">Swimming Pool</h5>
+                                <p class="text-muted mb-0">Relax at our temperature-controlled pool.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="p-4 bg-white rounded-4 shadow-sm h-100">
+                                <i class="fa fa-bell fa-3x text-warning mb-3"></i>
+                                <h5 class="fw-bold">24/7 Room Service</h5>
+                                <p class="text-muted mb-0">Our team is available round the clock.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </t>
+    </template>
+</odoo>

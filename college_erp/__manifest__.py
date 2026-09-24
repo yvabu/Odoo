@@ -1,0 +1,35 @@
+{
+    'name': "College ERP",
+    'version': "18.0.1.1",
+    'license': "LGPL-3",
+    'summary': "An erp for college education",
+    'description': """From students administration to exam,this covers all aspects of college administration""",
+    'author': "Saba Kobalia",
+    'website': "https://www.sabakobalia.com",
+    'category': "Education",
+    'sequence': 1,
+    'depends': ["base", "website", "mail", "portal", "http_routing"],  # დაემატა საჭირო მოდულები
+    'data': [
+        "security/college_erp_security.xml",
+        "security/ir.model.access.csv",
+        "data/subject_data.xml",
+        "views/college_student_view.xml",
+        "views/female_student_view.xml",
+        "views/male_student_view.xml",
+        "views/first_course_view.xml",
+        "views/college_subject_view.xml",
+        "views/college_teacher_view.xml",
+        "views/college_marks_view.xml",
+        "views/college_erp_menus.xml",
+        "views/templates.xml",
+        "views/website_student.xml",
+        "views/student_mark_template.xml",
+        "views/teacher_template.xml",
+        "views/teacher_mark_template.xml",
+        "views/teacher_student_list.xml",
+        "views/student_report.xml"
+    ],
+    'application': True,
+    'auto_install': False,
+    'installable': True
+}

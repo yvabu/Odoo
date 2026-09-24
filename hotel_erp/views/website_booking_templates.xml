@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- 1. BOOKING FORM TEMPLATE -->
+    <template id="hotel_booking_form_page" name="Hotel Booking Form">
+        <t t-call="website.layout">
+            <!-- External Libraries -->
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"/>
+            <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_blue.css"/>
+            <link rel="stylesheet" type="text/css" href="/hotel_erp/static/src/css/flatpickr_custom.css"/>
+
+            <div id="wrap" class="oe_structure oe_empty bg-light py-5">
+                <div class="container">
+
+                    <!-- Page Header -->
+                    <div class="text-center mb-5">
+                        <h2 class="fw-bold text-dark display-6">Complete Your Reservation</h2>
+                        <p class="text-muted">Please fill in your details to secure your stay</p>
+                    </div>
+
+                    <div class="row g-4 justify-content-center">
+
+                        <!-- Left Side: Selected Room Info Card -->
+                        <t t-if="selected_room">
+                            <div class="col-lg-4">
+                                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden card-hover position-relative">
+
+                                    <!-- ROOM CARD SLIDER -->
+                                    <div t-attf-id="roomCarousel_#{selected_room.id}" class="carousel slide position-relative overflow-hidden style-card-img-container" data-bs-ride="carousel" data-bs-interval="3000">
+                                        <div class="carousel-indicators mb-1" style="z-index: 5;">
+                                            <button type="button" t-attf-data-bs-target="#roomCarousel_#{selected_room.id}" data-bs-slide-to="0" class="active"></button>
+                                            <button type="button" t-attf-data-bs-target="#roomCarousel_#{selected_room.id}" data-bs-slide-to="1"></button>
+                                            <button type="button" t-attf-data-bs-target="#roomCarousel_#{selected_room.id}" data-bs-slide-to="2"></button>
+                                        </div>
+
+                                        <div class="carousel-inner h-100">
+                                            <div class="carousel-item active h-100">
+                                                <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&amp;fit=crop&amp;w=800&amp;q=80" class="d-block w-100 h-100 object-fit-cover transition-zoom" alt="Room 1"/>
+                                            </div>
+                                            <div class="carousel-item h-100">
+                                                <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&amp;fit=crop&amp;w=800&amp;q=80" class="d-block w-100 h-100 object-fit-cover transition-zoom" alt="Room 2"/>
+                                            </div>
+                                            <div class="carousel-item h-100">
+                                                <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&amp;fit=crop&amp;w=800&amp;q=80" class="d-block w-100 h-100 object-fit-cover transition-zoom" alt="Room 3"/>
+                                            </div>
+                                        </div>
+
+                                        <button class="carousel-control-prev" type="button" t-attf-data-bs-target="#roomCarousel_#{selected_room.id}" data-bs-slide="prev" style="z-index: 5;">
+                                            <span class="carousel-control-prev-icon" style="width: 20px; height: 20px;"></span>
+                                        </button>
+                                        <button class="carousel-control-next" type="button" t-attf-data-bs-target="#roomCarousel_#{selected_room.id}" data-bs-slide="next" style="z-index: 5;">
+                                            <span class="carousel-control-next-icon" style="width: 20px; height: 20px;"></span>
+                                        </button>
+
+                                        <span class="position-absolute top-0 end-0 m-3 badge rounded-pill bg-dark bg-opacity-75 px-3 py-2 fs-6" style="z-index: 5;">
+                                            $<t t-out="selected_room.room_price"/> / night
+                                        </span>
+                                    </div>
+
+                                    <!-- Card Body -->
+                                    <div class="card-body p-4 d-flex flex-column">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <h4 class="card-title fw-bold text-dark mb-0"><t t-out="selected_room.room_number"/></h4>
+                                            <span class="badge bg-info text-dark px-2 py-1"><t t-out="selected_room.room_type"/></span>
+                                        </div>
+
+                                        <ul class="list-unstyled text-muted my-3 flex-grow-1">
+                                            <li class="mb-2"><i class="fa fa-users me-2 text-warning"></i>Capacity: <strong><t t-out="selected_room.capacity"/> guests</strong></li>
+                                            <li class="mb-2"><i class="fa fa-check-circle me-2 text-success"></i>Status: <strong><t t-out="selected_room.room_status"/></strong></li>
+                                            <li class="mb-2"><i class="fa fa-magic me-2 text-primary"></i>Cleanliness: <strong><t t-out="selected_room.housekeeping_status"/></strong></li>
+                                        </ul>
+
+                                        <div class="d-flex gap-2 mt-auto">
+                                            <a t-attf-href="/room/#{selected_room.id}" class="btn btn-outline-dark rounded-3 flex-fill fw-semibold">
+                                                Details
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+
+                        <!-- Right Side: Booking Form -->
+                        <div t-att-class="'col-lg-8' if selected_room else 'col-lg-10'">
+                            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+
+                                <!-- 🔑 საინფორმაციო ბანერი -->
+                                <t t-if="is_public">
+                                    <div class="alert alert-info rounded-3 mb-4">
+                                        <i class="fa fa-info-circle me-2"></i>
+                                        თქვენი მონაცემებით ავტომატურად შეიქმნება პირადი ანგარიში — Check-in-ის შემდეგ,
+                                        იქიდან ნახავთ ინვოისს და შეგეძლებათ ონლაინ გადახდა.
+                                    </div>
+                                </t>
+                                <t t-if="is_staff">
+                                    <div class="alert alert-warning rounded-3 mb-4">
+                                        <i class="fa fa-user-plus me-2"></i>
+                                        სტუმრის სახელით ჯავშნა — შეავსეთ სტუმრის (არა თქვენი) მონაცემები.
+                                    </div>
+                                </t>
+
+                                <form action="/booking/submit" method="post" id="booking_form">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                                    <h5 class="fw-bold text-dark mb-4 border-bottom pb-2">
+                                        <i class="fa fa-user me-2 text-primary"></i>1. Guest Details
+                                    </h5>
+
+                                    <div class="row g-3 mb-4">
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-semibold text-secondary">Full Name *</label>
+                                            <t t-if="is_self_service">
+                                                <input type="text" name="guest_name" class="form-control form-control-lg bg-light border-0 fs-6"
+                                                       t-att-value="user.name" readonly="1" required="1"/>
+                                            </t>
+                                            <t t-else="">
+                                                <input type="text" name="guest_name" class="form-control form-control-lg fs-6"
+                                                       placeholder="სტუმრის სრული სახელი" required="1"/>
+                                            </t>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-semibold text-secondary">Personal ID / Passport *</label>
+                                            <input type="text" name="personal_number" class="form-control form-control-lg bg-light border-0 fs-6" placeholder="01001011223" required="1"/>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-semibold text-secondary">Email Address *</label>
+                                            <t t-if="is_self_service">
+                                                <input type="email" name="email" class="form-control form-control-lg bg-light border-0 fs-6"
+                                                       t-att-value="user.email" readonly="1" required="1"/>
+                                            </t>
+                                            <t t-else="">
+                                                <input type="email" name="email" class="form-control form-control-lg fs-6"
+                                                       placeholder="guest@example.com" required="1"/>
+                                                <t t-if="is_public">
+                                                    <small class="text-muted d-block mt-1">ეს იქნება თქვენი login — ანგარიშზე წვდომისთვის.</small>
+                                                </t>
+                                            </t>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-semibold text-secondary">Phone Number *</label>
+                                            <input type="tel" name="phone" class="form-control form-control-lg bg-light border-0 fs-6"
+                                                   t-att-value="user.phone if is_self_service else ''" placeholder="+995 555 123 456" required="1"/>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <label class="form-label fw-semibold text-secondary">Address *</label>
+                                            <input type="text" name="address" class="form-control form-control-lg bg-light border-0 fs-6"
+                                                   t-att-value="user.partner_id.street if is_self_service else ''" placeholder="Street, City, Country" required="1"/>
+                                        </div>
+                                    </div>
+
+                                    <h5 class="fw-bold text-dark mb-4 border-bottom pb-2">
+                                        <i class="fa fa-bed me-2 text-primary"></i>2. Stay &amp; Room Details
+                                    </h5>
+
+                                    <div class="mb-4">
+                                        <label class="form-label fw-semibold text-secondary">Selected Room *</label>
+
+                                        <input t-if="selected_room" type="hidden" name="room_id" t-att-value="selected_room.id"/>
+
+                                        <select id="room_id" name="room_id" class="form-select form-select-lg bg-light border-0 fs-6"
+                                                t-att-disabled="'disabled' if selected_room else None" required="1">
+
+                                            <t t-if="selected_room">
+                                                <option t-att-value="selected_room.id" t-att-data-price="selected_room.room_price" selected="selected">
+                                                    Room <t t-out="selected_room.room_number"/> — $<t t-out="selected_room.room_price"/> / night (<t t-out="selected_room.room_type"/>)
+                                                </option>
+                                            </t>
+
+                                            <t t-else="">
+                                                <option value="" disabled="1" selected="selected">Choose a room...</option>
+                                                <t t-foreach="rooms" t-as="r">
+                                                    <option t-att-value="r.id" t-att-data-price="r.room_price">
+                                                        Room <t t-out="r.room_number"/> — $<t t-out="r.room_price"/> / night (<t t-out="r.room_type"/>)
+                                                    </option>
+                                                </t>
+                                            </t>
+                                        </select>
+                                    </div>
+
+                                    <div class="row g-3 mb-4">
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-semibold text-secondary">Check-In Date *</label>
+                                            <input type="text" name="check_in" id="check_in" class="form-control form-control-lg bg-light border-0 fs-6" placeholder="Select Check-in" t-att-value="check_in" t-att-data-prefill="check_in" required="1"/>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-semibold text-secondary">Check-Out Date *</label>
+                                            <input type="text" name="check_out" id="check_out" class="form-control form-control-lg bg-light border-0 fs-6" placeholder="Select Check-out" t-att-value="check_out" t-att-data-prefill="check_out" required="1"/>
+                                        </div>
+                                    </div>
+
+                                    <!-- Price Details Box -->
+                                    <div id="price_summary_box" class="card bg-dark text-white border-0 rounded-4 p-4 mb-4 d-none">
+                                        <div class="d-flex justify-content-between mb-2 text-white-50">
+                                            <span>Price per Night:</span>
+                                            <strong class="text-white">$<span id="display_night_price">0</span></strong>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2 text-white-50">
+                                            <span>Number of Nights:</span>
+                                            <strong class="text-white"><span id="display_nights_count">0</span> night(s)</strong>
+                                        </div>
+                                        <hr class="border-secondary my-3"/>
+                                        <div class="d-flex justify-content-between fs-4 fw-bold">
+                                            <span>Total Amount:</span>
+                                            <span class="text-success">$<span id="display_total_price">0</span></span>
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary btn-lg w-100 py-3 fw-bold rounded-3 shadow-sm text-uppercase border-0">
+                                        Confirm Reservation &amp; Proceed
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- JS Script for Flatpickr & Calculations -->
+            <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    let checkInPicker, checkOutPicker;
+                    const roomSelect = document.getElementById("room_id");
+
+                    const priceBox = document.getElementById("price_summary_box");
+                    const displayNightPrice = document.getElementById("display_night_price");
+                    const displayNightsCount = document.getElementById("display_nights_count");
+                    const displayTotalPrice = document.getElementById("display_total_price");
+
+                    function calculateTotalPrice() {
+                        const selectedOption = roomSelect.options[roomSelect.selectedIndex];
+                        const roomPrice = selectedOption ? parseFloat(selectedOption.getAttribute("data-price") || 0) : 0;
+
+                        const checkInDate = checkInPicker ? checkInPicker.selectedDates[0] : null;
+                        const checkOutDate = checkOutPicker ? checkOutPicker.selectedDates[0] : null;
+
+                        if (roomPrice &gt; 0) {
+                            displayNightPrice.textContent = roomPrice.toFixed(2);
+                            priceBox.classList.remove("d-none");
+                        }
+
+                        if (roomPrice &gt; 0 &amp;&amp; checkInDate &amp;&amp; checkOutDate &amp;&amp; checkOutDate &gt; checkInDate) {
+                            const diffTime = Math.abs(checkOutDate - checkInDate);
+                            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                            const totalPrice = diffDays * roomPrice;
+
+                            displayNightsCount.textContent = diffDays;
+                            displayTotalPrice.textContent = totalPrice.toFixed(2);
+                        } else {
+                            displayNightsCount.textContent = "1";
+                            displayTotalPrice.textContent = roomPrice.toFixed(2);
+                        }
+                    }
+
+                    function initPickers(disabledDates = []) {
+                        if (checkInPicker) checkInPicker.destroy();
+                        if (checkOutPicker) checkOutPicker.destroy();
+
+                        const prefilledCheckIn = document.getElementById("check_in").getAttribute("data-prefill") || null;
+                        const prefilledCheckOut = document.getElementById("check_out").getAttribute("data-prefill") || null;
+
+                        checkOutPicker = flatpickr("#check_out", {
+                            minDate: "today",
+                            dateFormat: "Y-m-d",
+                            disable: disabledDates,
+                            defaultDate: prefilledCheckOut,
+                            onChange: function () {
+                                calculateTotalPrice();
+                            }
+                        });
+
+                        checkInPicker = flatpickr("#check_in", {
+                            minDate: "today",
+                            dateFormat: "Y-m-d",
+                            disable: disabledDates,
+                            defaultDate: prefilledCheckIn,
+                            onChange: function (selectedDates) {
+                                if (selectedDates.length &gt; 0) {
+                                    let nextDay = new Date(selectedDates[0]);
+                                    nextDay.setDate(nextDay.getDate() + 1);
+
+                                    checkOutPicker.set("minDate", nextDay);
+
+                                    if (checkOutPicker.selectedDates[0] &amp;&amp; checkOutPicker.selectedDates[0] &lt; nextDay) {
+                                        checkOutPicker.clear();
+                                    }
+                                }
+                                calculateTotalPrice();
+                            }
+                        });
+
+                        if (prefilledCheckIn &amp;&amp; prefilledCheckOut) {
+                            calculateTotalPrice();
+                        }
+                    }
+
+                    initPickers();
+
+                    roomSelect.addEventListener("change", function () {
+                        calculateTotalPrice();
+                        const roomId = this.value;
+                        if (!roomId) return;
+
+                        fetch('/hotel/get_booked_dates', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                jsonrpc: "2.0",
+                                method: "call",
+                                params: { room_id: roomId }
+                            })
+                        })
+                        .then(response =&gt; response.json())
+                        .then(data =&gt; {
+                            const bookedDates = data.result || [];
+                            initPickers(bookedDates);
+                        });
+                    });
+
+                    if (roomSelect.value) {
+                        roomSelect.dispatchEvent(new Event('change'));
+                    }
+                });
+            </script>
+        </t>
+    </template>
+
+    <!-- 2. BOOKING SUCCESS TEMPLATE -->
+    <template id="hotel_booking_success_page" name="Booking Success Page">
+        <t t-call="website.layout">
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+            <div class="container my-5 text-center py-5">
+                <div class="alert alert-success alert-dismissible fade show shadow-sm mb-4 text-start mx-auto rounded-3" style="max-width: 650px;" role="alert">
+                    <i class="fa fa-check-circle me-2 fs-5"></i>
+                    <strong>წარმატება!</strong> თქვენი ჯავშანი მიღებულია. ინვოისი და გადახდის საშუალება გამოჩნდება
+                    Check-in-ის შემდეგ — რეცეფციაზე ან თქვენს დაშბორდზე.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+
+                <div class="card shadow-sm p-4 p-md-5 border-0 mx-auto rounded-4" style="max-width: 650px;">
+                    <div class="mb-3">
+                        <i class="fa fa-check-circle text-success" style="font-size: 4.5rem;"></i>
+                    </div>
+                    <h2 class="fw-bold text-dark mb-2">Reservation Confirmed!</h2>
+                    <p class="text-muted fs-6 mb-4">
+                        Thank you, <strong class="text-dark"><t t-out="reservation.guest_id.name"/></strong>. თქვენი ჯავშანი შენახულია
+                        სტატუსით <strong><t t-out="reservation.state"/></strong>.
+                    </p>
+
+                    <div class="bg-light p-4 rounded-3 text-start mb-4 border-0">
+                        <h6 class="fw-bold mb-3 text-uppercase text-primary">Reservation Summary</h6>
+                        <div class="row mb-2">
+                            <div class="col-6 text-muted fs-6">Reservation Ref:</div>
+                            <div class="col-6 fw-bold text-end fs-6"><t t-out="reservation.name"/></div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-6 text-muted fs-6">Room:</div>
+                            <div class="col-6 fw-bold text-end fs-6"><t t-out="reservation.room_id.room_number"/> (<t t-out="reservation.room_id.room_type"/>)</div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-6 text-muted fs-6">Check-In / Out:</div>
+                            <div class="col-6 fw-bold text-end fs-6"><t t-out="reservation.check_in"/> / <t t-out="reservation.check_out"/></div>
+                        </div>
+                        <hr class="my-2"/>
+                        <div class="row">
+                            <div class="col-6 text-muted fs-6">Estimated Total:</div>
+                            <div class="col-6 fw-bold text-end fs-5 text-dark">$<t t-out="reservation.total_price"/></div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <t t-if="reservation.invoice_id">
+                            <a t-attf-href="/my/invoices/#{reservation.invoice_id.id}?access_token=#{reservation.invoice_id.access_token}"
+                               class="btn btn-success btn-lg rounded-3 fw-bold py-3 shadow-sm border-0">
+                                <i class="fa fa-credit-card me-2"></i> Pay Invoice Now
+                            </a>
+                        </t>
+
+                        <a t-attf-href="/report/pdf/hotel_erp.report_reservation_document/#{reservation.id}"
+                           target="_blank"
+                           class="btn btn-outline-danger btn-lg rounded-3 fw-bold py-3 shadow-sm mt-2">
+                            <i class="fa fa-file-pdf-o me-2"></i> Download Reservation PDF
+                        </a>
+
+                        <div class="d-flex gap-2 justify-content-center mt-3">
+                            <a href="/" class="btn btn-light border rounded-3 px-4 fw-bold w-100 py-2">Back to Home</a>
+                            <a href="/my/dashboard" class="btn btn-light border rounded-3 px-4 fw-bold w-100 py-2">My Dashboard</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    Swal.fire({
+                        title: 'ჯავშანი მიღებულია! 🎉',
+                        text: 'Check-in-ის შემდეგ ავტომატურად შეიქმნება ინვოისი და შეძლებთ ონლაინ გადახდას.',
+                        icon: 'success',
+                        confirmButtonText: 'კარგი',
+                        confirmButtonColor: '#0d6efd'
+                    });
+                });
+            </script>
+        </t>
+    </template>
+</odoo>
