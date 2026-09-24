@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="reservation_report" model="ir.actions.report">
+        <field name="name">Reservation Report PDF</field>
+        <field name="model">hotel.reservation</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">hotel_erp.report_reservation_document</field>
+        <field name="report_file">hotel_erp.report_reservation_document</field>
+        <field name="print_report_name">'Reservation Report PDF For Room - %s' % (object.room_id.room_number)</field>
+        <field name="binding_type">report</field>
+        <field name="binding_model_id" ref="model_hotel_reservation"/>
+    </record>
+
+    <template id="report_reservation_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                       <div class="text-center mb-4">
+                           <h2>Reservation Confirmation</h2>
+                           <h4 t-field="o.name"/>
+                       </div>
+
+                        <div class="row mb-4">
+                            <div class="col-6">
+                                <strong>Guest:</strong> <span t-field="o.guest_id.name"/><br/>
+                                <strong>Room</strong> <span t-field="o.room_id.room_number"/>
+                            </div>
+                            <div class="col-6 text-end">
+                                <strong>Check In:</strong> <span t-field="o.check_in"/><br/>
+                                <strong>Check Out</strong> <span t-field="o.check_out"/>
+                            </div>
+                        </div>
+
+                        <table class="table table-bordered mt-4">
+                            <thead>
+                                <tr class="bg-light">
+                                    <th>Description</th>
+                                    <th>Quantity(Amount of Days)</th>
+                                    <th>Unit Price(One Night)</th>
+                                    <th>Total Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-start">ოთახის ქირაობა (ოთახის სახელი:<span t-field="o.room_id.room_number"/>)</td>
+                                    <td class="text-center"><span t-out="(o.check_out - o.check_in).days"/></td>
+                                    <td class="text-center"><span t-field="o.room_id.room_price" t-options='{"widget": "monetary", "display_currency": o.env.company.currency_id}'/></td>
+                                    <td class="text-center">
+                                        <span t-out="(o.check_out - o.check_in).days * o.room_id.room_price" t-options='{"widget": "monetary", "display_currency": o.env.company.currency_id}'/>
+                                    </td>
+                                </tr>
+                                <!-- 2. დამატებითი სერვისების სტრიქონები (Service Lines) -->
+                            <t t-foreach="o.service_line_ids" t-as="line">
+                                <tr class="border-bottom">
+                                 <td class="text-start">
+                                   <span t-field="line.service_id.name"/>
+                                 </td>
+                                 <td class="text-center">
+                                    <span t-field="line.quantity"/>
+                                 </td>
+                                 <td class="text-center">
+                                  <span t-field="line.price_unit" t-options='{"widget": "monetary", "display_currency": o.env.company.currency_id}'/>
+                                 </td>
+                                 <td class="text-center">
+                                  <span t-field="line.price_subtotal" t-options='{"widget": "monetary", "display_currency": o.env.company.currency_id}'/>
+                                 </td>
+                               </tr>
+                            </t>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- 3. ჯამური თანხის ბლოკი (როგორც ფოტოზეა მარჯვნივ) -->
+                   <div class="row justify-content-end mt-3">
+                       <div class="col-4">
+                          <table class="table table-sm border-top border-dark">
+                              <tr>
+                                 <td><strong>გადასახდელი თანხის ჯამი:</strong></td>
+                                 <td class="text-end">
+                                    <strong t-field="o.total_price" t-options='{"widget": "monetary", "display_currency": o.env.company.currency_id}'/>
+                                 </td>
+                              </tr>
+                              <tr>
+                                  <td><strong>გადახდილი თანხის რაოდენობა:</strong></td>
+                                  <td class="text-end">
+                                    <span t-field="o.paid_amount" t-options='{"widget": "monetary", "display_currency": o.env.company.currency_id}'/>
+                                  </td>
+                              </tr>
+                              <tr class="border-top border-dark">
+                                  <td><strong>დარჩენილი თანხის რაოდენობა</strong></td>
+                                  <td class="text-end">
+                                    <strong t-field="o.amount_due" t-options='{"widget": "monetary", "display_currency": o.env.company.currency_id}'/>
+                                  </td>
+
+                              </tr>
+                          </table>
+                       </div>
+                   </div>
+                    <div class="mt-5 text-right">
+                        <p>ბეჭედი და სტუმრის ხელმოწერა:</p>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

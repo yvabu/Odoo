@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="teacher_dashboard" name="მასწავლებლის Dashboard">
+
+        <t t-call="website.layout">
+
+            <div id="wrap" class="oe_structure">
+
+                <style scoped="scoped">
+
+                    .s_dashboard_bg {
+                        background: #f5f7fb;
+                        min-height: 100vh;
+                        padding: 50px 0 80px 0;
+                    }
+
+                    /* ================= PROFILE ================= */
+
+                    .profile-card-fix {
+                        background: #ffffff;
+                        border-radius: 24px;
+                        padding: 35px 25px;
+                        border: 1px solid #e5e7eb;
+                        box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+                    }
+
+                    .profile-avatar-circle {
+                        width: 110px;
+                        height: 110px;
+                        border-radius: 50%;
+                        margin: 0 auto 20px auto;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+                        color: white;
+                        box-shadow: 0 10px 25px rgba(79, 70, 229, 0.25);
+                    }
+
+                    /* ================= SEARCH ================= */
+
+                    .search-box-wrapper {
+                        position: relative;
+                        width: 100%;
+                    }
+
+                    .search-icon-inside {
+                        position: absolute;
+                        left: 18px;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        color: #94a3b8;
+                        z-index: 5;
+                    }
+
+                    #subjectSearch {
+                        width: 100%;
+                        border-radius: 16px;
+                        border: 2px solid #e2e8f0;
+                        padding: 14px 18px 14px 50px;
+                        background: white;
+                        font-size: 16px;
+                        transition: 0.3s;
+                    }
+
+                    #subjectSearch:focus {
+                        outline: none;
+                        border-color: #4f46e5;
+                        box-shadow: none;
+                    }
+
+                    /* ================= SUBJECTS ================= */
+
+                    #subjectList {
+                        width: 100%;
+                    }
+
+                    .subject-item {
+                        display: flex;
+                    }
+
+                    .uni-course-card {
+                        width: 100%;
+                        min-height: 260px;
+                        background: white;
+                        border-radius: 24px;
+                        padding: 28px;
+                        border: 1px solid #edf2f7;
+                        transition: 0.3s;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-between;
+                        box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+                    }
+
+                    .uni-course-card:hover {
+                        transform: translateY(-5px);
+                        border-color: #4f46e5;
+                        box-shadow: 0 20px 35px rgba(79, 70, 229, 0.12);
+                    }
+
+                    .card-accent-pill {
+                        width: 60px;
+                        height: 6px;
+                        border-radius: 20px;
+                        background: #4f46e5;
+                        margin-bottom: 20px;
+                    }
+
+                    .course-title {
+                        font-size: 1.35rem;
+                        font-weight: 800;
+                        color: #0f172a;
+                        line-height: 1.4;
+                        margin-bottom: 18px;
+                        word-break: break-word;
+                    }
+
+                    .stu-tag {
+                        display: inline-block;
+                        background: #eef2ff;
+                        color: #4338ca;
+                        padding: 8px 16px;
+                        border-radius: 12px;
+                        font-size: 14px;
+                        font-weight: 700;
+                    }
+
+                    .btn-uni-large {
+                        width: 100%;
+                        display: block;
+                        text-align: center;
+                        padding: 14px;
+                        border-radius: 14px;
+                        text-decoration: none !important;
+                        background: white;
+                        border: 2px solid #e2e8f0;
+                        color: #334155;
+                        font-weight: 700;
+                        transition: 0.3s;
+                    }
+
+                    .btn-uni-large:hover {
+                        background: #4f46e5;
+                        border-color: #4f46e5;
+                        color: white !important;
+                    }
+
+                    /* ================= MOBILE ================= */
+
+                    @media (max-width: 768px) {
+
+                        .profile-card-fix {
+                            margin-bottom: 25px;
+                        }
+
+                        .course-title {
+                            font-size: 1.1rem;
+                        }
+
+                    }
+
+                </style>
+
+                <section class="s_dashboard_bg">
+
+                    <div class="container">
+
+                        <div class="row">
+
+                            <!-- PROFILE -->
+
+                            <div class="col-lg-3 col-md-4 col-12 mb-4">
+
+                                <div class="profile-card-fix text-center">
+
+                                    <div class="profile-avatar-circle">
+                                        <i class="fa fa-user-tie fa-3x"></i>
+                                    </div>
+
+                                    <h3 class="font-weight-bold mb-1" style="color:#0f172a;">
+                                        <t t-out="teacher.name"/>
+                                        <t t-out="teacher.last_name"/>
+                                    </h3>
+
+                                    <p class="text-primary font-weight-bold small text-uppercase mb-4">
+                                        უნივერსიტეტის ლექტორი
+                                    </p>
+
+                                    <div class="border-top pt-4 text-left">
+
+                                        <p class="small text-muted mb-2">
+                                            <i class="fa fa-envelope mr-2"/>
+                                            <t t-out="teacher.email"/>
+                                        </p>
+
+                                        <p class="small text-muted mb-0">
+                                            <i class="fa fa-university mr-2"/>
+                                            აკადემიური პერსონალი
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <!-- CONTENT -->
+
+                            <div class="col-lg-9 col-md-8 col-12">
+
+                                <div class="row align-items-center mb-5">
+
+                                    <div class="col-md-5 col-12 mb-3 mb-md-0">
+
+                                        <h2 style="font-size:2.2rem; font-weight:800; color:#0f172a;">
+                                            ჩემი საგნები
+                                        </h2>
+
+                                    </div>
+
+                                    <div class="col-md-7 col-12">
+
+                                        <div class="search-box-wrapper">
+
+                                            <i class="fa fa-search search-icon-inside"></i>
+
+                                            <input
+                                                type="text"
+                                                id="subjectSearch"
+                                                class="form-control"
+                                                placeholder="მოძებნეთ კურსი..."
+                                            />
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <!-- SUBJECT LIST -->
+
+                                <div class="row g-4" id="subjectList">
+
+                                    <t t-foreach="subjects" t-as="sub">
+
+                                        <div class="col-xl-4 col-lg-6 col-md-6 col-12 mb-4 subject-item">
+
+                                            <div class="uni-course-card">
+
+                                                <div>
+
+                                                    <div class="card-accent-pill"></div>
+
+                                                    <h4 class="course-title">
+                                                        <t t-esc="sub.subject_name"/>
+                                                    </h4>
+
+                                                    <div class="mb-4">
+
+                                                        <span class="stu-tag">
+                                                            <i class="fa fa-users mr-2"></i>
+                                                            <t t-esc="len(sub.student_ids)"/>
+                                                            სტუდენტი
+                                                        </span>
+
+                                                    </div>
+
+                                                </div>
+
+                                                <div>
+
+                                                    <a
+                                                        t-attf-href="/teacher/subject/#{sub.id}"
+                                                        class="btn-uni-large"
+                                                    >
+                                                        მართვა
+                                                        <i class="fa fa-arrow-right ml-2"></i>
+                                                    </a>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </t>
+
+                                </div>
+
+                                <!-- NO RESULTS -->
+
+                                <div id="noResults" class="text-center mt-5 d-none">
+
+                                    <div class="bg-white d-inline-block p-5 rounded-circle shadow-sm mb-4">
+
+                                        <i class="fa fa-search fa-3x text-muted"></i>
+
+                                    </div>
+
+                                    <h4 class="text-muted">
+                                        მსგავსი საგანი ვერ მოიძებნა
+                                    </h4>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <!-- SEARCH SCRIPT -->
+
+                <script type="text/javascript">
+
+                    document.addEventListener("DOMContentLoaded", function () {
+
+                        const searchInput = document.getElementById('subjectSearch');
+
+                        searchInput.addEventListener('keyup', function () {
+
+                            let filter = this.value.toLowerCase();
+
+                            let items = document.querySelectorAll('.subject-item');
+
+                            let found = false;
+
+                            items.forEach(function(item) {
+
+                                let title = item.querySelector('.course-title').innerText.toLowerCase();
+
+                                if (title.includes(filter)) {
+
+                                    item.style.display = 'flex';
+                                    found = true;
+
+                                } else {
+
+                                    item.style.display = 'none';
+
+                                }
+
+                            });
+
+                            document
+                                .getElementById('noResults')
+                                .classList.toggle('d-none', found);
+
+                        });
+
+                    });
+
+                </script>
+
+            </div>
+
+        </t>
+
+    </template>
+</odoo>

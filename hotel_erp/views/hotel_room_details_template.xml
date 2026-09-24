@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="hotel_room_details_page" name="Room Details Page">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                <div class="container my-5">
+                    <!-- Breadcrumb -->
+                    <nav aria-label="breadcrumb" class="mb-4">
+                        <ol class="breadcrumb bg-transparent p-0">
+                            <li class="breadcrumb-item"><a href="/" class="text-decoration-none">Home</a></li>
+                            <li class="breadcrumb-item active" aria-current="page"><t t-out="room.room_number"/></li>
+                        </ol>
+                    </nav>
+
+                    <div class="row g-5 align-items-center">
+
+                        <!-- 📌 1. ROOM SLIDER SECTION (4-5 Photos Carousel) -->
+                        <div class="col-lg-7">
+                            <div id="roomDetailsCarousel" class="carousel slide shadow-lg rounded-4 overflow-hidden" data-bs-ride="carousel" data-bs-interval="4000">
+
+                                <!-- Indicators / Bullets -->
+                                <div class="carousel-indicators">
+                                    <t t-if="room.image">
+                                        <button type="button" data-bs-target="#roomDetailsCarousel" data-bs-slide-to="0" class="active" aria-current="true"></button>
+                                    </t>
+                                    <t t-else="">
+                                        <button type="button" data-bs-target="#roomDetailsCarousel" data-bs-slide-to="0" class="active" aria-current="true"></button>
+                                        <button type="button" data-bs-target="#roomDetailsCarousel" data-bs-slide-to="1"></button>
+                                        <button type="button" data-bs-target="#roomDetailsCarousel" data-bs-slide-to="2"></button>
+                                        <button type="button" data-bs-target="#roomDetailsCarousel" data-bs-slide-to="3"></button>
+                                        <button type="button" data-bs-target="#roomDetailsCarousel" data-bs-slide-to="4"></button>
+                                    </t>
+                                </div>
+
+                                <!-- Slides -->
+                                <div class="carousel-inner" style="height: 480px;">
+                                    <t t-if="room.image">
+                                        <div class="carousel-item active h-100">
+                                            <img t-attf-src="/web/image/hotel.room/#{room.id}/image" class="d-block w-100 h-100 object-fit-cover" t-att-alt="room.room_number"/>
+                                        </div>
+                                    </t>
+                                    <t t-else="">
+                                        <div class="carousel-item active h-100">
+                                            <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" class="d-block w-100 h-100 object-fit-cover" alt="Room View 1"/>
+                                        </div>
+                                        <div class="carousel-item h-100">
+                                            <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" class="d-block w-100 h-100 object-fit-cover" alt="Room View 2"/>
+                                        </div>
+                                        <div class="carousel-item h-100">
+                                            <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" class="d-block w-100 h-100 object-fit-cover" alt="Room View 3"/>
+                                        </div>
+                                        <div class="carousel-item h-100">
+                                            <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" class="d-block w-100 h-100 object-fit-cover" alt="Bathroom View"/>
+                                        </div>
+                                        <div class="carousel-item h-100">
+                                            <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" class="d-block w-100 h-100 object-fit-cover" alt="Balcony/Details View"/>
+                                        </div>
+                                    </t>
+                                </div>
+
+                                <!-- Controls -->
+                                <button class="carousel-control-prev" type="button" data-bs-target="#roomDetailsCarousel" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#roomDetailsCarousel" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 📌 2. ROOM DETAILS CARD SECTION -->
+                        <div class="col-lg-5">
+                            <div class="card border-0 shadow-sm p-4 rounded-4">
+                                <h1 class="display-5 fw-bold text-dark mt-2 mb-2">
+                                    Room <t t-out="room.room_number"/>
+                                </h1>
+                                <div class="mb-3">
+                                    <span class="display-6 fw-bold text-success">$<t t-out="room.room_price"/></span>
+                                    <span class="text-muted fs-5"> / night</span>
+                                </div>
+                                <div class="mb-3">
+                                    <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fs-6 fw-bold text-uppercase">
+                                        <t t-out="room.room_type"/>
+                                    </span>
+                                </div>
+
+                                <hr class="my-3"/>
+
+                                <!-- 🔑 DESCRIPTION SECTION (ბექენდიდან წამოღებული აღწერა) -->
+                                <t t-if="room.description">
+                                    <div class="mb-4">
+                                        <h6 class="fw-bold text-dark mb-2">Description</h6>
+                                        <!-- t-raw / t-out გამოიყენება იმის მიხედვით, Text ველია თუ Html -->
+                                        <p class="text-muted lead fs-6 mb-0" t-out="room.description"/>
+                                    </div>
+                                    <hr class="my-3"/>
+                                </t>
+
+                                <h5 class="fw-bold text-dark mb-3">Room Features</h5>
+                                <div class="row g-3 mb-4">
+                                    <div class="col-6">
+                                        <i class="fa fa-user me-2 text-primary"></i>
+                                        <span>Capacity: <strong><t t-out="room.capacity"/> Persons</strong></span>
+                                    </div>
+                                    <div class="col-6">
+                                        <i class="fa fa-check-circle me-2 text-success"></i>
+                                        <span>Status: <strong><t t-out="room.housekeeping_status"/></strong></span>
+                                    </div>
+                                    <div class="col-6" t-if="room.is_wifi">
+                                        <i class="fa fa-wifi me-2 text-primary"></i>
+                                        <span>Free Wi-Fi</span>
+                                    </div>
+                                    <div class="col-6">
+                                        <i class="fa fa-tv me-2 text-primary"></i>
+                                        <span>Smart TV</span>
+                                    </div>
+                                    <div class="col-6" t-if="room.is_air_conditioning">
+                                        <i class="fa fa-snowflake-o me-2 text-warning"></i>
+                                        <span>Air Conditioning</span>
+                                    </div>
+                                    <div class="col-6" t-if="room.is_smoking">
+                                        <i class="fa fa-smoking me-2 text-warning"></i>
+                                        <span>Smoking Available</span>
+                                    </div>
+                                    <div class="col-6" t-if="room.balcony_count">
+                                        <i class="fa fa-window-maximize me-2 text-warning"></i>
+                                        <span>Balconies: <strong><t t-out="room.balcony_count"/></strong></span>
+                                    </div>
+                                </div>
+
+                                <div class="d-grid mt-3">
+                                    <a t-attf-href="/booking?room_id=#{room.id}&amp;check_in=#{check_in}&amp;check_out=#{check_out}" class="btn btn-warning btn-lg fw-bold py-3 text-uppercase rounded-3 shadow-sm">
+                                        BOOK THIS ROOM NOW
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

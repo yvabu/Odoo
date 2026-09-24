@@ -1,0 +1,21 @@
+<odoo>
+   <!--category for Hotel Management-->
+    <record id="module_category_hotel" model="ir.module.category">
+        <field name="name">Hotel Management</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <!-- create groups -->
+    <record id="group_hotel_user" model="res.groups">
+        <field name="name">User/Receptionist</field>
+        <field name="category_id" ref="module_category_hotel"/>
+    </record>
+
+    <record id="group_hotel_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="category_id" ref="module_category_hotel"/>
+        <field name="implied_ids" eval="[(4,ref('group_hotel_user'))]"/>
+
+    </record>
+
+</odoo>

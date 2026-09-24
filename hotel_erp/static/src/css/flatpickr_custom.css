@@ -1,0 +1,64 @@
+.flatpickr-day.flatpickr-disabled,
+.flatpickr-day.flatpickr-disabled:hover {
+    background-color: #dc3545 !important; /* წითელი */
+    color: white !important;
+    text-decoration: line-through;
+    opacity: 0.8;
+    cursor: not-allowed;
+}
+
+.flatpickr-day:not(.flatpickr-disabled) {
+    background-color: #28a745 !important; /* მწვანე თავისუფალი დღეები */
+    color: white !important;
+}
+
+/* Carousel & Card Height Constraints */
+.vh-75 { height: 70vh !important; }
+.style-card-img-container { height: 240px; }
+
+/* Micro-interactions & Visual Polish */
+.card-hover { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.card-hover:hover { transform: translateY(-7px); box-shadow: 0 1rem 3rem rgba(0,0,0,.15)!important; }
+
+.transition-zoom { transition: transform 0.5s ease; }
+.card-hover:hover .transition-zoom { transform: scale(1.05); }
+
+.hover-scale { transition: transform 0.2s ease; }
+.hover-scale:hover { transform: scale(1.05); }
+
+/* 📌 Custom Stable Animations for Hero Carousel */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translate3d(0, -50px, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 50px, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+.animate-fade-down {
+    animation: fadeInDown 1s ease-out forwards;
+}
+
+.animate-fade-up {
+    animation: fadeInUp 1s ease-out 0.3s forwards;
+    opacity: 0;
+}
+
+.animate-fade-up-delay {
+    animation: fadeInUp 1s ease-out 0.6s forwards;
+    opacity: 0;
+}

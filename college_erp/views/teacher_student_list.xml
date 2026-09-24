@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="teacher_students_list" name="სტუდენტების სია">
+    <t t-call="website.layout">
+        <div class="container mt-5">
+            <h2 class="mb-4 font-weight-bold"><t t-esc="subject.subject_name"/> - სტუდენტები</h2>
+            <div class="card shadow-sm border-0" style="border-radius: 15px;">
+                <a t-attf-href="/teacher_marks/#{marks.id}" style="text-decoration: none">
+                <table class="table table-hover mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="border-0">სტუდენტი</th>
+                            <th class="border-0 text-center">ქულა</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="marks" t-as="m">
+                            <tr>
+                                <td class="align-middle"><t t-esc="m.student_id.first_name"/><t t-esc="m.student_id.last_name"/> </td>
+                                <td class="text-center align-middle"><t t-esc="m.total_marks"/></td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+                </a>
+            </div>
+        </div>
+    </t>
+</template>
+</odoo>

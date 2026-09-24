@@ -1,0 +1,1142 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* college_erp
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-07 16:05+0000\n"
+"PO-Revision-Date: 2026-04-07 16:05+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: college_erp
+#: model:ir.module.category,description:college_erp.module_category_college_erp
+msgid ""
+"\n"
+"          This is category for College_erp Module named College ERP\n"
+"       "
+msgstr ""
+
+#. module: college_erp
+#: model:ir.actions.report,print_report_name:college_erp.action_report_student_mark
+msgid "'ნიშნები - %s' % (object.first_name)"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.teacher_students_list
+msgid "- სტუდენტები"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.student_dashboard_main
+#: model_terms:ir.ui.view,arch_db:college_erp.student_marks_template
+msgid "/ 100"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.report_student_template
+msgid ""
+"<br/>\n"
+"                           <strong>პირადი ნომერი:</strong>"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.student_marks_template
+msgid "<i class=\"fa fa-file-pdf-o mr-2\"/> გადმოწერე ნიშნების ფურცელი (PDF)"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.student_marks_template
+msgid "<i class=\"fa fa-info-circle mr-2\"/>ლექტორის შენიშვნა:"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.teacher_mark_web
+msgid "<i class=\"fa fa-save mr-2\"/>შენახვა"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.teacher_dashboard
+msgid "<i class=\"fa fa-university mr-2\"/> აკადემიური პერსონალი"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.student_dashboard_main
+msgid "<strong><i class=\"fa fa-envelope mr-2\"/>Email:</strong>"
+msgstr "ემაილი:"
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.student_dashboard_main
+msgid "<strong><i class=\"fa fa-id-card mr-2\"/>პირადი #:</strong>"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.student_dashboard_main
+msgid "<strong><i class=\"fa fa-phone mr-2\"/>ტელ:</strong>"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.report_student_template
+msgid "<strong>თარიღი:</strong>"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.report_student_template
+msgid "<strong>სტუდენტი:</strong>"
+msgstr ""
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__message_needaction
+msgid "Action Needed"
+msgstr "საჭიროა მოქმედება"
+
+#. module: college_erp
+#: model:ir.model.fields.selection,name:college_erp.selection__college_student__status__active
+msgid "Active"
+msgstr "აქტიური"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__activity_ids
+msgid "Activities"
+msgstr "აქტიურობები"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "აქტივობის გამინაკლისის დეკორაცია"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__activity_state
+msgid "Activity State"
+msgstr "აქტივობის მდგომარეობა"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "აქტივობის ტიპის ხატულა"
+
+#. module: college_erp
+#: model_terms:ir.actions.act_window,help:college_erp.action_first_course
+msgid "Add First Year Students!!!"
+msgstr "დაამატე პირველი კურსის სტუდენტები!!!"
+
+#. module: college_erp
+#: model_terms:ir.actions.act_window,help:college_erp.action_male_students
+msgid "Add Male Students!!!"
+msgstr "დაამატე მამრობითი სქესის სტუდენტები!!!"
+
+#. module: college_erp
+#: model_terms:ir.actions.act_window,help:college_erp.action_female_students
+msgid "Add female Students!!!"
+msgstr "დაამატე მდედრობითი სქესის სტუდენტები!!!"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__age
+msgid "Age"
+msgstr "ასაკი"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__message_attachment_count
+msgid "Attachment Count"
+msgstr "დანართის რაოდენობა"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__born_date
+msgid "Born Date"
+msgstr "დაბადების წელი"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__city
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_view_form
+msgid "City"
+msgstr "ქალაქი"
+
+#. module: college_erp
+#: model:ir.module.category,name:college_erp.module_category_college_erp
+msgid "College ERP"
+msgstr "კოლეჯ ერპ"
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_homepage
+msgid "College Logo"
+msgstr "კოლეჯის ლოგო"
+
+#. module: college_erp
+#: model:ir.model,name:college_erp.model_college_student
+msgid "College Student"
+msgstr "კოლეჯის სტუდენტები"
+
+#. module: college_erp
+#: model:ir.model,name:college_erp.model_college_teacher
+msgid "College Teachers"
+msgstr "კოლეჯის მასწავლებლები"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__coomunication_addr
+msgid "Communication Addres"
+msgstr "მისამართი"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__country_id
+msgid "Country"
+msgstr "ქვეყანა"
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_view_form
+msgid "Country..."
+msgstr "ქვეყანა..."
+
+#. module: college_erp
+#: model_terms:ir.actions.act_window,help:college_erp.action_college_erp
+msgid "Create your first Student"
+msgstr "შექმენი პირველი სტუდენტი"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_mark__create_uid
+#: model:ir.model.fields,field_description:college_erp.field_college_student__create_uid
+#: model:ir.model.fields,field_description:college_erp.field_college_subject_selection__create_uid
+#: model:ir.model.fields,field_description:college_erp.field_college_subjects__create_uid
+#: model:ir.model.fields,field_description:college_erp.field_college_teacher__create_uid
+msgid "Created by"
+msgstr "შექმნილია"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_mark__create_date
+#: model:ir.model.fields,field_description:college_erp.field_college_student__create_date
+#: model:ir.model.fields,field_description:college_erp.field_college_subject_selection__create_date
+#: model:ir.model.fields,field_description:college_erp.field_college_subjects__create_date
+#: model:ir.model.fields,field_description:college_erp.field_college_teacher__create_date
+msgid "Created on"
+msgstr "შექმნილია"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_mark__display_name
+#: model:ir.model.fields,field_description:college_erp.field_college_student__display_name
+#: model:ir.model.fields,field_description:college_erp.field_college_subject_selection__display_name
+#: model:ir.model.fields,field_description:college_erp.field_college_subjects__display_name
+#: model:ir.model.fields,field_description:college_erp.field_college_teacher__display_name
+msgid "Display Name"
+msgstr "საჩვენებელი სახელი"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_teacher__email
+msgid "Email"
+msgstr "ელექტრონული ფოსტა"
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_view_search
+msgid "Entery date"
+msgstr "ჩარიცხვის თარიღი"
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_homepage
+msgid "Experienced Staff"
+msgstr "გამოცდილი პერსონალი"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__father_name
+msgid "Father's Name"
+msgstr "მამის სახელი"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__state_id
+msgid "Fed.State"
+msgstr "ფედ.სახელმწიფო"
+
+#. module: college_erp
+#: model:ir.model.fields.selection,name:college_erp.selection__college_student__gender__female
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_view_search
+msgid "Female"
+msgstr "ქალი"
+
+#. module: college_erp
+#: model:ir.actions.act_window,name:college_erp.action_female_students
+#: model:ir.ui.menu,name:college_erp.menu_college_erp_Student_detail_female_students
+msgid "Female Students"
+msgstr "ქალი სტუდენტები"
+
+#. module: college_erp
+#: model:ir.actions.act_window,name:college_erp.action_first_course
+#: model:ir.ui.menu,name:college_erp.menu_college_erp_Student_detail_first_course
+msgid "First Course Students"
+msgstr "პირველიკურსის სტუდენტები"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__first_name
+msgid "First Name"
+msgstr "სახელი"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__message_follower_ids
+msgid "Followers"
+msgstr "გამომწერები/მიმდევრები"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "მიმდევარი პარტნიორები"
+
+#. module: college_erp
+#: model:ir.model.fields,help:college_erp.field_college_student__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "შრიფტის შესანიშნავი ხატულა, მაგ. fa-tasks"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__gender
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_view_search
+msgid "Gender"
+msgstr "გენდერი"
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_view_search
+msgid "Group By"
+msgstr "დაჯგუფება"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__has_message
+msgid "Has Message"
+msgstr "აქვს შეტყობინება"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_mark__id
+#: model:ir.model.fields,field_description:college_erp.field_college_student__id
+#: model:ir.model.fields,field_description:college_erp.field_college_subject_selection__id
+#: model:ir.model.fields,field_description:college_erp.field_college_subjects__id
+#: model:ir.model.fields,field_description:college_erp.field_college_teacher__id
+msgid "ID"
+msgstr "უნიკალური იდენტიფიკატორი"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__activity_exception_icon
+msgid "Icon"
+msgstr "ხატულა/აიქონი"
+
+#. module: college_erp
+#: model:ir.model.fields,help:college_erp.field_college_student__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "გამონაკლისი აქტივობის აღმნიშვნელი ხატულა."
+
+#. module: college_erp
+#: model:ir.model.fields,help:college_erp.field_college_student__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "თუ მონიშნულია, ახალი შეტყობინებები თქვენს ყურადღებას მოითხოვს."
+
+#. module: college_erp
+#: model:ir.model.fields,help:college_erp.field_college_student__message_has_error
+#: model:ir.model.fields,help:college_erp.field_college_student__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "თუ მონიშნულია, ზოგიერთ შეტყობინებას მიწოდების შეცდომა აქვს."
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__message_is_follower
+msgid "Is Follower"
+msgstr "გამომწერია/მიმდევარია"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__last_name
+#: model:ir.model.fields,field_description:college_erp.field_college_teacher__last_name
+msgid "Last Name"
+msgstr "გვარი"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_mark__write_uid
+#: model:ir.model.fields,field_description:college_erp.field_college_student__write_uid
+#: model:ir.model.fields,field_description:college_erp.field_college_subject_selection__write_uid
+#: model:ir.model.fields,field_description:college_erp.field_college_subjects__write_uid
+#: model:ir.model.fields,field_description:college_erp.field_college_teacher__write_uid
+msgid "Last Updated by"
+msgstr "ბოლოს განაახლა "
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_mark__write_date
+#: model:ir.model.fields,field_description:college_erp.field_college_student__write_date
+#: model:ir.model.fields,field_description:college_erp.field_college_subject_selection__write_date
+#: model:ir.model.fields,field_description:college_erp.field_college_subjects__write_date
+#: model:ir.model.fields,field_description:college_erp.field_college_teacher__write_date
+msgid "Last Updated on"
+msgstr "ბოლოს განახლდა"
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_homepage
+msgid "Learn More"
+msgstr "მეტი ინფორმაცია"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__email
+msgid "Mail"
+msgstr "ელექტრონული ფოსტა"
+
+#. module: college_erp
+#: model:ir.model.fields.selection,name:college_erp.selection__college_student__gender__male
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_view_search
+msgid "Male"
+msgstr "კაცი"
+
+#. module: college_erp
+#: model:ir.actions.act_window,name:college_erp.action_male_students
+#: model:ir.ui.menu,name:college_erp.menu_college_erp_Student_detail_male_students
+msgid "Male Students"
+msgstr "მამაკაცი სტუდენტები"
+
+
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__mark_ids
+msgid "Mark"
+msgstr "ნიშანი"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__message_has_error
+msgid "Message Delivery error"
+msgstr "შეტყობინების მიწოდების შეცდომა"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__message_ids
+msgid "Messages"
+msgstr "შეტყობინებები"
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_homepage
+msgid "Modern Labs"
+msgstr "თანამედროვე ლაბორატორიები"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__mother_name
+msgid "Mother's Name"
+msgstr "დედის სახელი"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "ჩემი საქმიანობის ბოლო ვადა"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "შემდეგი აქტივობის კალენდარი ღონისძიება"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "შემდეგი აქტივობის ბოლო ვადა"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__activity_summary
+msgid "Next Activity Summary"
+msgstr "შემდეგი აქტივობის შეჯამება"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__activity_type_id
+msgid "Next Activity Type"
+msgstr "შემდეგი აქტიურობის ტიპი"
+
+#. module: college_erp
+#: model:ir.model.fields.selection,name:college_erp.selection__college_student__status__nonactive
+msgid "Nonactive"
+msgstr "არა აქტიური"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__message_needaction_counter
+msgid "Number of Actions"
+msgstr "მოქმედებების რაოდენობა"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__message_has_error_counter
+msgid "Number of errors"
+msgstr "ერორების რაოდენობა"
+
+#. module: college_erp
+#: model:ir.model.fields,help:college_erp.field_college_student__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "მოქმედების მომთხოვნი შეტყობინებების რაოდენობა"
+
+#. module: college_erp
+#: model:ir.model.fields,help:college_erp.field_college_student__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "მიწოდების შეცდომით შეტყობინებების რაოდენობა"
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_view_form
+msgid "Object test"
+msgstr "ობიექტის ტესტი"
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_view_form
+msgid "On Clicking here you will be redirected to Female records"
+msgstr "აქ დაწკაპუნების შემდეგ თქვენ გადამისამართდებით ქალთა ჩანაწერების გვერდზე"
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_view_form
+msgid "On clicking here you will be redirected to Male Students Records"
+msgstr "აქ დაწკაპუნების შემდეგ თქვენ გადამისამართდებით კაცთა ჩანაწერების გვერდზე"
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_view_form
+msgid "Permanent address"
+msgstr "მუდმივი საცხოვრებელი ადგილი/მისამართი"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__personal_number
+msgid "Personal Number"
+msgstr "პირადი ნომერი"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__phone
+msgid "Phone"
+msgstr "ტელეფონის ნომერი"
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_homepage
+msgid "Quality Education"
+msgstr "განათლების ხარისხი"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__activity_user_id
+msgid "Responsible User"
+msgstr "პასუხისმგებელი მომხმარებელი"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "SMS მიწოდების შეცდომა"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__same_as_communication
+msgid "Same as Communication"
+msgstr "იგივეა, რაც კომუნიკაცია"
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_view_form
+msgid "State"
+msgstr "შტატი,სახელმწიფო"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__status
+msgid "Status"
+msgstr "სტატუსი"
+
+#. module: college_erp
+#: model:ir.model.fields,help:college_erp.field_college_student__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__street
+msgid "Street"
+msgstr "ქუჩა"
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_view_form
+msgid "Street 2..."
+msgstr "ქუჩა 2..."
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_view_form
+msgid "Street..."
+msgstr "ქუჩა..."
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__street2
+msgid "Street2"
+msgstr "ქუჩა2"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_mark__student_id
+#: model:ir.model.fields,field_description:college_erp.field_college_subjects__student_ids
+#: model:res.groups,name:college_erp.group_college_erp_student
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_view_calendar
+msgid "Student"
+msgstr "სტუდენტი"
+
+#. module: college_erp
+#: model:ir.model,name:college_erp.model_college_mark
+msgid "Student Marks"
+msgstr "სტუდენტთა ნიშნები"
+
+#. module: college_erp
+#: model:ir.ui.menu,name:college_erp.menu_college_erp_Student_detail
+msgid "StudentDetail"
+msgstr "სტუდენტის დეტალები"
+
+#. module: college_erp
+#: model:ir.ui.menu,name:college_erp.menu_college_erp_Student_detail_Students
+msgid "Students"
+msgstr "სტუდენტები"
+
+#. module: college_erp
+#: model:ir.actions.act_window,name:college_erp.action_college_erp
+msgid "Students of College"
+msgstr "კოლეჯის სტუდენტები"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_mark__subject_id
+#: model:ir.model.fields,field_description:college_erp.field_college_teacher__subject_ids
+msgid "Subject"
+msgstr "საგნები"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_subjects__subject_name
+msgid "Subject Name"
+msgstr "საგანის სახელი"
+
+#. module: college_erp
+#: model:ir.model,name:college_erp.model_college_subject_selection
+msgid "Subject Selection"
+msgstr "საგანის არჩევა"
+
+#. module: college_erp
+#: model:ir.model,name:college_erp.model_college_subjects
+#: model:ir.model.fields,field_description:college_erp.field_college_student__subject_ids
+msgid "Subjects"
+msgstr "საგნები"
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_view_tree
+msgid "Sum of Age"
+msgstr "ასაკის ჯამი"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_mark__teacher_id
+#: model:ir.model.fields,field_description:college_erp.field_college_subjects__teacher_id
+#: model:res.groups,name:college_erp.group_college_erp_teacher
+msgid "Teacher"
+msgstr "მასწავლებელი"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_teacher__name
+msgid "Teacher Name"
+msgstr "მასწავლებლის სახელი"
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_view_tree
+msgid "Translate Into Active"
+msgstr "აქტიურად გადაქცევა"
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_view_tree
+msgid "Translate Into Nonavtive"
+msgstr "არა აქტიურად გადაქცევა"
+
+#. module: college_erp
+#: model:ir.model.fields,help:college_erp.field_college_student__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "ჩანაწერში გამონაკლისი აქტივობის ტიპი."
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__image_1920
+msgid "Upload Student's image"
+msgstr "ატვირთეთ სტუდენტის ფოტოსურათი"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__user_id
+#: model:ir.model.fields,field_description:college_erp.field_college_teacher__user_id
+msgid "User"
+msgstr "მომხმარებელი"
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_view_form
+msgid "View Female Students"
+msgstr "ქალ სტუდენტთა ხილვა"
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_view_form
+msgid "View Male Students"
+msgstr "კაც სტუდენტთა ხილვა"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__website_message_ids
+msgid "Website Messages"
+msgstr "საიტის მესიჯები"
+
+#. module: college_erp
+#: model:ir.model.fields,help:college_erp.field_college_student__website_message_ids
+msgid "Website communication history"
+msgstr "ვებსაიტის კომუნიკაციის ისტორია"
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_homepage
+msgid "Welcome to Our College"
+msgstr "კეთილი იყოს ჩვენს კოლეჯში მობრძანება"
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_view_form
+msgid "ZIP"
+msgstr ""
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__zip
+msgid "Zip"
+msgstr ""
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__active
+msgid "active"
+msgstr "აქტიური"
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_view_search
+msgid "archived"
+msgstr "დაარქივებული"
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.student_marks_template
+msgid "breadcrumb"
+msgstr ""
+
+#. module: college_erp
+#: model:ir.ui.menu,name:college_erp.menu_college_erp_root
+msgid "college ERP"
+msgstr ""
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_student__entery_date
+msgid "entery Date"
+msgstr "უნივერსიტეტში ჩარიცხვის თარიღი"
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_subject_selection__subject_id
+msgid "აირჩიეთ საგანი"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.student_dashboard_main
+msgid "აკადემიური მოსწრება"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.report_student_template
+msgid "აკადემიური მოსწრების ბარათი"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.actions.act_window,help:college_erp.action_college_students_marks
+msgid "აქ გამოჩნდება სტუდენტების ნიშნები."
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.report_student_template
+msgid "ბეჭედი და ხელმოწერა: ---ს.ქობალია---"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_homepage
+msgid "გამორჩეული ლაბორატორიები ინოვაციური ტექნოლოგიებით."
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.teacher_mark_web
+msgid "გამოცდები"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.teacher_mark_web
+msgid "გაუქმება"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.teacher_mark_web
+msgid "კვირა"
+msgstr ""
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_mark__w1
+msgid "კვირა 1"
+msgstr ""
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_mark__w10
+msgid "კვირა 10"
+msgstr ""
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_mark__w2
+msgid "კვირა 2"
+msgstr ""
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_mark__w3
+msgid "კვირა 3"
+msgstr ""
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_mark__w4
+msgid "კვირა 4"
+msgstr ""
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_mark__w5
+msgid "კვირა 5"
+msgstr ""
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_mark__w6
+msgid "კვირა 6"
+msgstr ""
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_mark__w7
+msgid "კვირა 7"
+msgstr ""
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_mark__w8
+msgid "კვირა 8"
+msgstr ""
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_mark__w9
+msgid "კვირა 9"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.student_marks_template
+msgid "ლექტორი:"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.teacher_dashboard
+msgid "მართვა <i class=\"fa fa-arrow-right ml-2 small\"/>"
+msgstr ""
+
+#. module: college_erp
+#: model:ir.actions.act_window,name:college_erp.action_college_teacher
+#: model:ir.model.fields,field_description:college_erp.field_college_subject_selection__teachers_id
+#: model:ir.ui.menu,name:college_erp.menu_college_for_teacher
+msgid "მასწავლებელი"
+msgstr ""
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_mark__comment
+msgid "მასწავლებლის კომენტარი"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.teacher_mark_web
+msgid "მასწავლებლის შენიშვნა / კომენტარი"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_mark_view_form
+#: model_terms:ir.ui.view,arch_db:college_erp.report_student_template
+msgid "მეათე კვირის ქულა"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_mark_view_form
+#: model_terms:ir.ui.view,arch_db:college_erp.report_student_template
+msgid "მეექვსე კვირის ქულა"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_mark_view_form
+#: model_terms:ir.ui.view,arch_db:college_erp.report_student_template
+msgid "მეოთხე კვირის ქულა"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_mark_view_form
+#: model_terms:ir.ui.view,arch_db:college_erp.report_student_template
+msgid "მეორე კვირის ქულა"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_mark_view_form
+#: model_terms:ir.ui.view,arch_db:college_erp.report_student_template
+msgid "მერვე კვირის ქულა"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_mark_view_form
+#: model_terms:ir.ui.view,arch_db:college_erp.report_student_template
+msgid "მესამე კვირის ქულა"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_mark_view_form
+#: model_terms:ir.ui.view,arch_db:college_erp.report_student_template
+msgid "მეშვიდე კვირის ქულა"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_mark_view_form
+#: model_terms:ir.ui.view,arch_db:college_erp.report_student_template
+msgid "მეცხრე კვირის ქულა"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_mark_view_form
+#: model_terms:ir.ui.view,arch_db:college_erp.report_student_template
+msgid "მეხუთე კვირის ქულა"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.student_marks_template
+msgid "მთავარი"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.teacher_mark_web
+msgid "მონაცემები წარმატებით განახლდა!"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.teacher_dashboard
+msgid "მოძებნეთ კურსი დასახელებით..."
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.teacher_dashboard
+msgid "მსგავსი საგანი ვერ მოიძებნა"
+msgstr ""
+
+#. module: college_erp
+#: model:ir.actions.act_window,name:college_erp.action_college_students_marks
+#: model:ir.ui.menu,name:college_erp.menu_student_marks
+msgid "ნიშნების ჟურნალი"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_mark_view_form
+msgid "ნიშნების უწყისი"
+msgstr ""
+
+#. module: college_erp
+#: model:ir.actions.report,name:college_erp.action_report_student_mark
+msgid "ნიშნების ფურცელი"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_mark_view_form
+#: model_terms:ir.ui.view,arch_db:college_erp.report_student_template
+msgid "პირველი კვირის ქულა"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_homepage
+msgid "პროფესიონალი და მოტივირებული პერსონალი."
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.report_student_template
+msgid "საბოლოო ქულა"
+msgstr ""
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_mark__total_marks
+#: model_terms:ir.ui.view,arch_db:college_erp.student_marks_template
+msgid "საბოლოო შეფასება"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.report_student_template
+#: model_terms:ir.ui.view,arch_db:college_erp.student_dashboard_main
+msgid "საგანი"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.teacher_mark_web
+msgid "საგანი:"
+msgstr ""
+
+#. module: college_erp
+#: model:ir.ui.menu,name:college_erp.menu_student_subjects
+msgid "საგნების არჩევა"
+msgstr ""
+
+#. module: college_erp
+#: model:ir.actions.act_window,name:college_erp.action_subject_selection
+msgid "საგნის არჩევა"
+msgstr ""
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_subject_selection__target_teacher_id
+msgid "საგნის რეალური მასწავლებელი"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.student_marks_template
+msgid "სამუშაო ჯგუფში აქტიურობა1(MAX:3)"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.student_marks_template
+msgid "სამუშაო ჯგუფში აქტიურობა10(MAX:3)"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.student_marks_template
+msgid "სამუშაო ჯგუფში აქტიურობა2(MAX:3)"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.student_marks_template
+msgid "სამუშაო ჯგუფში აქტიურობა3(MAX:3)"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.student_marks_template
+msgid "სამუშაო ჯგუფში აქტიურობა4(MAX:3)"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.student_marks_template
+msgid "სამუშაო ჯგუფში აქტიურობა5(MAX:3)"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.student_marks_template
+msgid "სამუშაო ჯგუფში აქტიურობა6(MAX:3)"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.student_marks_template
+msgid "სამუშაო ჯგუფში აქტიურობა7(MAX:3)"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.student_marks_template
+msgid "სამუშაო ჯგუფში აქტიურობა8(MAX:3)"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.student_marks_template
+msgid "სამუშაო ჯგუფში აქტიურობა9(MAX:3)"
+msgstr ""
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_subject_selection__students_ids
+msgid "სტუდენტები"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.student_dashboard_main
+#: model_terms:ir.ui.view,arch_db:college_erp.teacher_dashboard
+#: model_terms:ir.ui.view,arch_db:college_erp.teacher_students_list
+msgid "სტუდენტი"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_mark_view_form
+msgid "სულ"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_homepage
+msgid "სწავლების თანამედროვე მეთოდები და გამოცდილი მასწავლებლებმა."
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.teacher_dashboard
+msgid "უნივერსიტეტის ლექტორი"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.teacher_mark_web
+msgid "ფინალური (მაქს. 40)"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_mark_view_form
+#: model_terms:ir.ui.view,arch_db:college_erp.report_student_template
+msgid "ფინალური გამოცდის ქულა"
+msgstr ""
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_mark__final
+msgid "ფინალური გამოცდის შეფასება"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.student_marks_template
+msgid "ფინალური გამოცდის შეფასება(MAX:30)"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.teacher_students_list
+msgid "ქულა"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.teacher_mark_web
+msgid "ყოველკვირეული ქულები (0-3)"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.student_marks_template
+msgid "შეფასება"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.student_marks_template
+msgid "შეფასების კრიტერიუმი"
+msgstr ""
+
+#. module: college_erp
+#: model:ir.model.constraint,message:college_erp.constraint_college_student_personal_number_unique
+msgid "შეცდომა: სტუდენტი ამ პირადი ნომრით უკვე არსებობს"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.teacher_mark_web
+msgid "შუალედური (მაქს. 30)"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_mark_view_form
+#: model_terms:ir.ui.view,arch_db:college_erp.report_student_template
+msgid "შუალედური გამოცდის ქულა"
+msgstr ""
+
+#. module: college_erp
+#: model:ir.model.fields,field_description:college_erp.field_college_mark__shualeduri
+msgid "შუალედური გამოცდის შეფასება"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.student_marks_template
+msgid "შუალედური გამოცდის შეფასება(MAX:30)"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.teacher_mark_web
+msgid "ჩაწერეთ შენიშვნა სტუდენტისთვის..."
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_view_form
+#: model_terms:ir.ui.view,arch_db:college_erp.teacher_dashboard
+#: model_terms:ir.ui.view,arch_db:college_erp.view_college_teacher_form_custom
+msgid "ჩემი საგნები"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_student_view_form
+msgid "ჩემი შეფასებები"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.college_homepage
+msgid ""
+"ჩვენი კოლეჯი უზრუნველყოფს მაღალი ხარისხის განათლებას,\n"
+"                                თანამედროვე ლაბორატორიებს და პროფესიონალ ლექტორებს."
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.teacher_mark_web
+msgid "ცვლილებების შენახვა"
+msgstr ""
+
+#. module: college_erp
+#: model_terms:ir.ui.view,arch_db:college_erp.student_dashboard_main
+msgid "ჯამური ქულა"
+msgstr ""
