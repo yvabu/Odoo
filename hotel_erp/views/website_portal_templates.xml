@@ -134,8 +134,6 @@
                         </div>
 
                         <div class="col-md-3">
-                            <!-- განახლდა: ახლა პირდაპირ /rooms-ზე გადადის — იგივე ნაკადი,
-                                 რასაც სტუმარი ხმარობს ოთახის დასაჯავშნად -->
                             <a href="/rooms" class="btn btn-outline-success w-100 py-3 shadow-sm">
                                 <i class="fa fa-calendar-plus-o fa-2x d-block mb-1"/>
                                 Create Reservation
