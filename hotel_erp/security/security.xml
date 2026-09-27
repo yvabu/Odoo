@@ -14,7 +14,7 @@
     <record id="group_hotel_manager" model="res.groups">
         <field name="name">Manager</field>
         <field name="category_id" ref="module_category_hotel"/>
-        <field name="implied_ids" eval="[(4,ref('group_hotel_user'))]"/>
+        <field name="implied_ids" eval="[(4,ref('group_hotel_user')),(4, ref('account.group_account_invoice'))]"/>
 
     </record>
 

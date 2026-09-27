@@ -11,7 +11,8 @@ class HotelRoom(models.Model):
 
     room_number=fields.Char(string="Room Number",required=True,default='#',copy=False)
     room_type=fields.Selection([('single','Single'),('double','Double',),('vip','VIP')],string='ოთახის ტიპი',required=True)
-    room_price=fields.Float(string='Room Price For One Night',required=True)
+    currency_id=fields.Many2one('res.currency', string='Currency',default=lambda self:self.env.company.currency_id ,readonly=True)
+    room_price=fields.Monetary(string='Room Price For One Night',currency_field='currency_id',required=True)
     room_status=fields.Selection(
         [
           ('available','Available'),
@@ -33,6 +34,8 @@ class HotelRoom(models.Model):
     reservation_ids=fields.One2many('hotel.reservation','room_id',string="Reservations")
     reservation_count=fields.Integer(string="ჯავშანთა რაოდენობა",compute="_compute_reservation_count")
     housekeeping_status=fields.Selection([('clean','Clean'),('dirty','Dirty'),('inspection','Needs Inspection')],default='clean',required=True)
+
+
 
     @api.constrains('room_price')
     def _check_room_price(self):

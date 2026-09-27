@@ -8,7 +8,8 @@
             <list>
                 <field name="name"/>
                 <field name="service_type"/>
-                <field name="price"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="price" widget="monetary"/>
                 <field name="active"/>
             </list>
         </field>
@@ -26,7 +27,8 @@
                         <field name="service_type"/>
                     </group>
                     <group>
-                        <field name="price"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="price" widget="monetary"/>
                         <field name="active" widget="boolean_toggle"/>
                     </group>
                  </group>

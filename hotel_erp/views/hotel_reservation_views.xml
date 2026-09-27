@@ -10,7 +10,8 @@
               <field name="room_id"/>
               <field name="check_in"/>
               <field name="check_out"/>
-              <field name="total_price"/>
+              <field name="currency_id" invisible="1"/>
+              <field name="total_price" widget="monetary"/>
               <!-- 🎨 ლამაზი Badge სტატუსებისთვის -->
               <field name="state"
                      widget="badge"
@@ -28,7 +29,11 @@
                     <button name="action_confirm" string="Set Confirm" type="object" class="oe_highlight" invisible="state !='draft'"/>
                     <button name="action_check_in" string="Check In" type="object" class="oe_highlight" invisible="state !='confirmed'"/>
                     <button name="action_check_out" string="Check Out" type="object" class="oe_highlight" invisible="state !='checked_in'"/>
-                    <button name="action_cancel" string="Set cancelled" type="object"  invisible="state != 'draft' and state !='confirmed'"/>
+
+                    <!-- 🆕 წინასწარი გადახდის ღილაკი -->
+                    <button name="action_register_advance_payment" string="წინასწარი გადახდა" type="object" class="btn-primary" invisible="state in ('cancelled','checked_out')"/>
+
+                    <button name="action_cancel" string="Set cancelled" type="object" invisible="state != 'draft' and state !='confirmed'"/>
                     <button name="action_create_invoice" string="Create Invoice" type="object" class="oe_highlight" invisible="invoice_id or state in('draft','cancelled')"/>
 
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,checked_in,checked_out,cancelled"/>
@@ -48,20 +53,20 @@
                                 <span class="o_stat_text">Invoice</span>
                             </div>
                         </button>
-
                     </div>
                     <group readonly="state=='checked_out'">
                         <group>
                             <field name="name" readonly="1"/>
                             <field name="guest_id"/>
                             <field name="room_id" domain="[('housekeeping_status','=','clean')]" options="{'no_open': True}"/>
-                            <field name="room_price"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="room_price" widget="monetary"/>
                         </group>
                         <group>
                             <field name="check_in" />
                             <field name="check_out" />
 
-                            <field name="total_price" readonly="1"/>
+                            <field name="total_price" readonly="1" widget="monetary"/>
                             <field name="invoice_id" invisible="1"/>
                         </group>
                     </group>
@@ -72,8 +77,8 @@
                                 <list editable="bottom">
                                     <field name="service_id"/>
                                     <field name="quantity"/>
-                                    <field name="price_unit"/>
-                                    <field name="price_subtotal"/>
+                                    <field name="price_unit" widget="monetary"/>
+                                    <field name="price_subtotal" widget="monetary"/>
                                 </list>
                             </field>
                         </page>
@@ -90,16 +95,29 @@
                             <group class="oe_subtotal_footer oe_right">
                                 <field name="paid_amount" widget="monetary"/>
                                 <field name="residual_amount" widget="monetary" class="oe_subtotal_footer_separator"/>
-                                <field name="amount_due" widget="monetary" invisible="amount_due ==0" class="text-danger fw-bold"/>
-                                <field name="change_to_return" widget="monetary" invisible="change_to_return==0" class="text-warning fw-bold"/>
+                                <field name="amount_due" widget="monetary" invisible="amount_due == 0" class="text-danger fw-bold"/>
+                                <field name="change_to_return" widget="monetary" invisible="change_to_return == 0" class="text-warning fw-bold"/>
                             </group>
+                        </page>
 
+                        <!-- 🆕 წინასწარი გადახდების/დეპოზიტების ცალკე Tab -->
+                        <page name="advance_payments" string="წინასწარი გადახდები / დეპოზიტები">
+                            <field name="advance_payment_ids" readonly="1">
+                                <list>
+                                    <field name="date"/>
+                                    <field name="name"/>
+                                    <field name="journal_id"/>
+                                    <field name="amount" sum="Total Advance"/>
+                                    <field name="state" widget="badge"/>
+                                </list>
+                            </field>
                         </page>
                     </notebook>
                 </sheet>
             </form>
         </field>
     </record>
+
 <!--search view -->
     <record id="hotel_reservation_search_view" model="ir.ui.view">
         <field name="name">hotel.reservation.search.view</field>
@@ -113,6 +131,7 @@
                 <filter name="confirmed" string="Confirmed" domain="[('state','=','confirmed')]"/>
                 <filter name="checked_in" string="Checked In" domain="[('state','=','checked_in')]"/>
                 <filter name="invoiced" string="Invoiced" domain="[('invoice_id','!=',False)]"/>
+                <filter name="archived" string="Archived" domain="[('active','=',False)]"/>
 
                 <separator/>
                 <group expand="0" string="Group By">
@@ -137,8 +156,8 @@
                 <field name="room_id"/>
             </graph>
         </field>
-
     </record>
+
 <!--pivot view -->
     <record id="hotel_reservation_pivot_view" model="ir.ui.view">
         <field name="name">hotel.reservation.pivot.view</field>
@@ -151,8 +170,8 @@
                 <field name="paid_amount" type="measure"/>
             </pivot>
         </field>
-
     </record>
+
 <!-- calendar view-->
     <record id="hotel_reservation_calendar_view" model="ir.ui.view">
         <field name="name">hotel.reservation.calendar.view</field>
@@ -168,15 +187,13 @@
                 <field name="room_id" filters="1"/>
                 <field name="state" filters="1"/>
             </calendar>
-
         </field>
-
     </record>
+
 <!--window action -->
     <record id="hotel_reservation_window_action" model="ir.actions.act_window">
         <field name="name">Booking</field>
         <field name="res_model">hotel.reservation</field>
         <field name="view_mode">list,form,calendar,graph,pivot</field>
-
     </record>
 </odoo>

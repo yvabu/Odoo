@@ -21,20 +21,21 @@
                         <form action="/rooms" method="get" id="availability_search_form">
                             <div class="row g-3 justify-content-center align-items-end bg-white rounded-4 shadow p-4 mx-auto" style="max-width: 800px;">
                                 <div class="col-md-5">
-                                    <label class="form-label fw-semibold text-secondary small text-uppercase">Check-In</label>
+                                    <label class="form-label fw-semibold text-secondary small text-uppercase mb-1">Check-In</label>
                                     <input type="text" name="check_in" id="search_check_in"
                                            class="form-control form-control-lg bg-light border-0"
                                            placeholder="Select date" t-att-value="check_in" autocomplete="off" required="1"/>
                                 </div>
                                 <div class="col-md-5">
-                                    <label class="form-label fw-semibold text-secondary small text-uppercase">Check-Out</label>
+                                    <label class="form-label fw-semibold text-secondary small text-uppercase mb-1">Check-Out</label>
                                     <input type="text" name="check_out" id="search_check_out"
                                            class="form-control form-control-lg bg-light border-0"
                                            placeholder="Select date" t-att-value="check_out" autocomplete="off" required="1"/>
                                 </div>
-                                <div class="col-md-2 d-grid">
-                                    <button type="submit" class="btn btn-warning btn-lg fw-bold rounded-3">
-                                        <i class="fa fa-search"></i> ძებნა
+                                <div class="col-md-2">
+                                    <button type="submit" class="btn btn-warning btn-lg fw-bold rounded-3 w-100 d-inline-flex align-items-center justify-content-center gap-2">
+                                        <i class="fa fa-search"></i>
+                                        <span>ძებნა</span>
                                     </button>
                                 </div>
                             </div>
@@ -71,65 +72,74 @@
                             <p class="text-muted">სცადეთ სხვა თარიღები.</p>
                         </div>
                     </t>
-
                     <div class="row g-4">
-                        <t t-foreach="hotel_rooms" t-as="ht_room">
-                            <div class="col-md-6 col-lg-4">
-                                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden card-hover position-relative">
+                    <t t-foreach="hotel_rooms" t-as="r">
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden card-hover position-relative">
 
-                                    <!-- ოთახის ფოტო: თუ ატვირთულია hotel.room-ში, ვიყენებთ მას, თუ არა — placeholder -->
-                                    <div class="position-relative overflow-hidden style-card-img-container">
-                                        <t t-if="ht_room.image">
-                                            <img t-attf-src="/web/image/hotel.room/#{ht_room.id}/image"
-                                                 class="d-block w-100 h-100 object-fit-cover transition-zoom"
-                                                 t-att-alt="ht_room.room_number"/>
-                                        </t>
-                                        <t t-else="">
-                                            <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&amp;fit=crop&amp;w=800&amp;q=80"
-                                                 class="d-block w-100 h-100 object-fit-cover transition-zoom" alt="Room"/>
-                                        </t>
-                                        <span class="position-absolute top-0 end-0 m-3 badge rounded-pill bg-dark bg-opacity-75 px-3 py-2 fs-6">
-                                            $<t t-out="ht_room.room_price"/> / night
-                                        </span>
+                                <!-- ROOM CARD SLIDER -->
+                                <div t-attf-id="roomCarousel_#{r.id}" class="carousel slide position-relative overflow-hidden style-card-img-container" data-bs-ride="carousel" data-bs-interval="3000">
+                                    <div class="carousel-indicators mb-1" style="z-index: 5;">
+                                        <button type="button" t-attf-data-bs-target="#roomCarousel_#{r.id}" data-bs-slide-to="0" class="active"></button>
+                                        <button type="button" t-attf-data-bs-target="#roomCarousel_#{r.id}" data-bs-slide-to="1"></button>
+                                        <button type="button" t-attf-data-bs-target="#roomCarousel_#{r.id}" data-bs-slide-to="2"></button>
                                     </div>
 
-                                    <!-- Card Body -->
-                                    <div class="card-body p-4 d-flex flex-column">
-                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <h4 class="card-title fw-bold text-dark mb-0">
-                                                Room <t t-out="ht_room.room_number"/>
-                                            </h4>
-                                            <span class="badge bg-info text-dark px-2 py-1"><t t-out="ht_room.room_type"/></span>
+                                    <div class="carousel-inner h-100">
+                                        <div class="carousel-item active h-100">
+                                            <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&amp;fit=crop&amp;w=800&amp;q=80" class="d-block w-100 h-100 object-fit-cover transition-zoom" alt="Room 1"/>
                                         </div>
-
-                                        <ul class="list-unstyled text-muted my-3 flex-grow-1">
-                                            <li class="mb-2"><i class="fa fa-users me-2 text-warning"></i>Capacity: <strong><t t-out="ht_room.capacity"/> guests</strong></li>
-                                            <li class="mb-2" t-if="ht_room.is_wifi"><i class="fa fa-wifi me-2 text-primary"></i>Wi-Fi Included</li>
-                                            <li class="mb-2" t-if="ht_room.is_air_conditioning"><i class="fa fa-snowflake-o me-2 text-primary"></i>Air Conditioning</li>
-                                        </ul>
-
-                                        <div class="d-flex gap-2 mt-auto">
-                                            <a t-attf-href="/room/#{ht_room.id}?check_in=#{check_in}&amp;check_out=#{check_out}"
-                                               class="btn btn-outline-dark rounded-3 flex-fill fw-semibold">
-                                                Details
-                                            </a>
-
-                                            <!-- ყველასთვის ერთი და იგივე ბმული — public ვიზიტორისთვის ანგარიში
-                                                 ავტომატურად შეიქმნება submit-ისას -->
-                                            <a t-attf-href="/booking?room_id=#{ht_room.id}&amp;check_in=#{check_in}&amp;check_out=#{check_out}"
-                                               class="btn btn-warning rounded-3 flex-fill fw-bold">
-                                                Book Now
-                                            </a>
+                                        <div class="carousel-item h-100">
+                                            <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&amp;fit=crop&amp;w=800&amp;q=80" class="d-block w-100 h-100 object-fit-cover transition-zoom" alt="Room 2"/>
                                         </div>
+                                        <div class="carousel-item h-100">
+                                            <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&amp;fit=crop&amp;w=800&amp;q=80" class="d-block w-100 h-100 object-fit-cover transition-zoom" alt="Room 3"/>
+                                        </div>
+                                    </div>
+
+                                    <button class="carousel-control-prev" type="button" t-attf-data-bs-target="#roomCarousel_#{r.id}" data-bs-slide="prev" style="z-index: 5;">
+                                        <span class="carousel-control-prev-icon" style="width: 20px; height: 20px;"></span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" t-attf-data-bs-target="#roomCarousel_#{r.id}" data-bs-slide="next" style="z-index: 5;">
+                                        <span class="carousel-control-next-icon" style="width: 20px; height: 20px;"></span>
+                                    </button>
+
+                                    <span class="position-absolute top-0 end-0 m-3 badge rounded-pill bg-dark bg-opacity-75 px-3 py-2 fs-6" style="z-index: 5;">
+                                        $<t t-out="r.room_price"/> / night
+                                    </span>
+                                </div>
+
+                                <!-- Card Body -->
+                                <div class="card-body p-4 d-flex flex-column">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h4 class="card-title fw-bold text-dark mb-0"><t t-out="r.room_number"/></h4>
+                                        <span class="badge bg-info text-dark px-2 py-1"><t t-out="r.room_type"/></span>
+                                    </div>
+
+                                    <ul class="list-unstyled text-muted my-3 flex-grow-1">
+                                        <li class="mb-2"><i class="fa fa-users me-2 text-warning"></i>Capacity: <strong><t t-out="r.capacity"/> guests</strong></li>
+                                        <li class="mb-2"><i class="fa fa-check-circle me-2 text-success"></i>Status: <strong><t t-out="r.room_status"/></strong></li>
+                                        <li class="mb-2"><i class="fa fa-magic me-2 text-primary"></i>Cleanliness: <strong><t t-out="r.housekeeping_status"/></strong></li>
+                                    </ul>
+
+                                    <div class="d-flex gap-2 mt-auto">
+                                        <a t-attf-href="/room/#{r.id}" class="btn btn-outline-dark rounded-3 flex-fill fw-semibold stretched-link">
+                                            Details
+                                        </a>
+                                        <a t-attf-href="/booking?room_id=#{r.id}" class="btn btn-warning rounded-3 flex-fill fw-bold position-relative" style="z-index: 5;">
+                                            Book Now
+                                        </a>
                                     </div>
                                 </div>
+
                             </div>
-                        </t>
-                    </div>
+                        </div>
+                    </t>
+                </div>
                 </div>
             </div>
 
-            <!-- JS: flatpickr on the header search bar, auto-submits once both dates picked -->
+            <!-- JS: flatpickr on the header search bar -->
             <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
             <script>
                 document.addEventListener("DOMContentLoaded", function () {

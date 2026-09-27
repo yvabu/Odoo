@@ -1,3 +1,5 @@
+from email.policy import default
+
 from odoo import models,fields,api
 from odoo.exceptions import ValidationError
 
@@ -9,11 +11,14 @@ class HotelReservationLine(models.Model):
     reservation_id=fields.Many2one('hotel.reservation', string="Reservation", required=True, ondelete='cascade')
     service_id=fields.Many2one('hotel.service',string='Service',required=True)
     quantity=fields.Integer(string="Quantity",default='1',required=True)
-    price_unit=fields.Float(string="Unit Price")
-    price_subtotal=fields.Float(string="Subtotal",compute='_compute_price_subtotal')
+    currency_id=fields.Many2one('res.currency', string='Currency',default=lambda self:self.env['res.currency'].search([('name','=','GEL')],limit=1) ,readonly=True)
+    price_unit=fields.Monetary(string="Unit Price",currency_field='currency_id')
+    price_subtotal=fields.Monetary(string="Subtotal",currency_field='currency_id',compute='_compute_price_subtotal')
     invoiced=fields.Boolean(string="ინვოისში გატარებულია",default=False,readonly=True,copy=False,
         help="აღნიშნავს რომ ეს სერვის-ხაზი უკვე შესულია რომელიმე ინვოისში (Check-in-ის ან Check-out-ის დროს "
              "შექმნილში). ეხმარება სისტემას, არ დააინვოისოს ერთი და იგივე სერვისი ორჯერ.")
+
+
 
     @api.onchange('service_id')
     def _onchange_service_id(self):

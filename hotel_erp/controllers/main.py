@@ -55,7 +55,7 @@ class HotelReceptionController(http.Controller):
             registred_guest = request.env['hotel.guest'].sudo().search([('personal_number', '=', personal_number)],
                                                                        limit=1)
             if registred_guest:
-                return redirect('/my/dashboard?error=guest_exists')
+                return request.redirect('/my/dashboard?error=guest_exists')
 
             request.env['hotel.guest'].sudo().create({
                 'name': name,
@@ -82,7 +82,7 @@ class HotelReceptionController(http.Controller):
             res = request.env['hotel.reservation'].sudo().browse(int(reservation_id))
             if res.exists():
                 try:
-                    res.action_check_in()
+                    res.sudo().action_check_in()
                 except ValidationError as e:
                     return request.redirect(f'/my/dashboard?error={e.args[0]}')
         return request.redirect('/my/dashboard?success=checkin_done')
@@ -102,8 +102,6 @@ class HotelReceptionController(http.Controller):
             room = request.env['hotel.room'].sudo().browse(int(room_id))
             if room.exists() and room.housekeeping_status in ['dirty', 'maintenance']:
                 room.action_set_clean()
-                # შენიშვნა: ტემპლეიტი ამოწმებს request.params.get('clean_rooms')-ს
-                # (და არა success == 'clean_rooms'-ს), ამიტომ redirect-იც ასე გავასწორეთ.
                 return request.redirect('/my/dashboard?clean_rooms=1')
         return request.redirect('/my/dashboard')
 
@@ -143,6 +141,13 @@ class HotelReceptionController(http.Controller):
             if res.exists():
                 try:
                     res.action_check_out()
+                    # ოთახის invoice
+                    if res.invoice_id:
+                        res._send_invoice_by_email(res.invoice_id)
+
+                    # სერვისების invoice-ები
+                    for invoice in res.service_invoice_ids:
+                        res._send_invoice_by_email(invoice)
                 except ValidationError as e:
                     return request.redirect(f'/my/dashboard?error={e.args[0]}')
         return request.redirect('/my/dashboard?success=checkout_done')
@@ -172,7 +177,7 @@ class HotelManagerPortal(http.Controller):
             registred_guest = request.env['hotel.guest'].sudo().search([('personal_number', '=', personal_number)],
                                                                        limit=1)
             if registred_guest:
-                return redirect('/my/dashboard?error=guest_exists')
+                return request.redirect('/my/dashboard?error=guest_exists')
             request.env['hotel.guest'].sudo().create({
                 'name': name,
                 'personal_number': personal_number,
@@ -241,7 +246,19 @@ class HotelManagerPortal(http.Controller):
             })
         )
 
-        payment_register._create_payments()
+        payment_register._createPayments()
+        # გადახდილი invoice-ის PDF-ის გაგზავნა
+        reservation = request.env['hotel.reservation'].sudo().search(
+            [
+                '|',
+                ('invoice_id', '=', invoice.id),
+                ('service_invoice_ids', 'in', invoice.id),
+            ],
+            limit=1,
+        )
+
+        if reservation:
+            reservation._send_invoice_by_email(invoice)
 
         return request.redirect('/my/dashboard?success=payment_registered')
 
@@ -266,9 +283,6 @@ class HotelServiceController(http.Controller):
                 if hasattr(reservation, 'action_add_service'):
                     reservation.action_add_service(service.id, quantity)
                 else:
-                    # hotel.reservation.line მოდელში ველს ჰქვია 'quantity' (და არა 'qty'),
-                    # ასევე price_unit სერვისის ფასიდან უნდა შემოვიტანოთ, რომ
-                    # total_price/price_subtotal სწორად დაითვალოს.
                     request.env['hotel.reservation.line'].sudo().create({
                         'reservation_id': reservation.id,
                         'service_id': service.id,
@@ -276,21 +290,10 @@ class HotelServiceController(http.Controller):
                         'price_unit': service.price,
                     })
 
-                # 🔑 რეალურ დროში ინვოისირება: თუ სტუმარი უკვე Check-in-ის შემდეგაა
-                # (checked_in), დამატებული სერვისი მაშინვე ინვოისდება, რომ
-                # დაუყოვნებლივ გადასახდელი გახდეს (წინასწარი გადახდის საშუალება
-                # stay-ის განმავლობაშივე, არა მხოლოდ Check-out-ზე).
-                # Check-in-ის მდგომარეობაში guest_id.partner_id უკვე გარანტირებულია
-                # (action_create_invoice ოთახის ინვოისისთვის ამას მოითხოვდა Check-in-ზე),
-                # ამიტომ ეს გამოძახება უსაფრთხოა.
                 if reservation.state == 'checked_in':
                     try:
                         reservation.action_create_service_invoice()
                     except ValidationError:
-                        # თუ რაიმე მიზეზით ინვოისის შექმნა ახლა ვერ მოხერხდა,
-                        # სერვისი მაინც დამატებულია და Check-out-ის დროს
-                        # action_create_service_invoice() ისედაც ავტომატურად
-                        # დაინვოისებს ყველა ჯერ არჩაინვოისებელ ხაზს (safety net).
                         _logger.exception(
                             'სერვისის დაუყოვნებელი ინვოისირება ვერ მოხერხდა ჯავშანზე %s', reservation.id
                         )
@@ -576,12 +579,7 @@ class BookingForm(http.Controller):
         if is_staff:
             return request.redirect('/my/dashboard?success=booking_created')
 
-        return request.render(
-            'hotel_erp.hotel_booking_success_page',
-            {
-                'reservation': reservation,
-            },
-        )
+        return request.redirect('/my/dashboard?success=booking_created')
 
 
 class HotelPortal(http.Controller):
@@ -598,7 +596,7 @@ class HotelPortal(http.Controller):
             guests = request.env['hotel.guest'].sudo().search([])
 
             invoices = reservations.mapped('invoice_id') | reservations.mapped('service_invoice_ids')
-            payments = invoices.mapped('payment_ids')
+            payments = reservations.mapped('payment_ids')
 
             return request.render(
                 'hotel_erp.portal_my_dashboard',
@@ -625,10 +623,6 @@ class HotelPortal(http.Controller):
             return request.render(
                 'hotel_erp.portal_my_dashboard',
                 {
-                    # ტემპლეიტში (portal_my_dashboard) receptionist-ის განშტოებაში
-                    # იხმარება 'checkins' და 'active_reservations' სახელები —
-                    # ამიტომ იმავე მნიშვნელობებს ვაბრუნებთ ამ key-ებითაც, რომ ცხრილებმა
-                    # იმუშაონ (ძველი key-ებიც ვტოვებთ თავსებადობისთვის).
                     'pending_reservations': pending_reservations,
                     'checked_in_reservations': checked_in_reservations,
                     'checkins': pending_reservations,
@@ -669,16 +663,13 @@ class HotelPortal(http.Controller):
                 if checked_in_reservations:
                     invoices = checked_in_reservations.mapped('invoice_id') | checked_in_reservations.mapped(
                         'service_invoice_ids')
-                    payments = invoices.mapped('payment_ids')
+                    payments = checked_in_reservations.mapped('payment_ids')
                 elif my_reservations:
                     show_checkin_notice = True
 
             return request.render(
                 'hotel_erp.portal_my_dashboard',
                 {
-                    # ტემპლეიტის guest-ის განშტოებაში იხმარება 'reservations' და
-                    # 'invoices' სახელები — ამიტომ იმავე მნიშვნელობებს ვაბრუნებთ
-                    # ამ key-ებითაც (ძველი key-ებიც ვტოვებთ თავსებადობისთვის).
                     'my_reservations': my_reservations,
                     'my_invoices': invoices,
                     'reservations': my_reservations,
@@ -739,8 +730,152 @@ class HotelPortal(http.Controller):
                     .create({'amount': float(amount)})
                 )
                 payment_register._create_payments()
+                # კონკრეტულად გადახდილი invoice-ის მოძებნა
+                reservation = request.env['hotel.reservation'].sudo().search(
+                    [
+                        '|',
+                        ('invoice_id', '=', invoice.id),
+                        ('service_invoice_ids', 'in', invoice.id),
+                    ],
+                    limit=1,
+                )
+
+                if reservation:
+                    reservation._send_invoice_by_email(invoice)
                 return request.redirect('/my/dashboard?success=payment_registered')
         return request.redirect('/my/dashboard')
+
+    # 🆕 წინასწარი გადახდის რეგისტრაცია დაშბორდიდან (Direct Advance Payment)
+    @http.route(
+        '/dashboard/advance_payment/register',
+        type='http',
+        auth='user',
+        website=True,
+        methods=['POST'],
+        csrf=True
+    )
+    def dashboard_register_advance_payment(self, **post):
+
+        user = request.env.user
+
+        reservation_id = post.get('reservation_id')
+        amount = post.get('amount')
+
+        if not reservation_id:
+            return request.redirect(
+                '/my/dashboard?error=reservation_not_found'
+            )
+
+        if not amount:
+            return request.redirect(
+                '/my/dashboard?error=invalid_amount'
+            )
+
+        try:
+            amount = float(amount)
+        except (ValueError, TypeError):
+            return request.redirect(
+                '/my/dashboard?error=invalid_amount'
+            )
+
+        if amount <= 0:
+            return request.redirect(
+                '/my/dashboard?error=invalid_amount'
+            )
+
+        reservation = request.env['hotel.reservation'].sudo().browse(
+            int(reservation_id)
+        )
+
+        if not reservation.exists():
+            return request.redirect(
+                '/my/dashboard?error=reservation_not_found'
+            )
+
+        partner = reservation.guest_id.partner_id
+
+        if not partner:
+            return request.redirect(
+                '/my/dashboard?error=guest_partner_not_found'
+            )
+
+        if not partner.email:
+            return request.redirect(
+                '/my/dashboard?error=guest_email_not_found'
+            )
+
+        # მომხმარებლის უფლებების შემოწმება
+        is_manager = user.has_group('hotel_erp.group_hotel_manager')
+
+        is_guest = (
+            reservation.guest_id.user_id.id == user.id
+            if reservation.guest_id.user_id
+            else False
+        )
+
+        if not is_manager and not is_guest:
+            return request.redirect(
+                '/my/dashboard?error=access_denied'
+            )
+
+        # გადახდა არ უნდა აღემატებოდეს დარჩენილ თანხას
+        if amount > reservation.amount_due:
+            return request.redirect(
+                '/my/dashboard?error=amount_exceeds_due'
+            )
+
+        # Payment Journal
+        journal = request.env['account.journal'].sudo().search([
+            ('type', '=', 'bank'),
+            ('company_id', '=', request.env.company.id),
+        ], limit=1)
+
+        if not journal:
+            journal = request.env['account.journal'].sudo().search([
+                ('type', '=', 'cash'),
+                ('company_id', '=', request.env.company.id),
+            ], limit=1)
+
+        if not journal:
+            return request.redirect(
+                '/my/dashboard?error=payment_journal_not_found'
+            )
+
+        try:
+
+            payment = request.env['account.payment'].sudo().create({
+                'payment_type': 'inbound',
+                'partner_type': 'customer',
+                'partner_id': partner.id,
+                'amount': amount,
+                'journal_id': journal.id,
+                'reservation_id': reservation.id,
+            })
+
+            # Payment-ის დადასტურება
+            payment.action_post()
+
+            # ახლიდან გადავითვალოთ გადახდები
+            reservation._compute_paid_amount_calculation()
+            reservation._compute_amount_due()
+            reservation._compute_payment_status()
+
+            # Payment Confirmation Email
+            reservation._send_payment_confirmation_email(amount)
+
+        except ValidationError as e:
+            return request.redirect(
+                f'/my/dashboard?error={e.args[0]}'
+            )
+
+        except Exception:
+            return request.redirect(
+                '/my/dashboard?error=payment_failed'
+            )
+
+        return request.redirect(
+            '/my/dashboard?success=payment_registered'
+        )
 
     @http.route('/my/reservation/cancel', type='http', auth='user', website=True, methods=['POST'], csrf=True)
     def cancel_reservation(self, reservation_id=None, **kwargs):
