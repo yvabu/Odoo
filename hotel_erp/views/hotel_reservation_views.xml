@@ -19,6 +19,7 @@
           </list>
         </field>
     </record>
+
 <!-- form view -->
     <record id="hotel_reservation_form_view" model="ir.ui.view">
         <field name="name">hotel.reservation.form.view</field>
@@ -26,7 +27,6 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <!--<button name="action_confirm" string="Set Confirm" type="object" class="oe_highlight" invisible="state !='draft' "/> -->
                     <button name="action_check_in" string="Check In" type="object" class="oe_highlight" invisible="state !='confirmed'"/>
                     <button name="action_check_out" string="Check Out" type="object" class="oe_highlight" invisible="state !='checked_in'"/>
 
@@ -35,7 +35,10 @@
 
                     <button name="action_cancel" string="Set cancelled" type="object" invisible="state != 'draft' and state !='confirmed'"/>
                     <button name="action_create_invoice" string="Create Invoice" type="object" class="oe_highlight" invisible="invoice_id or state!='checked_in'"/>
-                    <button name="action_create_service_invoice" string="სერვისის ინვოისის შექმნა" type="object" class="oe_highlight" invisible="state not in ('checked_in', 'checked_out')"/>
+
+                    <!-- 🆕 სერვისის ინვოისის შექმნის ღილაკი -->
+                    <button name="action_create_service_invoice" string="სერვისის ინვოისის შექმნა" type="object" class="oe_highlight" invisible="invoice_id or  state not in ('checked_in', 'checked_out')"/>
+
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,checked_in,checked_out,cancelled"/>
                     <field name="payment_status" widget="badge" decoration-danger="payment_status=='unpaid'" decoration-warning="payment_status=='partial'" decoration-success="payment_status=='paid'" decoration-info="payment_status=='overpaid'" />
                 </header>
@@ -43,17 +46,31 @@
                     <widget name="web_ribbon" title="Paid" bg_color="text-bg-success" invisible="payment_status != 'paid'"/>
                     <widget name="web_ribbon" title="Checked Out" bg_color="text-bg-info" invisible="state != 'checked_out'"/>
 
+                    <!-- 🔘 SMART BUTTONS BOX -->
                     <div class="oe_button_box" name="button_box">
+                        <!-- ოთახის ინვოისის ღილაკი -->
                         <button name="action_view_invoice"
                                 type="object"
                                 class="oe_stat_button"
                                 icon="fa-pencil-square-o"
                                 invisible="not invoice_id">
                             <div class="o_stat_info">
-                                <span class="o_stat_text">Invoice</span>
+                                <span class="o_stat_text">Room Invoice</span>
+                            </div>
+                        </button>
+
+                        <!-- 🆕 სერვისის ინვოისების ღილაკი (ჩნდება როცა სერვისის ინვოისი შეიქმნება) -->
+                        <button name="action_view_service_invoices"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-file-text-o"
+                                invisible="not service_invoice_ids">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Service Invoices</span>
                             </div>
                         </button>
                     </div>
+
                     <group readonly="state=='checked_out'">
                         <group>
                             <field name="name" readonly="1"/>
@@ -68,6 +85,7 @@
 
                             <field name="total_price" readonly="1" widget="monetary"/>
                             <field name="invoice_id" invisible="1"/>
+                            <field name="service_invoice_ids" invisible="1"/>
                         </group>
                     </group>
 
@@ -100,7 +118,7 @@
                             </group>
                         </page>
 
-                        <!-- 🆕 წინასწარი გადახდების/დეპოზიტების ცალკე Tab -->
+                        <!-- წინასწარი გადახდების/დეპოზიტების ცალკე Tab -->
                         <page name="advance_payments" string="წინასწარი გადახდები / დეპოზიტები">
                             <field name="advance_payment_ids" readonly="1">
                                 <list>
