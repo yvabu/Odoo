@@ -26,16 +26,16 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button name="action_confirm" string="Set Confirm" type="object" class="oe_highlight" invisible="state !='draft'"/>
+                    <!--<button name="action_confirm" string="Set Confirm" type="object" class="oe_highlight" invisible="state !='draft' "/> -->
                     <button name="action_check_in" string="Check In" type="object" class="oe_highlight" invisible="state !='confirmed'"/>
                     <button name="action_check_out" string="Check Out" type="object" class="oe_highlight" invisible="state !='checked_in'"/>
 
                     <!-- 🆕 წინასწარი გადახდის ღილაკი -->
-                    <button name="action_register_advance_payment" string="წინასწარი გადახდა" type="object" class="btn-primary" invisible="state in ('cancelled','checked_out')"/>
+                    <button name="action_register_advance_payment" string="წინასწარი გადახდა" type="object" class="btn-primary" invisible="state in ('cancelled','checked_out') or payment_status in ('paid','overpaid') or amount_due &lt;= 0"/>
 
                     <button name="action_cancel" string="Set cancelled" type="object" invisible="state != 'draft' and state !='confirmed'"/>
-                    <button name="action_create_invoice" string="Create Invoice" type="object" class="oe_highlight" invisible="invoice_id or state in('draft','cancelled')"/>
-
+                    <button name="action_create_invoice" string="Create Invoice" type="object" class="oe_highlight" invisible="invoice_id or state!='checked_in'"/>
+                    <button name="action_create_service_invoice" string="სერვისის ინვოისის შექმნა" type="object" class="oe_highlight" invisible="state not in ('checked_in', 'checked_out')"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,checked_in,checked_out,cancelled"/>
                     <field name="payment_status" widget="badge" decoration-danger="payment_status=='unpaid'" decoration-warning="payment_status=='partial'" decoration-success="payment_status=='paid'" decoration-info="payment_status=='overpaid'" />
                 </header>

@@ -1,6 +1,6 @@
+import base64
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
-import base64
 
 
 class HotelReservation(models.Model):
@@ -12,12 +12,18 @@ class HotelReservation(models.Model):
     room_id = fields.Many2one('hotel.room', string='Room', required=True)
     check_in = fields.Date(string="Check In", required=True)
     check_out = fields.Date(string="Check Out", required=True)
-    currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id,
-                                  readonly=True)
-    room_price = fields.Monetary(related='room_id.room_price', currency_field='currency_id',
-                                 string='ოთახის ფასი(1 ღამე)', readonly=True, store=True)
-    total_price = fields.Monetary(string="Total Price", currency_field='currency_id', compute="_compute_total_price",
-                                  store=True)
+    currency_id = fields.Many2one(
+        'res.currency', string='Currency',
+        default=lambda self: self.env.company.currency_id, readonly=True
+    )
+    room_price = fields.Monetary(
+        related='room_id.room_price', currency_field='currency_id',
+        string='ოთახის ფასი(1 ღამე)', readonly=True, store=True
+    )
+    total_price = fields.Monetary(
+        string="Total Price", currency_field='currency_id',
+        compute="_compute_total_price", store=True
+    )
     state = fields.Selection([
         ('draft', 'Draft'),
         ('confirmed', 'Confirmed'),
@@ -27,69 +33,59 @@ class HotelReservation(models.Model):
     ], string='State', default="draft")
 
     service_line_ids = fields.One2many('hotel.reservation.line', 'reservation_id', string="Service Lines")
-    invoice_id = fields.Many2one('account.move', string="Room Invoice", readonly=True, copy=False,
-                                 help="ოთახის ღირებულების ინვოისი. იქმნება Check-in-ის მომენტში, რაც სტუმარს Check-out-მდე "
-                                      "წინასწარ გადახდის საშუალებას აძლევს.")
-    service_invoice_ids = fields.Many2many('account.move', 'hotel_reservation_service_invoice_rel',
-                                           'reservation_id', 'invoice_id', string="Service Invoices", readonly=True,
-                                           copy=False,
-                                           help="დამატებითი სერვისების ინვოისები. შეიძლება რამდენიმეც შეიქმნას, თუ სტუმარმა სხვადასხვა დროს "
-                                                "დაამატა სერვისი. ავტომატურად გენერირდება Check-out-ის დროს ნებისმიერი ჯერ არჩაინვოისებელი "
-                                                "სერვის-ხაზისთვის.")
+    invoice_id = fields.Many2one(
+        'account.move', string="Room Invoice", readonly=True, copy=False,
+        help="ოთახის ღირებულების ინვოისი."
+    )
+    service_invoice_ids = fields.Many2many(
+        'account.move', 'hotel_reservation_service_invoice_rel',
+        'reservation_id', 'invoice_id', string="Service Invoices", readonly=True, copy=False,
+        help="დამატებითი სერვისების ინვოისები."
+    )
 
-    # 🆕 წინასწარი გადახდების (Advance Payments / Deposits) ველები
-    advance_payment_ids = fields.One2many('account.payment', 'reservation_id',
-                                          string="წინასწარი გადახდები / დეპოზიტები", readonly=True)
+    advance_payment_ids = fields.One2many(
+        'account.payment', 'reservation_id',
+        string="წინასწარი გადახდები / დეპოზიტები", readonly=True
+    )
 
     payment_ids = fields.Many2many('account.payment', string="Payments", compute="_compute_payment_ids", readonly=True)
-    paid_amount = fields.Monetary(string="Paid Amount", currency_field='currency_id',
-                                  compute="_compute_paid_amount_calculation", store=True)
-    residual_amount = fields.Monetary(string="Residual Amount", currency_field='currency_id',
-                                      compute="_compute_residual_amount_calculation", store=True)
+    paid_amount = fields.Monetary(
+        string="Paid Amount", currency_field='currency_id',
+        compute="_compute_paid_amount_calculation", store=True
+    )
+    residual_amount = fields.Monetary(
+        string="Residual Amount", currency_field='currency_id',
+        compute="_compute_residual_amount_calculation", store=True
+    )
     payment_status = fields.Selection(
         [('unpaid', 'Unpaid'), ('partial', 'Partially Paid'), ('paid', 'Paid'), ('overpaid', 'Overpaid')],
-        compute="_compute_payment_status", store=True)
-    amount_due = fields.Monetary(string="დარჩენილი დავალიანება", currency_field='currency_id',
-                                 compute="_compute_amount_due")
-    change_to_return = fields.Monetary(string="დასაბრუნებელი ხურდა", currency_field='currency_id',
-                                       compute='_compute_change_to_return')
-    active=fields.Boolean(string="Active",default=True)
+        compute="_compute_payment_status", store=True
+    )
+    amount_due = fields.Monetary(
+        string="დარჩენილი დავალიანება", currency_field='currency_id',
+        compute="_compute_amount_due", store=True
+    )
+    change_to_return = fields.Monetary(
+        string="დასაბრუნებელი ხურდა", currency_field='currency_id',
+        compute='_compute_change_to_return'
+    )
+    active = fields.Boolean(string="Active", default=True)
 
     def write(self, vals):
         for rec in self:
-            '''
             if rec.state == 'checked_out':
-                raise ValidationError(
-                    'Checked Out სტატუსში მყოფი ჯავშნის მონაცემების შეცვლა აკრძალულია!'
-                )
-            '''
+                raise ValidationError('Checked Out სტატუსში მყოფი ჯავშნის მონაცემების შეცვლა აკრძალულია!')
+
         res = super().write(vals)
 
-        # თუ Check-Out-ის თარიღი შეიცვალა,
-        # თავიდან დავითვალოთ ოთახის თანხა და ინვოისის რაოდენობა
         if 'check_out' in vals:
             for rec in self:
-
-                # total_price ავტომატურად გადათვლილია @api.depends-ის გამო
-
                 if rec.invoice_id and rec.invoice_id.state == 'posted':
-                    dgeebi = max(
-                        (rec.check_out - rec.check_in).days,
-                        1
-                    )
-
+                    dgeebi = max((rec.check_out - rec.check_in).days, 1)
                     invoice = rec.invoice_id.sudo()
-
-                    # Posted invoice-ს ჯერ Draft-ში გადავიყვანთ
                     invoice.button_draft()
-
-                    # ოთახის ინვოისში დღეების რაოდენობის შეცვლა
                     for line in invoice.invoice_line_ids:
-                        line.sudo().write({
-                            'quantity': dgeebi
-                        })
-
-                    # ისევ დავადასტუროთ
+                        line.sudo().write({'quantity': dgeebi})
                     invoice.action_post()
 
         return res
@@ -103,8 +99,7 @@ class HotelReservation(models.Model):
                 payments |= rec.invoice_id.sudo()._get_reconciled_payments()
             for inv in rec.service_invoice_ids.sudo():
                 payments |= inv.sudo()._get_reconciled_payments()
-            # 🆕 დავამატოთ პირდაპირი წინასწარი გადახდებიც (თუ ინვოისზე ჯერ არ არის Reconciled)
-            direct_advances = rec.advance_payment_ids.filtered(lambda p: p.state == 'posted')
+            direct_advances = rec.advance_payment_ids.filtered(lambda p: p.state in ('paid', 'in_process'))
             payments |= direct_advances
             rec.payment_ids = [(6, 0, payments.ids)]
 
@@ -114,7 +109,7 @@ class HotelReservation(models.Model):
             if rec.total_price > rec.paid_amount:
                 rec.amount_due = rec.total_price - rec.paid_amount
             else:
-                rec.amount_due = 0
+                rec.amount_due = 0.0
 
     @api.depends('paid_amount', 'total_price')
     def _compute_change_to_return(self):
@@ -122,7 +117,7 @@ class HotelReservation(models.Model):
             if rec.paid_amount > rec.total_price:
                 rec.change_to_return = rec.paid_amount - rec.total_price
             else:
-                rec.change_to_return = 0
+                rec.change_to_return = 0.0
 
     @api.depends('invoice_id.amount_total', 'invoice_id.amount_residual',
                  'service_invoice_ids.amount_total', 'service_invoice_ids.amount_residual',
@@ -133,15 +128,14 @@ class HotelReservation(models.Model):
             reconciled_payments = rec.env['account.payment'].sudo()
             if rec.invoice_id:
                 invoice = rec.invoice_id.sudo()
-                paid += invoice.amount_total - invoice.amount_residual
+                paid += (invoice.amount_total - invoice.amount_residual)
                 reconciled_payments |= invoice._get_reconciled_payments()
             for inv in rec.service_invoice_ids.sudo():
-                paid += inv.amount_total - inv.amount_residual
+                paid += (inv.amount_total - inv.amount_residual)
                 reconciled_payments |= inv._get_reconciled_payments()
 
-            # 🆕 ვითვლით იმ წინასწარ გადახდებს, რომლებიც ჯერ ინვოისზე არ არის დაკავშირებული (რომ ორჯერ არ დაითვალოს)
             unreconciled_advances = rec.advance_payment_ids.filtered(
-                lambda p: p.state == 'posted' and p.id not in reconciled_payments.ids
+                lambda p: p.state in ('paid', 'in_process') and p.id not in reconciled_payments.ids
             )
             paid += sum(unreconciled_advances.mapped('amount'))
             rec.paid_amount = paid
@@ -154,7 +148,7 @@ class HotelReservation(models.Model):
     @api.depends('paid_amount', 'total_price', 'invoice_id.payment_state', 'service_invoice_ids.payment_state')
     def _compute_payment_status(self):
         for rec in self:
-            if rec.paid_amount > rec.total_price:
+            if rec.paid_amount > rec.total_price and rec.total_price > 0:
                 rec.payment_status = 'overpaid'
             elif rec.total_price > 0 and rec.paid_amount >= rec.total_price:
                 rec.payment_status = 'paid'
@@ -167,46 +161,38 @@ class HotelReservation(models.Model):
     def _compute_total_price(self):
         for rec in self:
             if rec.room_id and rec.check_in and rec.check_out:
-                dgeebi = (rec.check_out - rec.check_in).days
-                dgeebi = max(dgeebi, 1)
+                dgeebi = max((rec.check_out - rec.check_in).days, 1)
                 rec.total_price = (dgeebi * rec.room_id.room_price) + sum(rec.service_line_ids.mapped('price_subtotal'))
             else:
                 rec.total_price = 0.0
 
     @api.constrains('check_in', 'check_out')
     def _check_dates(self):
-        today=fields.Date.today()
-
+        today = fields.Date.today()
         for rec in self:
             if rec.check_in and rec.check_out:
                 if rec.check_out <= rec.check_in:
                     raise ValidationError("Check-out-ის თარიღი უნდა იყოს check_in თარიღის მომდევნო")
-            if rec.check_in and rec.check_in <today:
-                raise ValidationError(f"Check-In-ის თარიღი არ შეიძლება იყოს დღევანდელ თარიღზე ადრე. "
-                                      f"" f"დღეს არის {today}.")
+            if rec.check_in and rec.check_in < today:
+                raise ValidationError(f"Check-In-ის თარიღი არ შეიძლება იყოს დღევანდელ თარიღზე ადრე. დღეს არის {today}.")
             if rec.check_out and rec.check_out < today:
-                raise ValidationError(f"Check-Out-ის თარიღი არ შეიძლება იყოს დღევანდელ თარიღზე ადრე. " 
-                                      f"დღეს არის {today}.")
+                raise ValidationError(f"Check-Out-ის თარიღი არ შეიძლება იყოს დღევანდელ თარიღზე ადრე. დღეს არის {today}.")
+
     @api.constrains('guest_id')
     def _check_guest_id_active(self):
         for rec in self:
-            if rec.guest_id:
-                if rec.guest_id.active == False:
-                    raise ValidationError('დაარქივებულ მომხმარებელს არ შეუძლია ჯავშნის შექმნა')
+            if rec.guest_id and not rec.guest_id.active:
+                raise ValidationError('დაარქივებულ მომხმარებელს არ შეუძლია ჯავშნის შექმნა')
 
     @api.constrains('room_id', 'check_in', 'check_out', 'state')
     def _check_room_available(self):
         for rec in self:
             if not rec.room_id or not rec.check_in or not rec.check_out:
                 continue
-
             if rec.state in ('cancelled', 'checked_out') or not rec.active:
                 continue
-
             if rec.check_out <= rec.check_in:
-                raise ValidationError(
-                    'Check-out თარიღი უნდა იყოს Check-in-ზე გვიან!'
-                )
+                raise ValidationError('Check-out თარიღი უნდა იყოს Check-in-ზე გვიან!')
 
             overlapping = self.search([
                 ('id', '!=', rec.id),
@@ -219,16 +205,13 @@ class HotelReservation(models.Model):
 
             if overlapping:
                 raise ValidationError(
-                    f"ოთახი '{rec.room_id.room_number}' "
-                    f"არჩეულ თარიღებში უკვე დაკავებულია!"
+                    f"ოთახი '{rec.room_id.room_number}' არჩეულ თარიღებში უკვე დაკავებულია!"
                 )
 
     @api.onchange('room_id', 'check_in', 'check_out')
     def _onchange_check_dates(self):
         if self.room_id and self.check_in and self.check_out:
-
             if self.check_out > self.check_in:
-
                 overlapping = self.search([
                     ('id', '!=', self._origin.id if self._origin else False),
                     ('room_id', '=', self.room_id.id),
@@ -237,16 +220,11 @@ class HotelReservation(models.Model):
                     ('check_in', '<', self.check_out),
                     ('check_out', '>', self.check_in),
                 ])
-
                 if overlapping:
                     return {
                         'warning': {
                             'title': '⚠️ ოთახი დაკავებულია!',
-                            'message': (
-                                f'ოთახი "{self.room_id.room_number}" '
-                                f'არჩეულ ინტერვალში უკვე დაჯავშნილია. '
-                                f'გთხოვთ აირჩიოთ სხვა თარიღი.'
-                            ),
+                            'message': f'ოთახი "{self.room_id.room_number}" არჩეულ ინტერვალში უკვე დაჯავშნილია.',
                         }
                     }
 
@@ -254,13 +232,14 @@ class HotelReservation(models.Model):
         for record in self:
             if record.room_id:
                 record.room_id.sudo().write({'room_status': 'available'})
-        res = super().unlink()
-        return res
+        return super().unlink()
 
     def action_confirm(self):
         for rec in self:
             if rec.state == 'cancelled':
                 raise ValidationError('გაუქმებული ჯავშნის დადასტურება შეუძლებელია')
+            if rec.paid_amount <= 0:
+                raise ValidationError("ჯავშნის დასადასტურებლად აუცილებელია წინასწარი გადახდის განხორციელება,(გამოიყენეთ 'წინასწარი გადახდის' ღილაკი.)")
             rec.state = 'confirmed'
 
     def action_check_in(self):
@@ -275,32 +254,31 @@ class HotelReservation(models.Model):
             if not rec.invoice_id:
                 rec.action_create_invoice()
             rec.guest_id.message_post(
-                body=f"სტუმარი <b>{rec.guest_id.name}</b> დარეგისტრირდა (Check-In) ოთახში <b>{rec.room_id.room_number}</b>.")
+                body=f"სტუმარი <b>{rec.guest_id.name}</b> დარეგისტრირდა (Check-In) ოთახში <b>{rec.room_id.room_number}</b>."
+            )
 
-    # 🆕 განახლებული Check-Out ლოგიკა რეალური სასტუმროს წესების მიხედვით
     def action_check_out(self):
         for rec in self:
             today = fields.Date.today()
-
             if today < rec.check_out:
                 raise ValidationError(
                     f"დღეს არის {today}, ხოლო დაგეგმილი Check-Out-ის თარიღია {rec.check_out}. "
                     f"თუ გსურთ დროზე ადრე გასვლა, შეცვალეთ Check-Out-ის თარიღი."
                 )
-            rec.sudo().write({'state':'checked_out','active':False})
+            rec.sudo().write({'state': 'checked_out', 'active': False})
             if rec.invoice_id:
                 rec._send_invoice_by_email(rec.invoice_id)
-            # სერვისების ინვოისების გაგზავნა
             for invoice in rec.service_invoice_ids:
                 rec._send_invoice_by_email(invoice)
 
             rec.guest_id.message_post(
-                body=f"სტუმარმა დატოვა სასტუმრო. ჯავშანი: <b>{rec.name}</b>, ოთახი: <b>{rec.room_id.room_number}</b>.")
+                body=f"სტუმარმა დატოვა სასტუმრო. ჯავშანი: <b>{rec.name}</b>, ოთახი: <b>{rec.room_id.room_number}</b>."
+            )
             rec.room_id.sudo().write({'room_status': 'available', 'housekeeping_status': 'dirty'})
 
     def action_cancel(self):
         for rec in self:
-            if rec.state != 'draft' and rec.state != 'confirmed':
+            if rec.state not in ('draft', 'confirmed'):
                 raise ValidationError('cancel ის გამოძახება დაუშვებელია')
             rec.state = 'cancelled'
             if rec.room_id:
@@ -311,8 +289,7 @@ class HotelReservation(models.Model):
         for vals in vals_list:
             if vals.get('name', 'New') == 'New':
                 vals['name'] = self.env['ir.sequence'].next_by_code('hotel.reservation')
-        reservation = super().create(vals_list)
-        return reservation
+        return super().create(vals_list)
 
     def action_view_invoice(self):
         self.ensure_one()
@@ -335,14 +312,15 @@ class HotelReservation(models.Model):
             'domain': [('id', 'in', self.service_invoice_ids.ids)],
         }
 
-    # 🆕 წინასწარი გადახდის (Advance Payment Wizard) გამოძახების ღილაკის მეთოდი
     def action_register_advance_payment(self):
         self.ensure_one()
         if not self.guest_id.partner_id:
             raise ValidationError('სტუმარს არ აქვს მიბმული პარტნიორი (res.partner), წინასწარი გადახდა ვერ გატარდება.')
 
+        if self.amount_due <= 0:
+            raise ValidationError('ჯავშანზე დავალიანება არ ირიცხება, გადახდა ვერ განხორციელდება.')
         return {
-            'name': ('წინასწარი გადახდა / დეპოზიტი'),
+            'name': 'წინასწარი გადახდა / დეპოზიტი',
             'type': 'ir.actions.act_window',
             'res_model': 'account.payment',
             'view_mode': 'form',
@@ -358,86 +336,54 @@ class HotelReservation(models.Model):
 
     def _send_invoice_by_email(self, invoice):
         self.ensure_one()
-        partner=self.guest_id.partner_id
+        partner = self.guest_id.partner_id
         if not partner.email:
             raise ValidationError("სტუმარს არ აქვს email მისამართი.")
-        email_from=self.env.company.email
-        if not email_from:
-            email_from=self.env.user.email
-        pdf_content, content_type=self.env['ir.actions.report'].sudo()._render_qweb_pdf('account.account_invoices',[invoice.id])
-        attachment=self.env['ir.attachment'].sudo().create({
-            'name':f'{invoice.name}.pdf',
-            'type':'binary',
-            'datas':base64.b64encode(pdf_content),
-            'res_model':'account.move',
-            'res_id':invoice.id,
-            'mimetype':'application/pdf',
+        email_from = self.env.company.email or self.env.user.email
+
+        pdf_content, content_type = self.env['ir.actions.report'].sudo()._render_qweb_pdf(
+            'account.account_invoices', [invoice.id]
+        )
+        attachment = self.env['ir.attachment'].sudo().create({
+            'name': f'{invoice.name}.pdf',
+            'type': 'binary',
+            'datas': base64.b64encode(pdf_content),
+            'res_model': 'account.move',
+            'res_id': invoice.id,
+            'mimetype': 'application/pdf',
         })
-        mail=self.env['mail.mail'].sudo().create({
-            'subject':f'Invoice {invoice.name} - {self.name}',
-            'body_html':  f"""
-            <p>გამარჯობა {partner.name},</p>
-
-            <p>
-                გიგზავნით თქვენი სასტუმროს ჯავშნის
-                <strong>{invoice.name}</strong> ინვოისს.
-            </p>
-
-            <p>
-                ჯავშანი: <strong>{self.name}</strong>
-            </p>
-
-            <p>
-                ინვოისის თანხა:
-                <strong>{invoice.amount_total:.2f} USD</strong>
-            </p>
-
-            <p>მადლობა, რომ სარგებლობთ ჩვენი სასტუმროს მომსახურებით.</p>
-             """,
-            'email_from':email_from,
-            'email_to':partner.email,
-            'attachment_ids':[(4,attachment.id)]
-
+        mail = self.env['mail.mail'].sudo().create({
+            'subject': f'Invoice {invoice.name} - {self.name}',
+            'body_html': f"""
+                <p>გამარჯობა {partner.name},</p>
+                <p>გიგზავნით თქვენი სასტუმროს ჯავშნის <strong>{invoice.name}</strong> ინვოისს.</p>
+                <p>ჯავშანი: <strong>{self.name}</strong></p>
+                <p>ინვოისის თანხა: <strong>{invoice.amount_total:.2f} {self.currency_id.name or 'GEL'}</strong></p>
+                <p>მადლობა, რომ სარგებლობთ ჩვენი სასტუმროს მომსახურებით.</p>
+            """,
+            'email_from': email_from,
+            'email_to': partner.email,
+            'attachment_ids': [(4, attachment.id)]
         })
         mail.sudo().send()
         return True
 
     def _send_payment_confirmation_email(self, payment_amount):
         self.ensure_one()
-
         partner = self.guest_id.partner_id
+        if not partner or not partner.email:
+            return False
 
-        if not partner:
-            raise ValidationError("სტუმარს არ აქვს დაკავშირებული Partner.")
-
-        if not partner.email:
-            raise ValidationError("სტუმარს არ აქვს email მისამართი.")
-
-        # ოთახის სრული ღირებულება
         room_total = 0.0
-
         if self.room_id and self.check_in and self.check_out:
-            days = (self.check_out - self.check_in).days
-            days = max(days, 1)
+            days = max((self.check_out - self.check_in).days, 1)
             room_total = days * self.room_id.room_price
 
-        # სერვისების სრული ღირებულება
-        service_total = sum(
-            line.price_subtotal
-            for line in self.service_line_ids
-        )
-
-        # ჯამური ღირებულება
-        # total_price-ში უკვე შედის ოთახიც + სერვისებიც
+        service_total = sum(line.price_subtotal for line in self.service_line_ids)
         grand_total = self.total_price
-
-        # მიმდინარე გადახდის შემდეგ გადახდილი თანხა
         total_paid = self.paid_amount
-
-        # დარჩენილი თანხა
         amount_due = max(grand_total - total_paid, 0.0)
 
-        # Payment Status
         if total_paid <= 0:
             payment_status = "Unpaid"
         elif total_paid < grand_total:
@@ -447,185 +393,57 @@ class HotelReservation(models.Model):
         else:
             payment_status = "Overpaid"
 
-        # Email sender
-        email_from = self.env.company.email
-
-        if not email_from:
-            email_from = self.env.user.email
-
-        if not email_from:
-            raise ValidationError(
-                "კომპანიის ან მიმდინარე მომხმარებლის email მისამართი არ არის მითითებული."
-            )
-
+        email_from = self.env.company.email or self.env.user.email
         currency = self.currency_id.name or "GEL"
 
         body_html = f"""
             <div style="font-family: Arial, sans-serif;">
-
                 <h2>Payment Confirmation</h2>
-
-                <p>
-                    გამარჯობა <strong>{partner.name}</strong>,
-                </p>
-
-                <p>
-                    გიდასტურებთ თქვენი სასტუმროს ჯავშანზე
-                    განხორციელებულ გადახდას.
-                </p>
-
+                <p>გამარჯობა <strong>{partner.name}</strong>,</p>
+                <p>გიდასტურებთ თქვენი სასტუმროს ჯავშანზე განხორციელებულ გადახდას.</p>
                 <hr/>
-
                 <h3>Reservation Information</h3>
-
                 <p>
                     <strong>ჯავშანი:</strong> {self.name}<br/>
-                    <strong>ოთახი:</strong>
-                    {self.room_id.room_number if self.room_id else '-'}<br/>
+                    <strong>ოთახი:</strong> {self.room_id.room_number if self.room_id else '-'}<br/>
                     <strong>Check-in:</strong> {self.check_in or '-'}<br/>
                     <strong>Check-out:</strong> {self.check_out or '-'}
                 </p>
-
                 <hr/>
-
                 <h3>Payment Summary</h3>
-
-                <table style="
-                    border-collapse: collapse;
-                    width: 100%;
-                    max-width: 600px;
-                ">
-
+                <table style="border-collapse: collapse; width: 100%; max-width: 600px;">
                     <tr>
-                        <td style="
-                            padding: 8px;
-                            border-bottom: 1px solid #ddd;
-                        ">
-                            ოთახის ღირებულება
-                        </td>
-
-                        <td style="
-                            padding: 8px;
-                            border-bottom: 1px solid #ddd;
-                            text-align: right;
-                        ">
-                            <strong>
-                                {room_total:.2f} {currency}
-                            </strong>
-                        </td>
+                        <td style="padding: 8px; border-bottom: 1px solid #ddd;">ოთახის ღირებულება</td>
+                        <td style="padding: 8px; border-bottom: 1px solid #ddd; text-align: right;"><strong>{room_total:.2f} {currency}</strong></td>
                     </tr>
-
                     <tr>
-                        <td style="
-                            padding: 8px;
-                            border-bottom: 1px solid #ddd;
-                        ">
-                            სერვისების ღირებულება
-                        </td>
-
-                        <td style="
-                            padding: 8px;
-                            border-bottom: 1px solid #ddd;
-                            text-align: right;
-                        ">
-                            <strong>
-                                {service_total:.2f} {currency}
-                            </strong>
-                        </td>
+                        <td style="padding: 8px; border-bottom: 1px solid #ddd;">სერვისების ღირებულება</td>
+                        <td style="padding: 8px; border-bottom: 1px solid #ddd; text-align: right;"><strong>{service_total:.2f} {currency}</strong></td>
                     </tr>
-
                     <tr>
-                        <td style="
-                            padding: 8px;
-                            border-bottom: 2px solid #333;
-                        ">
-                            <strong>ჯამური ღირებულება</strong>
-                        </td>
-
-                        <td style="
-                            padding: 8px;
-                            border-bottom: 2px solid #333;
-                            text-align: right;
-                        ">
-                            <strong>
-                                {grand_total:.2f} {currency}
-                            </strong>
-                        </td>
+                        <td style="padding: 8px; border-bottom: 2px solid #333;"><strong>ჯამური ღირებულება</strong></td>
+                        <td style="padding: 8px; border-bottom: 2px solid #333; text-align: right;"><strong>{grand_total:.2f} {currency}</strong></td>
                     </tr>
-
                     <tr>
-                        <td style="padding: 8px;">
-                            მიმდინარე გადახდა
-                        </td>
-
-                        <td style="
-                            padding: 8px;
-                            text-align: right;
-                        ">
-                            <strong>
-                                {payment_amount:.2f} {currency}
-                            </strong>
-                        </td>
+                        <td style="padding: 8px;">მიმდინარე გადახდა</td>
+                        <td style="padding: 8px; text-align: right;"><strong>{payment_amount:.2f} {currency}</strong></td>
                     </tr>
-
                     <tr>
-                        <td style="padding: 8px;">
-                            სულ გადახდილი
-                        </td>
-
-                        <td style="
-                            padding: 8px;
-                            text-align: right;
-                        ">
-                            <strong>
-                                {total_paid:.2f} {currency}
-                            </strong>
-                        </td>
+                        <td style="padding: 8px;">სულ გადახდილი</td>
+                        <td style="padding: 8px; text-align: right;"><strong>{total_paid:.2f} {currency}</strong></td>
                     </tr>
-
                     <tr>
-                        <td style="padding: 8px;">
-                            დარჩენილი თანხა
-                        </td>
-
-                        <td style="
-                            padding: 8px;
-                            text-align: right;
-                        ">
-                            <strong>
-                                {amount_due:.2f} {currency}
-                            </strong>
-                        </td>
+                        <td style="padding: 8px;">დარჩენილი თანხა</td>
+                        <td style="padding: 8px; text-align: right;"><strong>{amount_due:.2f} {currency}</strong></td>
                     </tr>
-
                     <tr>
-                        <td style="padding: 8px;">
-                            Payment Status
-                        </td>
-
-                        <td style="
-                            padding: 8px;
-                            text-align: right;
-                        ">
-                            <strong>
-                                {payment_status}
-                            </strong>
-                        </td>
+                        <td style="padding: 8px;">Payment Status</td>
+                        <td style="padding: 8px; text-align: right;"><strong>{payment_status}</strong></td>
                     </tr>
-
                 </table>
-
                 <br/>
-
-                <p>
-                    მადლობა, რომ სარგებლობთ ჩვენი სასტუმროს მომსახურებით.
-                </p>
-
-                <p>
-                    პატივისცემით,<br/>
-                    <strong>{self.env.company.name}</strong>
-                </p>
-
+                <p>მადლობა, რომ სარგებლობთ ჩვენი სასტუმროს მომსახურებით.</p>
+                <p>პატივისცემით,<br/><strong>{self.env.company.name}</strong></p>
             </div>
         """
 
@@ -635,14 +453,10 @@ class HotelReservation(models.Model):
             'email_from': email_from,
             'email_to': partner.email,
         })
-
         mail.sudo().send()
-
         return True
 
     def action_create_invoice(self):
-        """ოთახის ინვოისი — შეიძლება შეიქმნას მხოლოდ Check-in-ის შემდეგ (state in checked_in/checked_out),
-        რომ სტუმარს Check-out-მდე ჰქონდეს წინასწარი გადახდის საშუალება."""
         for rec in self:
             if rec.state not in ('checked_in', 'checked_out'):
                 raise ValidationError('ოთახის ინვოისის შექმნა შესაძლებელია მხოლოდ Check-in-ის შემდეგ')
@@ -650,10 +464,10 @@ class HotelReservation(models.Model):
                 raise ValidationError('ამ ჯავშანზე ოთახის ინვოისი უკვე გაცემულია')
             if not rec.guest_id.partner_id:
                 raise ValidationError('res.partner-ის გარეშე ინვოისი არ გაიცემა')
+
             invoice_lines = []
             if rec.room_id and rec.check_in and rec.check_out:
-                day = (rec.check_out - rec.check_in).days
-                day = max(day, 1)
+                day = max((rec.check_out - rec.check_in).days, 1)
                 invoice_lines.append((0, 0, {
                     'name': f"ოთახის ქირაობა:{rec.room_id.room_number}",
                     'quantity': day,
@@ -670,6 +484,15 @@ class HotelReservation(models.Model):
             invoice.sudo().action_post()
             rec.invoice_id = invoice.id
 
+            # Odoo 18: Reconcile-ისთვის გამოიყენება payment.move_id.line_ids და სტატუსები ('paid', 'in_process')
+            for payment in rec.advance_payment_ids.filtered(lambda p: p.state in ('paid', 'in_process')):
+                payment_lines = payment.move_id.line_ids if payment.move_id else rec.env['account.move.line']
+                lines = (payment_lines + invoice.line_ids).filtered(
+                    lambda l: l.account_id == rec.guest_id.partner_id.property_account_receivable_id and not l.reconciled
+                )
+                if len(lines) >= 2:
+                    lines.reconcile()
+
             rec.guest_id.message_post(
                 body=f"ჯავშანზე <b>{rec.name}</b> შეექმნა ოთახის ინვოისი: <b>{invoice.name}</b> (ჯამი: {invoice.amount_total} GEL)",
                 subject='ინვოისის შექმნა',
@@ -679,8 +502,6 @@ class HotelReservation(models.Model):
         return True
 
     def action_create_service_invoice(self):
-        """დამატებითი სერვისების ინვოისი — ავტომატურად ითვლის ყველა ჯერ არჩაინვოისებელ
-        service_line_ids-ს (invoiced=False) და მათზე ცალკე ინვოისს გამოსცემს."""
         for rec in self:
             uninvoiced_lines = rec.service_line_ids.filtered(lambda l: not l.invoiced)
             if not uninvoiced_lines:
@@ -705,6 +526,16 @@ class HotelReservation(models.Model):
             rec.service_invoice_ids = [(4, invoice.id)]
             uninvoiced_lines.write({'invoiced': True})
 
+            # 🔗 წინასწარი გადახდის (Advance Payment) ავტომატური მიბმა სერვისის ინვოისზე
+            for payment in rec.advance_payment_ids.filtered(lambda p: p.state in ('paid', 'in_process', 'posted')):
+                payment_lines = payment.move_id.line_ids if payment.move_id else rec.env['account.move.line']
+                lines = (payment_lines + invoice.line_ids).filtered(
+                    lambda
+                        l: l.account_id == rec.guest_id.partner_id.property_account_receivable_id and not l.reconciled
+                )
+                if len(lines) >= 2:
+                    lines.reconcile()
+
             rec.guest_id.message_post(
                 body=f"ჯავშანზე <b>{rec.name}</b> დამატებით სერვისებზე შეიქმნა ინვოისი: "
                      f"<b>{invoice.name}</b> (ჯამი: {invoice.amount_total} GEL)",
@@ -715,8 +546,24 @@ class HotelReservation(models.Model):
         return True
 
 
-# 🆕 AccountPayment-ის გაფართოება ჯავშნის დასაკავშირებლად
 class AccountPayment(models.Model):
     _inherit = 'account.payment'
 
     reservation_id = fields.Many2one('hotel.reservation', string="ჯავშანი")
+
+    def action_post(self):
+        res = super().action_post()
+        for payment in self:
+            if payment.reservation_id:
+                # გადახდის შემდეგ იძულებით ვახდენთ გამოთვლითი ველების განახლებას
+                payment.reservation_id._compute_paid_amount_calculation()
+                payment.reservation_id._compute_amount_due()
+                payment.reservation_id._compute_payment_status()
+
+                if payment.reservation_id and payment.state=='in_process':
+                    payment.state='paid'
+
+                if payment.reservation_id.state == 'draft':
+                    payment.reservation_id.state = 'confirmed'
+                payment.reservation_id._send_payment_confirmation_email(payment.amount)
+        return res

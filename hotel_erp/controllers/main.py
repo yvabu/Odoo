@@ -1,7 +1,6 @@
 import logging
 import secrets
 import werkzeug.urls
-from werkzeug.utils import redirect
 
 from odoo import fields, http
 from odoo.addons.portal.controllers.portal import CustomerPortal
@@ -27,9 +26,16 @@ class HotelCustomLogin(Home):
 
 class HotelCustomPortal(CustomerPortal):
 
-    @http.route(route=['/my/dashboard', '/my/home'], type='http', auth='user', website=True)
+    @http.route(
+        route=['/my/dashboard', '/my/home'],
+        type='http',
+        auth='user',
+        website=True
+    )
     def account(self, redirect=None, **post):
-        """/my/account ან /my-ზე გადასვლისას მომხმარებელი ავტომატურად გადამისამართდება /my/dashboard-ზე"""
+        """/my/account ან /my-ზე გადასვლისას მომხმარებელი ავტომატურად
+        გადამისამართდება /my/dashboard-ზე
+        """
         return request.redirect('/my/dashboard')
 
 
@@ -52,8 +58,11 @@ class HotelReceptionController(http.Controller):
         address = post.get('address')
 
         if name and personal_number:
-            registred_guest = request.env['hotel.guest'].sudo().search([('personal_number', '=', personal_number)],
-                                                                       limit=1)
+            registred_guest = request.env['hotel.guest'].sudo().search(
+                [('personal_number', '=', personal_number)],
+                limit=1
+            )
+
             if registred_guest:
                 return request.redirect('/my/dashboard?error=guest_exists')
 
@@ -64,7 +73,9 @@ class HotelReceptionController(http.Controller):
                 'phone': phone,
                 'address': address
             })
+
             return request.redirect('/my/dashboard?success=guest_created')
+
         return request.redirect('/my/dashboard?error=invalid_data')
 
     @http.route(
@@ -78,13 +89,18 @@ class HotelReceptionController(http.Controller):
     def process_checkin(self, **post):
         """Check-In პროცესი"""
         reservation_id = post.get('reservation_id')
+
         if reservation_id:
             res = request.env['hotel.reservation'].sudo().browse(int(reservation_id))
+
             if res.exists():
                 try:
                     res.sudo().action_check_in()
                 except ValidationError as e:
-                    return request.redirect(f'/my/dashboard?error={e.args[0]}')
+                    return request.redirect(
+                        f'/my/dashboard?error={e.args[0]}'
+                    )
+
         return request.redirect('/my/dashboard?success=checkin_done')
 
     @http.route(
@@ -98,11 +114,14 @@ class HotelReceptionController(http.Controller):
     def house_keping_status_switcher(self, **post):
         """ოთახის დასუფთავება"""
         room_id = post.get('room_id')
+
         if room_id:
             room = request.env['hotel.room'].sudo().browse(int(room_id))
+
             if room.exists() and room.housekeeping_status in ['dirty', 'maintenance']:
                 room.action_set_clean()
                 return request.redirect('/my/dashboard?clean_rooms=1')
+
         return request.redirect('/my/dashboard')
 
     @http.route(
@@ -116,13 +135,18 @@ class HotelReceptionController(http.Controller):
     def set_confirm(self, **post):
         """ჯავშნის დადასტურება"""
         reservation_id = post.get('reservation_id')
+
         if reservation_id:
             res = request.env['hotel.reservation'].sudo().browse(int(reservation_id))
+
             if res.exists():
                 try:
                     res.action_confirm()
                 except ValidationError as er:
-                    return request.redirect(f'/my/dashboard?error={er.args[0]}')
+                    return request.redirect(
+                        f'/my/dashboard?error={er.args[0]}'
+                    )
+
         return request.redirect('/my/dashboard?success=confirm_done')
 
     @http.route(
@@ -136,11 +160,14 @@ class HotelReceptionController(http.Controller):
     def process_checkout(self, **post):
         """Check-Out პროცესი"""
         reservation_id = post.get('reservation_id')
+
         if reservation_id:
             res = request.env['hotel.reservation'].sudo().browse(int(reservation_id))
+
             if res.exists():
                 try:
                     res.action_check_out()
+
                     # ოთახის invoice
                     if res.invoice_id:
                         res._send_invoice_by_email(res.invoice_id)
@@ -148,8 +175,12 @@ class HotelReceptionController(http.Controller):
                     # სერვისების invoice-ები
                     for invoice in res.service_invoice_ids:
                         res._send_invoice_by_email(invoice)
+
                 except ValidationError as e:
-                    return request.redirect(f'/my/dashboard?error={e.args[0]}')
+                    return request.redirect(
+                        f'/my/dashboard?error={e.args[0]}'
+                    )
+
         return request.redirect('/my/dashboard?success=checkout_done')
 
 
@@ -164,6 +195,7 @@ class HotelManagerPortal(http.Controller):
         csrf=True,
     )
     def manager_create_guest(self, **post):
+
         if not request.env.user.has_group('hotel_erp.group_hotel_manager'):
             return request.redirect('/my/dashboard')
 
@@ -174,10 +206,14 @@ class HotelManagerPortal(http.Controller):
         address = post.get('address')
 
         if name and personal_number:
-            registred_guest = request.env['hotel.guest'].sudo().search([('personal_number', '=', personal_number)],
-                                                                       limit=1)
+            registred_guest = request.env['hotel.guest'].sudo().search(
+                [('personal_number', '=', personal_number)],
+                limit=1
+            )
+
             if registred_guest:
                 return request.redirect('/my/dashboard?error=guest_exists')
+
             request.env['hotel.guest'].sudo().create({
                 'name': name,
                 'personal_number': personal_number,
@@ -198,6 +234,7 @@ class HotelManagerPortal(http.Controller):
     )
     def manager_create_payment(self, **post):
         """გადახდის რეგისტრაცია Odoo-ს account.payment.register-ის საშუალებით"""
+
         if not request.env.user.has_group('hotel_erp.group_hotel_manager'):
             return request.redirect('/my/dashboard')
 
@@ -246,7 +283,8 @@ class HotelManagerPortal(http.Controller):
             })
         )
 
-        payment_register._createPayments()
+        payment_register._create_payments()
+
         # გადახდილი invoice-ის PDF-ის გაგზავნა
         reservation = request.env['hotel.reservation'].sudo().search(
             [
@@ -265,18 +303,31 @@ class HotelManagerPortal(http.Controller):
 
 class HotelServiceController(http.Controller):
 
-    @http.route('/reservation/add_service', type='http', auth='user', website=True, methods=['POST'], csrf=True)
+    @http.route(
+        '/reservation/add_service',
+        type='http',
+        auth='user',
+        website=True,
+        methods=['POST'],
+        csrf=True
+    )
     def add_service_to_reservation(self, **post):
         """სერვისის დამატება არსებულ ჯავშანზე"""
+
         reservation_id = post.get('reservation_id')
         service_id = post.get('service_id')
         quantity = int(post.get('quantity') or 1)
 
         if reservation_id and service_id:
-            reservation = request.env['hotel.reservation'].sudo().browse(int(reservation_id))
-            service = request.env['hotel.service'].sudo().browse(int(service_id))
+            reservation = request.env['hotel.reservation'].sudo().browse(
+                int(reservation_id)
+            )
+            service = request.env['hotel.service'].sudo().browse(
+                int(service_id)
+            )
 
             if reservation.exists() and service.exists():
+
                 if reservation.state in ('checked_out', 'cancelled'):
                     return request.redirect('/my/dashboard?error=service_failed')
 
@@ -295,16 +346,25 @@ class HotelServiceController(http.Controller):
                         reservation.action_create_service_invoice()
                     except ValidationError:
                         _logger.exception(
-                            'სერვისის დაუყოვნებელი ინვოისირება ვერ მოხერხდა ჯავშანზე %s', reservation.id
+                            'სერვისის დაუყოვნებელი ინვოისირება ვერ მოხერხდა ჯავშანზე %s',
+                            reservation.id
                         )
 
                 return request.redirect('/my/dashboard?success=service_added')
 
         return request.redirect('/my/dashboard?error=service_failed')
 
-    @http.route('/manager/create_service', type='http', auth='user', website=True, methods=['POST'], csrf=True)
+    @http.route(
+        '/manager/create_service',
+        type='http',
+        auth='user',
+        website=True,
+        methods=['POST'],
+        csrf=True
+    )
     def manager_create_service(self, **post):
         """ახალი სერვისის შექმნა სისტემაში მენეჯერის მიერ"""
+
         if not request.env.user.has_group('hotel_erp.group_hotel_manager'):
             return request.redirect('/my/dashboard')
 
@@ -316,6 +376,7 @@ class HotelServiceController(http.Controller):
                 'name': name,
                 'price': price,
             })
+
             return request.redirect('/my/dashboard?success=service_created')
 
         return request.redirect('/my/dashboard?error=invalid_service_data')
@@ -323,19 +384,37 @@ class HotelServiceController(http.Controller):
 
 class HotelWebsite(http.Controller):
 
-    @http.route('/', type='http', auth='public', website=True)
+    @http.route(
+        '/',
+        type='http',
+        auth='public',
+        website=True
+    )
     def home(self, **kwargs):
-        rooms = request.env['hotel.room'].sudo().search([('housekeeping_status', '=', 'clean')])
-        return request.render('hotel_erp.hotel_homepage', {'rooms': rooms})
+        rooms = request.env['hotel.room'].sudo().search([
+            ('housekeeping_status', '=', 'clean')
+        ])
+
+        return request.render(
+            'hotel_erp.hotel_homepage',
+            {'rooms': rooms}
+        )
 
 
 class HotelRoomsWebsite(http.Controller):
 
-    @http.route('/rooms', type='http', auth='public', website=True)
+    @http.route(
+        '/rooms',
+        type='http',
+        auth='public',
+        website=True
+    )
     def hotel_room(self, check_in=None, check_out=None, **kwargs):
+
         domain = [('active', '=', True)]
         ci = co = None
         date_error = None
+
         if check_in and check_out:
             try:
                 ci = fields.Date.from_string(check_in)
@@ -352,7 +431,9 @@ class HotelRoomsWebsite(http.Controller):
                         ('check_out', '>', ci),
                         ('state', '!=', 'cancelled'),
                     ])
+
                     booked_room_ids = overlapping.mapped('room_id').ids
+
                     if booked_room_ids:
                         domain.append(('id', 'not in', booked_room_ids))
 
@@ -369,9 +450,21 @@ class HotelRoomsWebsite(http.Controller):
             },
         )
 
-    @http.route('/room/<int:room_id>', type='http', auth='public', website=True)
-    def room_details(self, room_id, check_in=None, check_out=None, **kwargs):
+    @http.route(
+        '/room/<int:room_id>',
+        type='http',
+        auth='public',
+        website=True
+    )
+    def room_details(
+        self,
+        room_id,
+        check_in=None,
+        check_out=None,
+        **kwargs
+    ):
         room = request.env['hotel.room'].sudo().browse(room_id)
+
         if not room.exists():
             return request.redirect('/rooms')
 
@@ -387,8 +480,14 @@ class HotelRoomsWebsite(http.Controller):
 
 class HotelRoomController(http.Controller):
 
-    @http.route('/hotel/get_booked_dates', type='json', auth='public', website=True)
+    @http.route(
+        '/hotel/get_booked_dates',
+        type='json',
+        auth='public',
+        website=True
+    )
     def get_booked_dates(self, room_id):
+
         if not room_id:
             return []
 
@@ -398,10 +497,14 @@ class HotelRoomController(http.Controller):
         ])
 
         disabled_dates = []
+
         for res in reservations:
             current_date = res.check_in
+
             while current_date < res.check_out:
-                disabled_dates.append(current_date.strftime('%Y-%m-%d'))
+                disabled_dates.append(
+                    current_date.strftime('%Y-%m-%d')
+                )
                 current_date += timedelta(days=1)
 
         return disabled_dates
@@ -409,38 +512,64 @@ class HotelRoomController(http.Controller):
 
 class BookingForm(http.Controller):
 
-    @http.route('/booking', type='http', auth='public', website=True)
-    def booking_form(self, room_id=None, check_in=None, check_out=None, **kwargs):
+    @http.route(
+        '/booking',
+        type='http',
+        auth='public',
+        website=True
+    )
+    def booking_form(
+        self,
+        room_id=None,
+        check_in=None,
+        check_out=None,
+        **kwargs
+    ):
         user = request.env.user
         is_public = user._is_public()
-        is_staff = (not is_public) and (
+
+        is_staff = (
+            (not is_public)
+            and (
                 user.has_group('hotel_erp.group_hotel_user')
                 or user.has_group('hotel_erp.group_hotel_manager')
+            )
         )
+
         is_self_service = (not is_public) and (not is_staff)
 
         domain = [('active', '=', True)]
         ci = co = None
+
         if check_in and check_out:
             try:
                 ci = fields.Date.from_string(check_in)
                 co = fields.Date.from_string(check_out)
             except ValueError:
                 ci = co = None
+
             if ci and co and co > ci:
                 overlapping = request.env['hotel.reservation'].sudo().search([
                     ('check_in', '<', co),
                     ('check_out', '>', ci),
                     ('state', '!=', 'cancelled'),
                 ])
+
                 booked_room_ids = overlapping.mapped('room_id').ids
+
                 if booked_room_ids:
-                    domain.append(('id', 'not in', booked_room_ids))
+                    domain.append(
+                        ('id', 'not in', booked_room_ids)
+                    )
 
         rooms = request.env['hotel.room'].sudo().search(domain)
+
         selected_room = False
+
         if room_id:
-            selected_room = request.env['hotel.room'].sudo().browse(int(room_id))
+            selected_room = request.env['hotel.room'].sudo().browse(
+                int(room_id)
+            )
 
         return request.render(
             'hotel_erp.hotel_booking_form_page',
@@ -456,44 +585,79 @@ class BookingForm(http.Controller):
             },
         )
 
-    @http.route('/booking/submit', type='http', auth='public', website=True, methods=['POST'], csrf=True)
+    @http.route(
+        '/booking/submit',
+        type='http',
+        auth='public',
+        website=True,
+        methods=['POST'],
+        csrf=True
+    )
     def booking_submit(self, **post):
+
         guest_name = post.get('guest_name')
         email = post.get('email')
         phone = post.get('phone')
         personal_number = post.get('personal_number')
-        room_id = int(post.get('room_id')) if post.get('room_id') else False
+
+        room_id = (
+            int(post.get('room_id'))
+            if post.get('room_id')
+            else False
+        )
+
         check_in = post.get('check_in')
         check_out = post.get('check_out')
         address = post.get('address')
 
         current_user = request.env.user
         is_public = current_user._is_public()
-        is_staff = (not is_public) and (
+
+        is_staff = (
+            (not is_public)
+            and (
                 current_user.has_group('hotel_erp.group_hotel_user')
                 or current_user.has_group('hotel_erp.group_hotel_manager')
+            )
         )
 
         partner = False
         newly_registered = False
+        new_user=False
 
+        # 1. საჯარო მომხარებლის რეგისტრაცია
         if is_public:
-            if not email:
-                return request.redirect(f'/booking?room_id={room_id or ""}&error=email_required')
 
-            existing_user = request.env['res.users'].sudo().search([('login', '=', email)], limit=1)
+            if not email:
+                return request.redirect(
+                    f'/booking?room_id={room_id or ""}&error=email_required'
+                )
+
+            existing_user = request.env['res.users'].sudo().search(
+                [('login', '=', email)],
+                limit=1
+            )
+
             if existing_user:
+
                 redirect_target = '/booking'
+
                 params = [
                     p for p in [
                         f'room_id={room_id}' if room_id else '',
                         f'check_in={check_in}' if check_in else '',
                         f'check_out={check_out}' if check_out else '',
-                    ] if p
+                    ]
+                    if p
                 ]
+
                 if params:
                     redirect_target += '?' + '&'.join(params)
-                return request.redirect(f'/web/login?redirect={werkzeug.urls.url_quote(redirect_target)}')
+
+                return request.redirect(
+                    f'/web/login?redirect='
+                    f'{werkzeug.urls.url_quote(redirect_target)}'
+                )
 
             new_partner = request.env['res.partner'].sudo().create({
                 'name': guest_name,
@@ -501,50 +665,76 @@ class BookingForm(http.Controller):
                 'phone': phone,
                 'street': address,
             })
+
             random_password = secrets.token_urlsafe(12)
+
             new_user = request.env['res.users'].sudo().create({
                 'name': guest_name,
                 'login': email,
                 'email': email,
                 'partner_id': new_partner.id,
-                'groups_id': [(4, request.env.ref('base.group_portal').id)],
+                'groups_id': [
+                    (4, request.env.ref('base.group_portal').id)
+                ],
                 'password': random_password,
             })
+
             request.env.cr.commit()
+
             credential = {
                 'login': email,
                 'password': random_password,
                 'type': 'password',
             }
-            request.session.authenticate(request.db, credential)
+
+            request.session.authenticate(
+                request.db,
+                credential
+            )
 
             try:
                 new_user.sudo().action_reset_password()
+
                 signup_url = new_user.sudo().generate_signup_url()
+
                 if signup_url:
-                    _logger.info('🔑 [HOTEL ERP] Password set-up ბმული %s-სთვის: %s', email, signup_url)
+                    _logger.info(
+                        '🔑 [HOTEL ERP] Password set-up ბმული %s-სთვის: %s',
+                        email,
+                        signup_url
+                    )
+
             except Exception:
-                _logger.exception('Password reset email-ის გაგზავნა ვერ მოხერხდა %s-სთვის', email)
+                _logger.exception(
+                    'Password reset email-ის გაგზავნა ვერ მოხერხდა %s-სთვის',
+                    email
+                )
 
             partner = new_user.partner_id
             newly_registered = True
-
+        #რეცეფტიონისტი ან მენეჯერი
         elif is_staff:
             partner = False
-
+        #უკვე ავტორიზებული სტუმარი
         else:
             user = current_user
             partner = user.partner_id
+
             guest_name = guest_name or user.name
             email = email or user.email
             phone = phone or partner.phone
+
             partner.sudo().write({
                 'phone': phone or partner.phone,
                 'street': address or partner.street,
             })
 
-        guest = request.env['hotel.guest'].sudo().search([('personal_number', '=', personal_number)], limit=1)
+        guest = request.env['hotel.guest'].sudo().search(
+            [('personal_number', '=', personal_number)],
+            limit=1
+        )
         if not guest:
+
             guest_vals = {
                 'name': guest_name,
                 'personal_number': personal_number,
@@ -552,19 +742,61 @@ class BookingForm(http.Controller):
                 'email': email,
                 'address': address,
             }
+
             if partner:
                 guest_vals['partner_id'] = partner.id
+
             if newly_registered:
-                guest_vals['user_id'] = partner.user_ids[:1].id
-            guest = request.env['hotel.guest'].sudo().create(guest_vals)
-        else:
-            update_vals = {'phone': phone, 'email': email}
+                guest_vals['user_id'] = new_user.id
+
+            guest = request.env['hotel.guest'].sudo().create(
+                guest_vals
+            )
+        # 6. რეცეფციონისტის ან მენეჯერის მიერ შექმნილი სტუმრისთვის
+        # Portal მომხმარებლის შექმნა ან არსებულის მიბმა
+
+        if is_staff and not guest.user_id:
+            if not email:
+                return request.redirect('/my/dashboard?error=email_required')
+            existing_user = request.env['res.users'].sudo().search([('login', '=', email)], limit=1)
+            if existing_user:
+                new_user = existing_user
+                partner = existing_user.partner_id
+            else:
+                partner = request.env['res.partner'].sudo().create({
+                     'name': guest_name or guest.name,
+                     'email': email,
+                     'phone': phone or guest.phone,
+                     'street': address or guest.address,
+                })
+                random_password = secrets.token_urlsafe(12)
+                new_user = request.env['res.users'].sudo().create({
+                    'name': guest_name or guest.name,
+                    'login': email,
+                    'email': email,
+                    'partner_id': partner.id,
+                    'groups_id': [(4, request.env.ref('base.group_portal').id)],
+                    'password': random_password,
+                })
+
+                try:
+                    new_user.sudo().action_reset_password()
+                except Exception:
+                    _logger.exception('Password reset email-ის გაგზავნა ვერ მოხერხდა %s-სთვის', email)
+            guest.sudo().write({
+                'user_id': new_user.id,
+                'partner_id': partner.id,
+                'email': email,
+                'phone': phone or guest.phone,
+            })
+        # 7. უკვე არსებული სტუმრის მონაცემების განახლება
+        elif not newly_registered:
+            update_vals = {'phone': phone or guest.phone, 'email': email or guest.email, }
             if partner and not guest.partner_id:
                 update_vals['partner_id'] = partner.id
-            if newly_registered and not guest.user_id:
-                update_vals['user_id'] = partner.user_ids[:1].id
             guest.sudo().write(update_vals)
 
+        # 8. ჯავშნის შექმნა
         reservation = request.env['hotel.reservation'].sudo().create({
             'guest_id': guest.id,
             'room_id': room_id,
@@ -572,7 +804,7 @@ class BookingForm(http.Controller):
             'check_out': check_out,
             'state': 'draft',
         })
-
+        # 9. გადამისამართება
         if newly_registered:
             return request.redirect('/my/dashboard?success=account_created')
 
@@ -582,20 +814,43 @@ class BookingForm(http.Controller):
         return request.redirect('/my/dashboard?success=booking_created')
 
 
+
 class HotelPortal(http.Controller):
 
-    @http.route('/my/dashboard', type='http', auth='user', website=True)
+    @http.route(
+        '/my/dashboard',
+        type='http',
+        auth='user',
+        website=True
+    )
     def my_dashboard(self, success=None, **kwargs):
+
         user = request.env.user
-        available_services = request.env['hotel.service'].sudo().search([])
+
+        available_services = request.env[
+            'hotel.service'
+        ].sudo().search([])
 
         # 1. MANAGER DASHBOARD
         if user.has_group('hotel_erp.group_hotel_manager'):
-            reservations = request.env['hotel.reservation'].sudo().search([])
-            rooms = request.env['hotel.room'].sudo().search([])
-            guests = request.env['hotel.guest'].sudo().search([])
 
-            invoices = reservations.mapped('invoice_id') | reservations.mapped('service_invoice_ids')
+            reservations = request.env[
+                'hotel.reservation'
+            ].sudo().search([])
+
+            rooms = request.env[
+                'hotel.room'
+            ].sudo().search([])
+
+            guests = request.env[
+                'hotel.guest'
+            ].sudo().search([])
+
+            invoices = (
+                reservations.mapped('invoice_id')
+                | reservations.mapped('service_invoice_ids')
+            )
+
             payments = reservations.mapped('payment_ids')
 
             return request.render(
@@ -614,11 +869,28 @@ class HotelPortal(http.Controller):
 
         # 2. RECEPTIONIST DASHBOARD
         elif user.has_group('hotel_erp.group_hotel_user'):
-            pending_reservations = request.env['hotel.reservation'].sudo().search(
-                [('state', 'in', ['draft', 'confirmed'])])
-            checked_in_reservations = request.env['hotel.reservation'].sudo().search([('state', '=', 'checked_in')])
-            dirty_rooms = request.env['hotel.room'].sudo().search(
-                [('housekeeping_status', 'in', ['dirty', 'maintenance'])])
+
+            pending_reservations = request.env[
+                'hotel.reservation'
+            ].sudo().search([
+                ('state', 'in', ['draft', 'confirmed'])
+            ])
+
+            checked_in_reservations = request.env[
+                'hotel.reservation'
+            ].sudo().search([
+                ('state', '=', 'checked_in')
+            ])
+
+            dirty_rooms = request.env[
+                'hotel.room'
+            ].sudo().search([
+                (
+                    'housekeeping_status',
+                    'in',
+                    ['dirty', 'maintenance']
+                )
+            ])
 
             return request.render(
                 'hotel_erp.portal_my_dashboard',
@@ -636,13 +908,24 @@ class HotelPortal(http.Controller):
 
         # 3. GUEST DASHBOARD
         else:
-            guest = request.env['hotel.guest'].sudo().search(
+
+            guest = request.env[
+                'hotel.guest'
+            ].sudo().search(
                 [
                     '|',
-                    ('partner_id', '=', user.partner_id.id),
-                    ('email', '=', user.email),
+                    (
+                        'partner_id',
+                        '=',
+                        user.partner_id.id
+                    ),
+                    (
+                        'email',
+                        '=',
+                        user.email
+                    ),
                 ],
-                limit=1,
+                limit=1
             )
 
             my_reservations = request.env['hotel.reservation']
@@ -651,19 +934,31 @@ class HotelPortal(http.Controller):
             show_checkin_notice = False
 
             if guest:
-                my_reservations = request.env['hotel.reservation'].sudo().search(
-                    [
-                        ('guest_id', '=', guest.id),
-                        ('state', '!=', 'cancelled'),
-                    ]
+
+                my_reservations = request.env[
+                    'hotel.reservation'
+                ].sudo().search([
+                    ('guest_id', '=', guest.id),
+                    ('state', '!=', 'cancelled'),
+                ])
+
+                checked_in_reservations = my_reservations.filtered(
+                    lambda r: r.state in ['checked_in', 'done']
                 )
 
-                checked_in_reservations = my_reservations.filtered(lambda r: r.state in ['checked_in', 'done'])
-
                 if checked_in_reservations:
-                    invoices = checked_in_reservations.mapped('invoice_id') | checked_in_reservations.mapped(
-                        'service_invoice_ids')
-                    payments = checked_in_reservations.mapped('payment_ids')
+
+                    invoices = (
+                        checked_in_reservations.mapped('invoice_id')
+                        | checked_in_reservations.mapped(
+                            'service_invoice_ids'
+                        )
+                    )
+
+                    payments = checked_in_reservations.mapped(
+                        'payment_ids'
+                    )
+
                 elif my_reservations:
                     show_checkin_notice = True
 
@@ -682,29 +977,67 @@ class HotelPortal(http.Controller):
                 },
             )
 
-    @http.route('/dashboard/guest/create', type='http', auth='user', website=True, methods=['POST'], csrf=True)
+    @http.route(
+        '/dashboard/guest/create',
+        type='http',
+        auth='user',
+        website=True,
+        methods=['POST'],
+        csrf=True
+    )
     def dashboard_create_guest(self, **post):
-        if request.env.user.has_group('hotel_erp.group_hotel_manager') or request.env.user.has_group(
-                'hotel_erp.group_hotel_user'):
+
+        if (
+            request.env.user.has_group(
+                'hotel_erp.group_hotel_manager'
+            )
+            or request.env.user.has_group(
+                'hotel_erp.group_hotel_user'
+            )
+        ):
+
             request.env['hotel.guest'].sudo().create({
                 'name': post.get('name'),
                 'email': post.get('email'),
                 'phone': post.get('phone'),
-                'personal_number': post.get('personal_number') or post.get('identification_id'),
+                'personal_number': (
+                    post.get('personal_number')
+                    or post.get('identification_id')
+                ),
             })
-            return request.redirect('/my/dashboard?success=guest_created')
+
+            return request.redirect(
+                '/my/dashboard?success=guest_created'
+            )
+
         return request.redirect('/my/dashboard')
 
-    @http.route('/dashboard/reservation/create', type='http', auth='user', website=True, methods=['POST'], csrf=True)
+    @http.route(
+        '/dashboard/reservation/create',
+        type='http',
+        auth='user',
+        website=True,
+        methods=['POST'],
+        csrf=True
+    )
     def dashboard_create_reservation(self, **post):
-        if request.env.user.has_group('hotel_erp.group_hotel_manager') or request.env.user.has_group(
-                'hotel_erp.group_hotel_user'):
+
+        if (
+            request.env.user.has_group(
+                'hotel_erp.group_hotel_manager'
+            )
+            or request.env.user.has_group(
+                'hotel_erp.group_hotel_user'
+            )
+        ):
+
             guest_id = post.get('guest_id')
             room_id = post.get('room_id')
             check_in = post.get('check_in')
             check_out = post.get('check_out')
 
             if guest_id and room_id and check_in and check_out:
+
                 request.env['hotel.reservation'].sudo().create({
                     'guest_id': int(guest_id),
                     'room_id': int(room_id),
@@ -712,26 +1045,54 @@ class HotelPortal(http.Controller):
                     'check_out': check_out,
                     'state': 'draft',
                 })
-                return request.redirect('/my/dashboard?success=booking_created')
+
+                return request.redirect(
+                    '/my/dashboard?success=booking_created'
+                )
+
         return request.redirect('/my/dashboard')
 
-    @http.route('/dashboard/payment/register', type='http', auth='user', website=True, methods=['POST'], csrf=True)
+    @http.route(
+        '/dashboard/payment/register',
+        type='http',
+        auth='user',
+        website=True,
+        methods=['POST'],
+        csrf=True
+    )
     def dashboard_register_payment(self, **post):
-        if request.env.user.has_group('hotel_erp.group_hotel_manager'):
+
+        if request.env.user.has_group(
+            'hotel_erp.group_hotel_manager'
+        ):
+
             invoice_id = post.get('invoice_id')
             amount = post.get('amount')
-            invoice = request.env['account.move'].sudo().browse(int(invoice_id or 0))
+
+            invoice = request.env['account.move'].sudo().browse(
+                int(invoice_id or 0)
+            )
 
             if invoice.exists() and amount:
+
                 payment_register = (
                     request.env['account.payment.register']
                     .sudo()
-                    .with_context(active_model='account.move', active_ids=[invoice.id])
-                    .create({'amount': float(amount)})
+                    .with_context(
+                        active_model='account.move',
+                        active_ids=[invoice.id]
+                    )
+                    .create({
+                        'amount': float(amount)
+                    })
                 )
+
                 payment_register._create_payments()
+
                 # კონკრეტულად გადახდილი invoice-ის მოძებნა
-                reservation = request.env['hotel.reservation'].sudo().search(
+                reservation = request.env[
+                    'hotel.reservation'
+                ].sudo().search(
                     [
                         '|',
                         ('invoice_id', '=', invoice.id),
@@ -742,10 +1103,15 @@ class HotelPortal(http.Controller):
 
                 if reservation:
                     reservation._send_invoice_by_email(invoice)
-                return request.redirect('/my/dashboard?success=payment_registered')
+
+                return request.redirect(
+                    '/my/dashboard?success=payment_registered'
+                )
+
         return request.redirect('/my/dashboard')
 
-    # 🆕 წინასწარი გადახდის რეგისტრაცია დაშბორდიდან (Direct Advance Payment)
+    # 🆕 წინასწარი გადახდის რეგისტრაცია დაშბორდიდან
+    # (Direct Advance Payment)
     @http.route(
         '/dashboard/advance_payment/register',
         type='http',
@@ -783,7 +1149,9 @@ class HotelPortal(http.Controller):
                 '/my/dashboard?error=invalid_amount'
             )
 
-        reservation = request.env['hotel.reservation'].sudo().browse(
+        reservation = request.env[
+            'hotel.reservation'
+        ].sudo().browse(
             int(reservation_id)
         )
 
@@ -805,7 +1173,9 @@ class HotelPortal(http.Controller):
             )
 
         # მომხმარებლის უფლებების შემოწმება
-        is_manager = user.has_group('hotel_erp.group_hotel_manager')
+        is_manager = user.has_group(
+            'hotel_erp.group_hotel_manager'
+        )
 
         is_guest = (
             reservation.guest_id.user_id.id == user.id
@@ -877,14 +1247,44 @@ class HotelPortal(http.Controller):
             '/my/dashboard?success=payment_registered'
         )
 
-    @http.route('/my/reservation/cancel', type='http', auth='user', website=True, methods=['POST'], csrf=True)
-    def cancel_reservation(self, reservation_id=None, **kwargs):
+    @http.route(
+        '/my/reservation/cancel',
+        type='http',
+        auth='user',
+        website=True,
+        methods=['POST'],
+        csrf=True
+    )
+    def cancel_reservation(
+        self,
+        reservation_id=None,
+        **kwargs
+    ):
+
         if reservation_id:
-            reservation = request.env['hotel.reservation'].sudo().browse(int(reservation_id))
-            if reservation.exists() and (
+
+            reservation = request.env[
+                'hotel.reservation'
+            ].sudo().browse(
+                int(reservation_id)
+            )
+
+            if (
+                reservation.exists()
+                and (
                     reservation.guest_id.email == request.env.user.email
-                    or reservation.guest_id.partner_id.id == request.env.user.partner_id.id
+                    or reservation.guest_id.partner_id.id
+                    == request.env.user.partner_id.id
+                )
             ):
-                reservation.write({'state': 'cancelled'})
-                return request.redirect('/my/dashboard?success=booking_cancelled')
+
+                reservation.write({
+                    'state': 'cancelled'
+                })
+
+                return request.redirect(
+                    '/my/dashboard?success=booking_cancelled'
+                )
+
         return request.redirect('/my/dashboard')
+
