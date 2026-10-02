@@ -118,7 +118,9 @@ class HotelReceptionController(http.Controller):
         if room_id:
             room = request.env['hotel.room'].sudo().browse(int(room_id))
 
-            if room.exists() and room.housekeeping_status in ['dirty', 'maintenance']:
+            if room.exists() and room.housekeeping_status in ('dirty','cleaning'):
+                if room.housekeeping_status == 'dirty':
+                    room.action_set_cleaning()
                 room.action_set_clean()
                 return request.redirect('/my/dashboard?clean_rooms=1')
 
@@ -426,11 +428,8 @@ class HotelRoomsWebsite(http.Controller):
                 if co <= ci:
                     date_error = 'checkout_before_checkin'
                 else:
-                    overlapping = request.env['hotel.reservation'].sudo().search([
-                        ('check_in', '<', co),
-                        ('check_out', '>', ci),
-                        ('state', '!=', 'cancelled'),
-                    ])
+                    Reservation = request.env['hotel.reservation'].sudo()
+                    overlapping = Reservation.search(Reservation._blocking_domain(None, ci, co))
 
                     booked_room_ids = overlapping.mapped('room_id').ids
 
@@ -491,10 +490,12 @@ class HotelRoomController(http.Controller):
         if not room_id:
             return []
 
-        reservations = request.env['hotel.reservation'].sudo().search([
-            ('room_id', '=', int(room_id)),
-            ('state', '!=', 'cancelled'),
-        ])
+        Reservation = request.env['hotel.reservation'].sudo()
+        reservations = Reservation.search(Reservation._blocking_domain(
+            [int(room_id)],
+            fields.Date.today(),
+            fields.Date.from_string('2999-12-31'),
+        ))
 
         disabled_dates = []
 
@@ -518,15 +519,13 @@ class BookingForm(http.Controller):
         auth='public',
         website=True
     )
-    def booking_form(
-        self,
-        room_id=None,
-        check_in=None,
-        check_out=None,
-        **kwargs
-    ):
+    def booking_form(self,room_id=None,check_in=None,check_out=None,**kwargs):
         user = request.env.user
         is_public = user._is_public()
+
+        guest=False
+        if not is_public:
+            guest=request.env['hotel.guest'].sudo().search([('partner_id','=',user.partner_id.id)],limit=1)
 
         is_staff = (
             (not is_public)
@@ -549,11 +548,8 @@ class BookingForm(http.Controller):
                 ci = co = None
 
             if ci and co and co > ci:
-                overlapping = request.env['hotel.reservation'].sudo().search([
-                    ('check_in', '<', co),
-                    ('check_out', '>', ci),
-                    ('state', '!=', 'cancelled'),
-                ])
+                Reservation = request.env['hotel.reservation'].sudo()
+                overlapping = Reservation.search(Reservation._blocking_domain(None, ci, co))
 
                 booked_room_ids = overlapping.mapped('room_id').ids
 
@@ -582,6 +578,7 @@ class BookingForm(http.Controller):
                 'is_staff': is_staff,
                 'is_self_service': is_self_service,
                 'user': user,
+                'guest': guest,
             },
         )
 
@@ -797,13 +794,21 @@ class BookingForm(http.Controller):
             guest.sudo().write(update_vals)
 
         # 8. ჯავშნის შექმნა
-        reservation = request.env['hotel.reservation'].sudo().create({
+        Reservation = request.env['hotel.reservation'].sudo()
+        if Reservation.search_count(Reservation._blocking_domain([int(room_id)], check_in, check_out)):
+            return request.redirect('/my/dashboard?error=room_unavailable')
+
+        reservation = Reservation.create({
             'guest_id': guest.id,
             'room_id': room_id,
             'check_in': check_in,
             'check_out': check_out,
             'state': 'draft',
         })
+        try:
+            reservation.action_sent_pending()
+        except ValidationError as e:
+            return request.redirect(f'/my/dashboard?error={e.args[0]}')
         # 9. გადამისამართება
         if newly_registered:
             return request.redirect('/my/dashboard?success=account_created')
@@ -873,7 +878,7 @@ class HotelPortal(http.Controller):
             pending_reservations = request.env[
                 'hotel.reservation'
             ].sudo().search([
-                ('state', 'in', ['draft', 'confirmed'])
+                ('state', 'in', ['pending', 'confirmed'])
             ])
 
             checked_in_reservations = request.env[
@@ -888,7 +893,7 @@ class HotelPortal(http.Controller):
                 (
                     'housekeeping_status',
                     'in',
-                    ['dirty', 'maintenance']
+                    ['dirty', 'cleaning']
                 )
             ])
 
@@ -943,7 +948,7 @@ class HotelPortal(http.Controller):
                 ])
 
                 checked_in_reservations = my_reservations.filtered(
-                    lambda r: r.state in ['checked_in', 'done']
+                    lambda r: r.state == 'checked_in'
                 )
 
                 if checked_in_reservations:
@@ -1038,13 +1043,22 @@ class HotelPortal(http.Controller):
 
             if guest_id and room_id and check_in and check_out:
 
-                request.env['hotel.reservation'].sudo().create({
+                Reservation = request.env['hotel.reservation'].sudo()
+                if Reservation.search_count(
+                        Reservation._blocking_domain([int(room_id)], check_in, check_out)):
+                    return request.redirect('/my/dashboard?error=room_unavailable')
+
+                reservation = Reservation.create({
                     'guest_id': int(guest_id),
                     'room_id': int(room_id),
                     'check_in': check_in,
                     'check_out': check_out,
                     'state': 'draft',
                 })
+                try:
+                    reservation.action_sent_pending()
+                except ValidationError as e:
+                    return request.redirect(f'/my/dashboard?error={e.args[0]}')
 
                 return request.redirect(
                     '/my/dashboard?success=booking_created'
@@ -1230,8 +1244,7 @@ class HotelPortal(http.Controller):
             reservation._compute_amount_due()
             reservation._compute_payment_status()
 
-            # Payment Confirmation Email
-            reservation._send_payment_confirmation_email(amount)
+            # Confirmation email უკვე იგზავნება AccountPayment.action_post()-ში
 
         except ValidationError as e:
             return request.redirect(
@@ -1278,13 +1291,13 @@ class HotelPortal(http.Controller):
                 )
             ):
 
-                reservation.write({
-                    'state': 'cancelled'
-                })
+                try:
+                    reservation.action_cancel()
+                except ValidationError as e:
+                    return request.redirect(f'/my/dashboard?error={e.args[0]}')
 
                 return request.redirect(
                     '/my/dashboard?success=booking_cancelled'
                 )
 
         return request.redirect('/my/dashboard')
-

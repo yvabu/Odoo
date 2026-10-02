@@ -151,7 +151,7 @@
                                             <label class="form-label fw-semibold text-secondary">Full Name *</label>
                                             <t t-if="is_self_service">
                                                 <input type="text" name="guest_name"
-                                                       class="form-control form-control-lg bg-light border-0 fs-6"
+                                                       class="form-control form-control-lg bg-light  fs-6"
                                                        t-att-value="user.name" readonly="1" required="1"/>
                                             </t>
                                             <t t-else="">
@@ -163,9 +163,14 @@
 
                                         <div class="col-md-6">
                                             <label class="form-label fw-semibold text-secondary">Personal ID / Passport *</label>
+                                            <t t-if="is_self_service">
                                             <input type="text" id="personal_number" name="personal_number"
-                                                   class="form-control form-control-lg bg-light border-0 fs-6"
-                                                   placeholder="01001011223" maxlength="11" required="1"/>
+                                                   class="form-control form-control-lg bg-light fs-6"
+                                                   t-att-value="guest.personal_number" readonly="1"  maxlength="11" required="1"/>
+                                            </t>
+                                            <t t-else="">
+                                                <input type="text" id="personal_number" name="personal_number" class="form-control form-control-lg bg-light  fs-6" placeholder="01219854892" maxlength="11" required="1"/>
+                                            </t>
                                             <div id="personal_number_error" class="text-danger small mt-1" style="display: none;"/>
                                         </div>
 
@@ -173,12 +178,12 @@
                                             <label class="form-label fw-semibold text-secondary">Email Address *</label>
                                             <t t-if="is_self_service">
                                                 <input type="email" id="email" name="email"
-                                                       class="form-control form-control-lg bg-light border-0 fs-6"
+                                                       class="form-control form-control-lg bg-light  fs-6"
                                                        t-att-value="user.email" readonly="1" required="1"/>
                                             </t>
                                             <t t-else="">
                                                 <input type="email" id="email" name="email"
-                                                       class="form-control form-control-lg fs-6"
+                                                       class="form-control form-control-lg  fs-6"
                                                        placeholder="guest@example.com" required="1"/>
                                                 <t t-if="is_public">
                                                     <small class="text-muted d-block mt-1">
@@ -192,7 +197,8 @@
                                         <div class="col-md-6">
                                             <label class="form-label fw-semibold text-secondary">Phone Number *</label>
                                             <input type="tel" name="phone" id="phone"
-                                                   class="form-control form-control-lg bg-light border-0 fs-6"
+                                                   class="form-control form-control-lg bg-light  fs-6"
+                                                   placeholder="551234567"
                                                    t-att-value="user.phone if is_self_service else ''"
                                                    maxlength="9" required="1"/>
                                             <div id="phone_error" class="text-danger small mt-1" style="display: none;"/>
@@ -201,7 +207,7 @@
                                         <div class="col-12">
                                             <label class="form-label fw-semibold text-secondary">Address *</label>
                                             <input type="text" name="address"
-                                                   class="form-control form-control-lg bg-light border-0 fs-6"
+                                                   class="form-control form-control-lg bg-light  fs-6"
                                                    t-att-value="user.partner_id.street if is_self_service else ''"
                                                    placeholder="Street, City, Country" required="1"/>
                                         </div>
@@ -218,7 +224,7 @@
                                                t-att-value="selected_room.id"/>
 
                                         <select id="room_id" name="room_id"
-                                                class="form-select form-select-lg bg-light border-0 fs-6"
+                                                class="form-select form-select-lg bg-light  fs-6"
                                                 t-att-disabled="'disabled' if selected_room else None" required="1">
 
                                             <t t-if="selected_room">
@@ -247,14 +253,14 @@
                                         <div class="col-md-6">
                                             <label class="form-label fw-semibold text-secondary">Check-In Date *</label>
                                             <input type="text" name="check_in" id="check_in"
-                                                   class="form-control form-control-lg bg-light border-0 fs-6"
+                                                   class="form-control form-control-lg bg-light  fs-6"
                                                    placeholder="Select Check-in" t-att-value="check_in"
                                                    t-att-data-prefill="check_in" required="1"/>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label fw-semibold text-secondary">Check-Out Date *</label>
                                             <input type="text" name="check_out" id="check_out"
-                                                   class="form-control form-control-lg bg-light border-0 fs-6"
+                                                   class="form-control form-control-lg bg-light  fs-6"
                                                    placeholder="Select Check-out" t-att-value="check_out"
                                                    t-att-data-prefill="check_out" required="1"/>
                                         </div>

@@ -198,7 +198,7 @@
 
                                         <tr>
                                             <td>
-                                                <t t-out="res.id"/>
+                                                <t t-out="res.name"/>
                                             </td>
 
                                             <td>
@@ -227,7 +227,7 @@
 
                                             <!-- NEW: Add Service & Advance Payment -->
                                             <td>
-                                                <t t-if="res.state not in ['checked_out', 'cancelled']">
+                                                <t t-if="res.state not in ['checked_out', 'cancelled', 'expired', 'no_show']">
                                                     <div class="d-flex align-items-center gap-1">
 
                                                         <button
@@ -241,7 +241,7 @@
                                                         </button>
 
                                                         <!-- NEW: Advance Payment Button -->
-                                                        <t t-if="res.amount_due > 0 and res.state not in ('checked_out', 'cancelled')">
+                                                        <t t-if="res.amount_due > 0 and res.state not in ('checked_out', 'cancelled', 'expired', 'no_show')">
                                                           <button
                                                                 type="button"
                                                                 class="btn btn-sm btn-outline-success"
@@ -981,7 +981,7 @@
                                                 <div class="d-flex gap-2">
 
                                                     <!-- Confirm button -->
-                                                    <t t-if="res.state == 'draft'">
+                                                    <t t-if="res.state == 'pending'">
                                                         <form action="/receptionist/set_confirm" method="post"
                                                               class="m-0">
                                                             <input type="hidden"
@@ -1097,7 +1097,7 @@
                                                     </button>
 
                                                     <!-- NEW: Guest Advance Payment Button -->
-                                                    <t t-if="act.amount_due > 0 and act.state not in ('checked_out', 'cancelled')">
+                                                    <t t-if="act.amount_due > 0 and act.state not in ('checked_out', 'cancelled', 'expired', 'no_show')">
                                                         <button
                                                                 type="button"
                                                                 class="btn btn-sm btn-outline-success"
@@ -1401,7 +1401,7 @@
                                         <tr>
                                             <td>
                                                 #
-                                                <t t-out="res.id"/>
+                                                <t t-out="res.name"/>
                                             </td>
                                             <td>
                                                 <a
@@ -1428,7 +1428,7 @@
                                                 <div class="d-flex align-items-center gap-2">
 
                                                     <!-- NEW: Add Service -->
-                                                    <t t-if="res.state not in ['checked_out', 'cancelled']">
+                                                    <t t-if="res.state not in ['checked_out', 'cancelled', 'expired', 'no_show']">
                                                         <button
                                                                 type="button"
                                                                 class="btn btn-sm btn-outline-primary"
@@ -1440,7 +1440,7 @@
                                                         </button>
 
                                                         <!-- NEW: Guest Advance Payment Button -->
-                                                        <t t-if="res.amount_due > 0 and res.state not in ('checked_out', 'cancelled')">
+                                                        <t t-if="res.amount_due > 0 and res.state not in ('checked_out', 'cancelled', 'expired', 'no_show')">
                                                           <button
                                                                 type="button"
                                                                 class="btn btn-sm btn-outline-success"
@@ -1467,7 +1467,7 @@
                                                 </div>
 
                                                 <!-- NEW: Guest Service Modal -->
-                                                <t t-if="res.state not in ['checked_out', 'cancelled']">
+                                                <t t-if="res.state not in ['checked_out', 'cancelled', 'expired', 'no_show']">
                                                     <div
                                                             class="modal fade"
                                                             t-attf-id="addServiceModalGuest#{res.id}"

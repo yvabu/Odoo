@@ -45,9 +45,9 @@
                                 <tr>
                                     <td class="text-start">ოთახის ქირაობა (ოთახის სახელი:<span t-field="o.room_id.room_number"/>)</td>
                                     <td class="text-center"><span t-out="(o.check_out - o.check_in).days"/></td>
-                                    <td class="text-center"><span t-field="o.room_id.room_price" t-options='{"widget": "monetary", "display_currency": o.env.company.currency_id}'/></td>
+                                    <td class="text-center"><span t-field="o.room_price" t-options='{"widget": "monetary", "display_currency": o.env.company.currency_id}'/></td>
                                     <td class="text-center">
-                                        <span t-out="(o.check_out - o.check_in).days * o.room_id.room_price" t-options='{"widget": "monetary", "display_currency": o.env.company.currency_id}'/>
+                                        <span t-out="(o.check_out - o.check_in).days * o.room_price" t-options='{"widget": "monetary", "display_currency": o.env.company.currency_id}'/>
                                     </td>
                                 </tr>
                                 <!-- 2. დამატებითი სერვისების სტრიქონები (Service Lines) -->

@@ -1,9 +1,5 @@
-from email.policy import default
-
 from odoo import models,fields,api
 from odoo.exceptions import ValidationError
-
-
 class HotelRoom(models.Model):
     _name='hotel.room'
     _description='Hotel Room'
@@ -17,7 +13,8 @@ class HotelRoom(models.Model):
         [
           ('available','Available'),
           ('occupied','Occupied'),
-          ('maintenance','Maintenance')
+          ('maintenance','Maintenance'),
+          ('inactive','Inactive'),
         ],
         string='Status',
         default='available'
@@ -33,9 +30,14 @@ class HotelRoom(models.Model):
     image=fields.Image(string='image',max_width=1920,max_height=1920)
     reservation_ids=fields.One2many('hotel.reservation','room_id',string="Reservations")
     reservation_count=fields.Integer(string="ჯავშანთა რაოდენობა",compute="_compute_reservation_count")
-    housekeeping_status=fields.Selection([('clean','Clean'),('dirty','Dirty'),('inspection','Needs Inspection')],default='clean',required=True)
+    housekeeping_status=fields.Selection([('clean','Clean'),('dirty','Dirty'),('cleaning','Cleaning')],default='clean',required=True)
+    is_occupied_now=fields.Boolean(string='Occupied',compute='_compute_occupied_now')
 
 
+    @api.depends('reservation_ids.state')
+    def _compute_occupied_now(self):
+        for rec in self:
+            rec.is_occupied_now=any(r.state=='checked_in' for r in rec.reservation_ids)
 
     @api.constrains('room_price')
     def _check_room_price(self):
@@ -66,17 +68,26 @@ class HotelRoom(models.Model):
 
     def action_set_clean(self):
         for rec in self:
+            if rec.housekeeping_status!='cleaning':
+                raise ValidationError('ოთახის Clean-ზე გადაყვანა შესაძლებელია მხოლოდ დასუფთავების პროცესის (Cleaning) შემდეგ.')
             rec.housekeeping_status='clean'
+
     def action_set_dirty(self):
         for rec in self:
+            if rec.housekeeping_status=='dirty':
+                continue
             rec.housekeeping_status='dirty'
 
-    def action_set_status_maintenance(self):
+    def action_set_cleaning(self):
         for rec in self:
-            rec.housekeeping_status='maintenance'
+            if rec.housekeeping_status !='dirty':
+                raise ValidationError('დასუფთავების დაწყება შესაძლებელია მხოლოდ დაუსუფთავებელი (Dirty) ოთახისთვის.')
+            rec.housekeeping_status='cleaning'
+
+
     def action_set_maintenance(self):
         for rec in self:
-            if rec.room_status=='occupied':
+            if rec.is_occupied_now:
                 raise ValidationError('ოთახი დაკავებულია, მისი maintenance-ზე გადაყვანა შეუძლებელია')
             rec.room_status='maintenance'
     def _compute_reservation_count(self):
@@ -95,15 +106,18 @@ class HotelRoom(models.Model):
             'context':  {'default_room_id':self.id}
         }
 
+    def action_set_inactive(self):
+        for rec in self:
+            if rec.is_occupied_now:
+                raise ValidationError('ოთახი დაკავებულია, მისი Inactive-ზე გადაყვანა შეუძლებელია')
+            rec.room_status='inactive'
+
     def action_set_available(self):
         self.ensure_one()
-        if self.room_status !='maintenance':
-            raise ValidationError('მხოლოდ Maintenance მდგომარეობაში მყოფი ოთახის გადაყვანაა შესაძლებელი Available-ზე.')
+        if self.room_status not in ('maintenance','inactive'):
+            raise ValidationError('Available-ზე გადაყვანა შესაძლებელია მხოლოდ Maintenance ან Inactive მდგომარეობიდან.')
         self.write({'room_status':'available'})
 
-    def set_occupied(self):
-        self.ensure_one()
-        self.write({'room_status':'occupied'})
     def action_copy_room(self):
         self.ensure_one()
         self.copy(default={

@@ -1,4 +1,5 @@
 import base64
+from datetime import timedelta
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 
@@ -16,20 +17,28 @@ class HotelReservation(models.Model):
         'res.currency', string='Currency',
         default=lambda self: self.env.company.currency_id, readonly=True
     )
-    room_price = fields.Monetary(
-        related='room_id.room_price', currency_field='currency_id',
-        string='ოთახის ფასი(1 ღამე)', readonly=True, store=True
-    )
+    room_price = fields.Monetary( currency_field='currency_id',string='ოთახის ფასი(1 ღამე)', readonly=True, store=True)
+    pending_date=fields.Datetime(string="Pending Date", readonly=True)
+    hold_expires_at = fields.Datetime(string="Hold Expires At", readonly=True, copy=False)
+    confirmed_at = fields.Datetime(string="Confirmed At", readonly=True, copy=False)
+    confirmed_by = fields.Many2one('res.users', string="Confirmed By", readonly=True, copy=False)
+    cancelled_at = fields.Datetime(string="Cancelled At", readonly=True, copy=False)
+    cancellation_reason = fields.Text(string="Cancellation Reason", copy=False)
+    checked_in_at = fields.Datetime(string="Checked In At", readonly=True, copy=False)
+    checked_out_at = fields.Datetime(string="Checked Out At", readonly=True, copy=False)
     total_price = fields.Monetary(
         string="Total Price", currency_field='currency_id',
         compute="_compute_total_price", store=True
     )
     state = fields.Selection([
         ('draft', 'Draft'),
+        ('pending', 'Pending'),
         ('confirmed', 'Confirmed'),
         ('checked_in', 'Checked In'),
         ('checked_out', 'Checked Out'),
-        ('cancelled', 'Cancelled')
+        ('cancelled', 'Cancelled'),
+        ('expired', 'Expired'),
+        ('no_show', 'No Show'),
     ], string='State', default="draft")
 
     service_line_ids = fields.One2many('hotel.reservation.line', 'reservation_id', string="Service Lines")
@@ -71,12 +80,75 @@ class HotelReservation(models.Model):
     )
     active = fields.Boolean(string="Active", default=True)
 
+
+
+    @api.onchange(room_id)
+    def set_room_price(self):
+        self.room_price=self.room_id.price
+
+    def action_no_show(self):
+        for rec in self:
+            if rec.state !='confirmed':
+                raise ValidationError('დაუდასტურებელი ჯავშნიდან ვერ განახორციელებთ ამ ქმედებას(action_no_show)')
+            if rec.check_in >= fields.Date.today():
+                raise ValidationError('შემოსვლის თარიღი აღემატება დღევანდელ დღეს და ვერ განახორციელებთ ქმედებას:(action_no_show)')
+            rec.state='no_show'
+    @api.model
+    def _blocking_domain(self, room_ids, check_in, check_out):
+        """ერთადერტი ადგილი, სადაც განისაზღვრება რომელი ჯავშანი აკავებს ოთახს:
+        confirmed, checked_in და ვადაგაუსვლელი pending."""
+        now = fields.Datetime.now()
+        domain = [
+            ('check_in', '<', check_out),
+            ('check_out', '>', check_in),
+            '|',
+            ('state', 'in', ('confirmed', 'checked_in')),
+            '&', ('state', '=', 'pending'), ('hold_expires_at', '>', now),
+        ]
+        if room_ids is not None:
+            domain.insert(0, ('room_id', 'in', room_ids))
+        return domain
+
+    def _get_conflicts(self):
+        self.ensure_one()
+        domain = self._blocking_domain([self.room_id.id], self.check_in, self.check_out)
+        return self.sudo().search(domain + [('id', '!=', self.id)])
+
+    def action_sent_pending(self):
+        hours = int(self.env['ir.config_parameter'].sudo().get_param('hotel_erp.pending_hold_hours', 24))
+        now = fields.Datetime.now()
+        for rec in self:
+            if rec.state != 'draft':
+                raise ValidationError('pending-ზე გადაყვანა შესაძლებელია მხოლოდ draft ჯავშნებისათვის')
+            # შემოწმება write-მდე, რომ შეცდომისას ბაზაში ნახევრად შეცვლილი ჩანაწერი არ დარჩეს
+            if rec._get_conflicts():
+                raise ValidationError(
+                    f"ოთახი '{rec.room_id.room_number}' არჩეულ თარიღებში უკვე დაკავებულია!"
+                )
+            rec.write({
+                'state': 'pending',
+                'pending_date': now,
+                'hold_expires_at': now + timedelta(hours=hours),
+            })
+
+    @api.model
+    def _cron_expire_pending(self):
+        expired = self.search([
+            ('state', '=', 'pending'),
+            ('hold_expires_at', '<', fields.Datetime.now()),
+        ])
+        expired.write({'state': 'expired'})
+
+
     def write(self, vals):
         for rec in self:
             if rec.state == 'checked_out':
                 raise ValidationError('Checked Out სტატუსში მყოფი ჯავშნის მონაცემების შეცვლა აკრძალულია!')
 
         res = super().write(vals)
+        if 'room_id' in vals and 'room_price' not in vals:
+            for rec in self.filtered(lambda r: r.state in ('draft', 'pending')):
+                rec.room_price = rec.room_id.room_price
 
         if 'check_out' in vals:
             for rec in self:
@@ -162,7 +234,7 @@ class HotelReservation(models.Model):
         for rec in self:
             if rec.room_id and rec.check_in and rec.check_out:
                 dgeebi = max((rec.check_out - rec.check_in).days, 1)
-                rec.total_price = (dgeebi * rec.room_id.room_price) + sum(rec.service_line_ids.mapped('price_subtotal'))
+                rec.total_price = (dgeebi * rec.room_price) + sum(rec.service_line_ids.mapped('price_subtotal'))
             else:
                 rec.total_price = 0.0
 
@@ -189,67 +261,57 @@ class HotelReservation(models.Model):
         for rec in self:
             if not rec.room_id or not rec.check_in or not rec.check_out:
                 continue
-            if rec.state in ('cancelled', 'checked_out') or not rec.active:
+            if rec.state not in ('pending', 'confirmed', 'checked_in') or not rec.active:
                 continue
             if rec.check_out <= rec.check_in:
                 raise ValidationError('Check-out თარიღი უნდა იყოს Check-in-ზე გვიან!')
-
-            overlapping = self.search([
-                ('id', '!=', rec.id),
-                ('room_id', '=', rec.room_id.id),
-                ('active', '=', True),
-                ('state', 'not in', ['cancelled', 'checked_out']),
-                ('check_in', '<', rec.check_out),
-                ('check_out', '>', rec.check_in),
-            ])
-
-            if overlapping:
+            if rec._get_conflicts():
                 raise ValidationError(
                     f"ოთახი '{rec.room_id.room_number}' არჩეულ თარიღებში უკვე დაკავებულია!"
                 )
 
     @api.onchange('room_id', 'check_in', 'check_out')
     def _onchange_check_dates(self):
-        if self.room_id and self.check_in and self.check_out:
-            if self.check_out > self.check_in:
-                overlapping = self.search([
-                    ('id', '!=', self._origin.id if self._origin else False),
-                    ('room_id', '=', self.room_id.id),
-                    ('active', '=', True),
-                    ('state', 'not in', ['cancelled', 'checked_out']),
-                    ('check_in', '<', self.check_out),
-                    ('check_out', '>', self.check_in),
-                ])
-                if overlapping:
-                    return {
-                        'warning': {
-                            'title': '⚠️ ოთახი დაკავებულია!',
-                            'message': f'ოთახი "{self.room_id.room_number}" არჩეულ ინტერვალში უკვე დაჯავშნილია.',
-                        }
+        if self.room_id and self.check_in and self.check_out and self.check_out > self.check_in:
+            domain = self._blocking_domain([self.room_id.id], self.check_in, self.check_out)
+            if self._origin:
+                domain.append(('id', '!=', self._origin.id))
+            if self.sudo().search_count(domain):
+                return {
+                    'warning': {
+                        'title': '⚠️ ოთახი დაკავებულია!',
+                        'message': f'ოთახი "{self.room_id.room_number}" არჩეულ ინტერვალში უკვე დაჯავშნილია.',
                     }
+                }
 
     def unlink(self):
-        for record in self:
-            if record.room_id:
-                record.room_id.sudo().write({'room_status': 'available'})
         return super().unlink()
 
     def action_confirm(self):
+        now=fields.Datetime.now()
         for rec in self:
-            if rec.state == 'cancelled':
-                raise ValidationError('გაუქმებული ჯავშნის დადასტურება შეუძლებელია')
+            if rec.state not in ('draft', 'pending'):
+                raise ValidationError('დადასტურება შესაძლებელია მხოლოდ Draft ან Pending ჯავშნისთვის')
             if rec.paid_amount <= 0:
                 raise ValidationError("ჯავშნის დასადასტურებლად აუცილებელია წინასწარი გადახდის განხორციელება,(გამოიყენეთ 'წინასწარი გადახდის' ღილაკი.)")
-            rec.state = 'confirmed'
+            if rec._get_conflicts():
+                raise ValidationError(
+                    f"ოთახი '{rec.room_id.room_number}' არჩეულ თარიღებში უკვე დაკავებულია!"
+                )
+            rec.write({'state': 'confirmed', 'hold_expires_at': False,'confirmed_at': now,'confirmed_by':self.env.user.id})
 
     def action_check_in(self):
+        now=fields.Datetime.now()
         for rec in self:
-            if rec.room_id.housekeeping_status in ('dirty', 'maintenance'):
-                raise ValidationError('დაუსუფთავებელ ან რემონტში მყოფ ოთახში Check-in შეუძლებელია!')
             if rec.state != 'confirmed':
                 raise ValidationError('დაუდასტურებელი ჯავშანის Check_in არ შეიძლება')
-            rec.state = 'checked_in'
-            rec.room_id.sudo().write({'room_status': 'occupied'})
+            if rec.room_id.room_status != 'available':
+                raise ValidationError('ოთახი რემონტშია ან არააქტიურია, Check-in შეუძლებელია!')
+            if rec.room_id.housekeeping_status != 'clean':
+                raise ValidationError('დაუსუფთავებელ ოთახში Check-in შეუძლებელია!')
+            rec.write({'state':'checked_in','checked_in_at': now})
+            if rec.room_id:
+                rec.room_id.write({'room_status':'occupied'})
 
             if not rec.invoice_id:
                 rec.action_create_invoice()
@@ -258,6 +320,7 @@ class HotelReservation(models.Model):
             )
 
     def action_check_out(self):
+        now=fields.Datetime.now()
         for rec in self:
             today = fields.Date.today()
             if today < rec.check_out:
@@ -265,7 +328,7 @@ class HotelReservation(models.Model):
                     f"დღეს არის {today}, ხოლო დაგეგმილი Check-Out-ის თარიღია {rec.check_out}. "
                     f"თუ გსურთ დროზე ადრე გასვლა, შეცვალეთ Check-Out-ის თარიღი."
                 )
-            rec.sudo().write({'state': 'checked_out', 'active': False})
+            rec.sudo().write({'state': 'checked_out', 'active': False,'checked_out_at':now})
             if rec.invoice_id:
                 rec._send_invoice_by_email(rec.invoice_id)
             for invoice in rec.service_invoice_ids:
@@ -274,21 +337,23 @@ class HotelReservation(models.Model):
             rec.guest_id.message_post(
                 body=f"სტუმარმა დატოვა სასტუმრო. ჯავშანი: <b>{rec.name}</b>, ოთახი: <b>{rec.room_id.room_number}</b>."
             )
-            rec.room_id.sudo().write({'room_status': 'available', 'housekeeping_status': 'dirty'})
+            rec.room_id.sudo().write({'housekeeping_status': 'dirty','room_id.room_status':'available'})
 
     def action_cancel(self):
+        now=fields.Datetime.now()
         for rec in self:
-            if rec.state not in ('draft', 'confirmed'):
+            if rec.state not in ('draft', 'pending', 'confirmed'):
                 raise ValidationError('cancel ის გამოძახება დაუშვებელია')
-            rec.state = 'cancelled'
-            if rec.room_id:
-                rec.room_id.sudo().write({'room_status': 'available'})
+            rec.write({'state': 'cancelled', 'hold_expires_at': False,'cancelled_at': now})
 
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
             if vals.get('name', 'New') == 'New':
                 vals['name'] = self.env['ir.sequence'].next_by_code('hotel.reservation')
+
+            if not vals.get('room_price') and vals.get('room_id'):
+                vals['room_price'] = self.env['hotel.room'].browse(vals['room_id']).room_price
         return super().create(vals_list)
 
     def action_view_invoice(self):
@@ -377,7 +442,7 @@ class HotelReservation(models.Model):
         room_total = 0.0
         if self.room_id and self.check_in and self.check_out:
             days = max((self.check_out - self.check_in).days, 1)
-            room_total = days * self.room_id.room_price
+            room_total = days * self.room_price
 
         service_total = sum(line.price_subtotal for line in self.service_line_ids)
         grand_total = self.total_price
@@ -471,7 +536,7 @@ class HotelReservation(models.Model):
                 invoice_lines.append((0, 0, {
                     'name': f"ოთახის ქირაობა:{rec.room_id.room_number}",
                     'quantity': day,
-                    'price_unit': rec.room_id.room_price
+                    'price_unit': rec.room_price
                 }))
 
             invoice = self.env['account.move'].sudo().create({
@@ -563,7 +628,7 @@ class AccountPayment(models.Model):
                 if payment.reservation_id and payment.state=='in_process':
                     payment.state='paid'
 
-                if payment.reservation_id.state == 'draft':
-                    payment.reservation_id.state = 'confirmed'
+                if payment.reservation_id.state in ('draft', 'pending'):
+                    payment.reservation_id.action_confirm()
                 payment.reservation_id._send_payment_confirmation_email(payment.amount)
         return res

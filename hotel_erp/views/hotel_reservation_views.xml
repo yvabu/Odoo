@@ -15,7 +15,11 @@
               <!-- 🎨 ლამაზი Badge სტატუსებისთვის -->
               <field name="state"
                      widget="badge"
-                     decoration-warning="state == 'checked_out'"/>
+                     decoration-info="state == 'pending'"
+                     decoration-success="state in ('confirmed','checked_in')"
+                     decoration-warning="state == 'checked_out'"
+                     decoration-muted="state in ('expired','cancelled')"
+                     decoration-danger="state == 'no_show'"/>
           </list>
         </field>
     </record>
@@ -27,19 +31,20 @@
         <field name="arch" type="xml">
             <form>
                 <header>
+                    <button name="action_sent_pending" string="Submit" type="object" class="oe_highlight" invisible="state != 'draft'"/>
                     <button name="action_check_in" string="Check In" type="object" class="oe_highlight" invisible="state !='confirmed'"/>
                     <button name="action_check_out" string="Check Out" type="object" class="oe_highlight" invisible="state !='checked_in'"/>
-
                     <!-- 🆕 წინასწარი გადახდის ღილაკი -->
-                    <button name="action_register_advance_payment" string="წინასწარი გადახდა" type="object" class="btn-primary" invisible="state in ('cancelled','checked_out') or payment_status in ('paid','overpaid') or amount_due &lt;= 0"/>
+                    <button name="action_register_advance_payment" string="წინასწარი გადახდა" type="object" class="btn-primary" invisible="state in ('cancelled','checked_out','expired','no_show') or payment_status in ('paid','overpaid') or amount_due &lt;= 0"/>
 
-                    <button name="action_cancel" string="Set cancelled" type="object" invisible="state != 'draft' and state !='confirmed'"/>
+                    <button name="action_cancel" string="Set cancelled" type="object" invisible="state not in ('draft','pending','confirmed')"/>
                     <button name="action_create_invoice" string="Create Invoice" type="object" class="oe_highlight" invisible="invoice_id or state!='checked_in'"/>
+                    <button name="action_no_show" string="No Show" type="object" class="oe_highlight" invisible="state !='confirmed'"/>
 
                     <!-- 🆕 სერვისის ინვოისის შექმნის ღილაკი -->
                     <button name="action_create_service_invoice" string="სერვისის ინვოისის შექმნა" type="object" class="oe_highlight" invisible="invoice_id or  state not in ('checked_in', 'checked_out')"/>
 
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,checked_in,checked_out,cancelled"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,pending,confirmed,checked_in,checked_out"/>
                     <field name="payment_status" widget="badge" decoration-danger="payment_status=='unpaid'" decoration-warning="payment_status=='partial'" decoration-success="payment_status=='paid'" decoration-info="payment_status=='overpaid'" />
                 </header>
                 <sheet>
@@ -77,11 +82,12 @@
                             <field name="guest_id"/>
                             <field name="room_id" domain="[('housekeeping_status','=','clean')]" options="{'no_open': True}"/>
                             <field name="currency_id" invisible="1"/>
-                            <field name="room_price" widget="monetary"/>
+                            <field name="room_price" widget="monetary" readonly="1" force_save="1"/>
                         </group>
                         <group>
                             <field name="check_in" />
                             <field name="check_out" />
+                            <field name="hold_expires_at" invisible="state != 'pending'"/>
 
                             <field name="total_price" readonly="1" widget="monetary"/>
                             <field name="invoice_id" invisible="1"/>
@@ -100,6 +106,19 @@
                                 </list>
                             </field>
                         </page>
+
+                        <page name="Audit" string="Audit/Cancelation Reason">
+                            <group>
+                                <field name="cancellation_reason" invisible="state !='cancelled'"/>
+                                <field name="confirmed_at"/>
+                                <field name="confirmed_by"/>
+                                <field name="cancelled_at"/>
+                                <field name="checked_in_at"/>
+                                <field name="checked_out_at"/>
+                            </group>
+
+                        </page>
+
                         <page name="payments" string="Payments">
                             <field name="payment_ids" readonly="1">
                                 <list editable="bottom">
@@ -146,11 +165,13 @@
                 <field name="guest_id"/>
                 <field name="room_id"/>
 
+                <filter name="pending" string="Pending" domain="[('state','=','pending')]"/>
+                <filter name="expired" string="Expired" domain="[('state','=','expired')]"/>
                 <filter name="confirmed" string="Confirmed" domain="[('state','=','confirmed')]"/>
                 <filter name="checked_in" string="Checked In" domain="[('state','=','checked_in')]"/>
                 <filter name="invoiced" string="Invoiced" domain="[('invoice_id','!=',False)]"/>
                 <filter name="archived" string="Archived" domain="[('active','=',False)]"/>
-
+                <filter name="no_show" string="No Show" domain="[('state','=','no_show')]"/>
                 <separator/>
                 <group expand="0" string="Group By">
                     <filter name="status" string="Status" context="{'group_by': 'state'}"/>
