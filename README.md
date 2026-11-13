@@ -180,6 +180,12 @@ addons_path = /path/to/odoo/addons,/path/to/custom_addons
 <img width="2558" height="1181" alt="image" src="https://github.com/user-attachments/assets/03f31284-60a5-4d9a-aa87-1cecf201812f" />
 <img width="2558" height="1181" alt="image" src="https://github.com/user-attachments/assets/ed151e53-2809-4673-a4ec-bc0051a62a5d" />
 <img width="2558" height="1181" alt="image" src="https://github.com/user-attachments/assets/00fd8a52-caff-4063-abc6-cf2dd0cfe818" />
+<img width="2558" height="1181" alt="image" src="https://github.com/user-attachments/assets/7bcce8aa-ab4b-4722-a761-2c28b65ebb3d" />
+<img width="2558" height="1181" alt="image" src="https://github.com/user-attachments/assets/f81d6bc8-4b48-4f38-8a74-50aec49fbc02" />
+<img width="2558" height="1181" alt="image" src="https://github.com/user-attachments/assets/5e878515-11c0-46eb-a179-70700075d383" />
+
+
+
 
 
 
