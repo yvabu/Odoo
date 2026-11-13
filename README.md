@@ -164,14 +164,8 @@ addons_path = /path/to/odoo/addons,/path/to/custom_addons
 
 ## 📸 Screenshots
 
-Screenshots of the application will be added here to demonstrate:
+<img width="2558" height="1181" alt="Screenshot from 2026-11-13 15-04-41" src="https://github.com/user-attachments/assets/0c0d9402-b4be-4349-bd7d-eb9e3c9faa91" />
 
-- Hotel Dashboard
-- Room Management
-- Guest Management
-- Reservation Management
-- Payment Workflows
-- Hotel Website
 
 ## 📚 Learning & Development
 
