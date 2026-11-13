@@ -165,6 +165,36 @@ addons_path = /path/to/odoo/addons,/path/to/custom_addons
 ## 📸 Screenshots
 
 <img width="2558" height="1181" alt="Screenshot from 2026-11-13 15-04-41" src="https://github.com/user-attachments/assets/0c0d9402-b4be-4349-bd7d-eb9e3c9faa91" />
+<img width="2558" height="1181" alt="image" src="https://github.com/user-attachments/assets/296b8120-84cc-4191-a11e-21625ffa40ea" />
+<img width="2558" height="1181" alt="image" src="https://github.com/user-attachments/assets/5aea5721-2883-4b52-bfe0-7a965a9704b7" />
+<img width="2558" height="1181" alt="image" src="https://github.com/user-attachments/assets/80a249d4-c925-4892-a1db-0a2ed07acc3e" />
+<img width="2558" height="1181" alt="image" src="https://github.com/user-attachments/assets/ab361e2e-cfa4-4129-9220-eea01cbb1254" />
+<img width="2558" height="1181" alt="image" src="https://github.com/user-attachments/assets/948b1df3-b9e9-4ace-a115-bca8453d2045" />
+<img width="2558" height="1181" alt="image" src="https://github.com/user-attachments/assets/46bd4cc6-20c7-426b-93ce-c054c9ef0aa6" />
+<img width="2558" height="1181" alt="image" src="https://github.com/user-attachments/assets/97ec308c-97c1-4e8c-a695-93721560dda0" />
+<img width="2558" height="1181" alt="image" src="https://github.com/user-attachments/assets/bc99c935-0a22-4dfa-a918-fa50dc31c02e" />
+<img width="2558" height="1181" alt="image" src="https://github.com/user-attachments/assets/ffc16735-8a8f-4e42-989e-1b4776d59d88" />
+<img width="2558" height="1181" alt="image" src="https://github.com/user-attachments/assets/91d104a7-e2fb-4d6f-82d6-d2c32bacdd13" />
+<img width="2558" height="1181" alt="image" src="https://github.com/user-attachments/assets/704347cb-6890-4bd6-9e3a-3fb1bf139adf" />
+<img width="2558" height="1181" alt="image" src="https://github.com/user-attachments/assets/b122ff8b-4664-4701-b8d6-64b73af7672c" />
+<img width="2558" height="1181" alt="image" src="https://github.com/user-attachments/assets/03f31284-60a5-4d9a-aa87-1cecf201812f" />
+<img width="2558" height="1181" alt="image" src="https://github.com/user-attachments/assets/ed151e53-2809-4673-a4ec-bc0051a62a5d" />
+<img width="2558" height="1181" alt="image" src="https://github.com/user-attachments/assets/00fd8a52-caff-4063-abc6-cf2dd0cfe818" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ## 📚 Learning & Development
