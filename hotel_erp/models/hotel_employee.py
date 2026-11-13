@@ -5,15 +5,15 @@ class HotelEmployees(models.Model):
     _name = 'hotel.employee'
     _description = 'Hotel Employee'
 
-    name = fields.Char(string='თანამშრომლის სახელი', required=True)
-    surname=fields.Char(string="თანამშრომლის გვარი",required=True)
-    email = fields.Char(string='ელექტრონული ფოსტა', required=True,compute='_compute_email')
-    password = fields.Char(string="შეიყვანეთ თქვენთვის სასურველი პაროლი", required=True)
-    phone = fields.Char(string='ტელეფონის ნომერი')
+    name = fields.Char(string='Employee Name', required=True)
+    surname=fields.Char(string="Employee Surname",required=True)
+    email = fields.Char(string='Email', required=True,compute='_compute_email')
+    password = fields.Char(string="Enter the password you want", required=True)
+    phone = fields.Char(string='Phone Number')
     role = fields.Selection([
         ('manager', 'Manager'),
         ('receptionist', 'Receptionist')
-    ], string='როლი', required=True, default='receptionist')
+    ], string='Role', required=True, default='receptionist')
     user_id=fields.Many2one('res.users',string='User',readonly=True)
 
     @api.depends('name','surname')
@@ -42,9 +42,7 @@ class HotelEmployees(models.Model):
                     'email': rec.email,
                     'login': rec.email,
                     'password': rec.password,
-                    'groups_id': [(4,group.id),
-                                  (4,self.env.ref('base.group_user').id)]
-                })
+                    'groups_id': [(4,group.id),(4,self.env.ref('base.group_user').id)]})
                 rec.user_id = user.id
 
         return records

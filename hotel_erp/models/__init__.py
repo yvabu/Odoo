@@ -1,2 +1,2 @@
-from . import hotel_room,hotel_guest,hotel_reservation,hotel_service,hotel_reservation_line,hotel_employee
+from . import hotel_room,hotel_guest,hotel_reservation,hotel_service,hotel_reservation_line,hotel_employee,hotel_reservation_cancel_wizard,hotel_dashboard,hotel_room_image
 

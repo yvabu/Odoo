@@ -20,16 +20,17 @@ class HotelRoom(models.Model):
         default='available'
     )
     floor=fields.Integer(string='Floor')
-    capacity=fields.Integer(string='ოთახის ტევადობა',required=True,default=1)
+    capacity=fields.Integer(string='Room capacity',required=True,default=1)
     description=fields.Text(string='Description')
     active=fields.Boolean(default=True)
     is_wifi=fields.Boolean(string="WI-FI")
     is_air_conditioning=fields.Boolean(string='Air Conditioning')
     balcony_count=fields.Integer(string='Balcony Count',default=1)
     is_smoking=fields.Boolean(string='Smoking Allowed')
-    image=fields.Image(string='image',max_width=1920,max_height=1920)
+    image_1920=fields.Image(string='Main image',max_width=1920,max_height=1920)
+    image_ids=fields.One2many('hotel.room.images','room_id',string="Gallery")
     reservation_ids=fields.One2many('hotel.reservation','room_id',string="Reservations")
-    reservation_count=fields.Integer(string="ჯავშანთა რაოდენობა",compute="_compute_reservation_count")
+    reservation_count=fields.Integer(string="Number of reservations",compute="_compute_reservation_count")
     housekeeping_status=fields.Selection([('clean','Clean'),('dirty','Dirty'),('cleaning','Cleaning')],default='clean',required=True)
     is_occupied_now=fields.Boolean(string='Occupied',compute='_compute_occupied_now')
 
@@ -43,33 +44,33 @@ class HotelRoom(models.Model):
     def _check_room_price(self):
         for rec in self:
             if rec.room_price <=0:
-                raise ValidationError('ფასი არ შეიძლება ნული ან მასზე ნაკლები იყოს')
+                raise ValidationError('The price cannot be zero or less than zero.')
 
     @api.constrains('room_type','capacity')
     def _check_room_type(self):
         for rec in self:
             if rec.room_type:
                 if rec.room_type=='single' and rec.capacity >1:
-                    raise ValidationError('Single ტიპის ოთახში კაცთა რაოდენობა უნდა უდრიდეს 1-ს')
+                    raise ValidationError('In a single-type room, the number of men must be equal to 1.')
                 if rec.room_type=='double' and rec.capacity>2:
-                    raise ValidationError('Double ტიპის ოთახში კაცთა რაოდენობა უნდა უდრიდეს 2-ს')
+                    raise ValidationError('The number of people in a double room should be equal to 2')
     @api.constrains('capacity')
     def _check_capacity(self):
         for rec in self:
             if rec.capacity<=0:
-                raise ValidationError('რაოდენობა არ შეიძლება იყოს 0 ან 0-ზე ნაკლები')
+                raise ValidationError('The count cannot be 0 or less than 0')
     @api.constrains('room_number')
     def _check_room_number(self):
         for rec in self:
             if rec.room_number:
                 if self.search([('room_number','=',rec.room_number),('id','!=',rec.id)]):
-                    raise ValidationError('ამ სახელით ოთახი უკვე არსებობს!')
+                    raise ValidationError('A room with this name already exists!')
 
 
     def action_set_clean(self):
         for rec in self:
             if rec.housekeeping_status!='cleaning':
-                raise ValidationError('ოთახის Clean-ზე გადაყვანა შესაძლებელია მხოლოდ დასუფთავების პროცესის (Cleaning) შემდეგ.')
+                raise ValidationError('A room can be set to "Clean" only after the cleaning process has been completed.')
             rec.housekeeping_status='clean'
 
     def action_set_dirty(self):
@@ -81,14 +82,14 @@ class HotelRoom(models.Model):
     def action_set_cleaning(self):
         for rec in self:
             if rec.housekeeping_status !='dirty':
-                raise ValidationError('დასუფთავების დაწყება შესაძლებელია მხოლოდ დაუსუფთავებელი (Dirty) ოთახისთვის.')
+                raise ValidationError('Cleaning can be started only for a "Dirty" room.')
             rec.housekeeping_status='cleaning'
 
 
     def action_set_maintenance(self):
         for rec in self:
             if rec.is_occupied_now:
-                raise ValidationError('ოთახი დაკავებულია, მისი maintenance-ზე გადაყვანა შეუძლებელია')
+                raise ValidationError('The room is busy, it cannot be transferred to maintenance')
             rec.room_status='maintenance'
     def _compute_reservation_count(self):
         for rec in self:
@@ -109,13 +110,13 @@ class HotelRoom(models.Model):
     def action_set_inactive(self):
         for rec in self:
             if rec.is_occupied_now:
-                raise ValidationError('ოთახი დაკავებულია, მისი Inactive-ზე გადაყვანა შეუძლებელია')
+                raise ValidationError('The room is occupied; it cannot be set to Inactive.')
             rec.room_status='inactive'
 
     def action_set_available(self):
         self.ensure_one()
         if self.room_status not in ('maintenance','inactive'):
-            raise ValidationError('Available-ზე გადაყვანა შესაძლებელია მხოლოდ Maintenance ან Inactive მდგომარეობიდან.')
+            raise ValidationError('Transition to "Available" is possible only from "Maintenance" or "Inactive" states.')
         self.write({'room_status':'available'})
 
     def action_copy_room(self):

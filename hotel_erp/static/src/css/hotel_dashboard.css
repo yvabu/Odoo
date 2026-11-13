@@ -1,0 +1,197 @@
+/* =========================================================
+   Hotel Dashboard – Soft Modern (light indigo)
+   ჩაამატე: static/src/css/hotel_dashboard.css
+   და manifest-ში assets -> web.assets_backend
+   ========================================================= */
+
+.hd-root {
+  --hd-bg: #FAFBFF;
+  --hd-card: #FFFFFF;
+  --hd-border: #EBEFF7;
+  --hd-text: #1E293B;
+  --hd-muted: #7C8AA0;
+
+  --hd-indigo: #6366F1;
+  --hd-indigo-dark: #4338CA;
+  --hd-indigo-soft: #EEF0FF;
+
+  --hd-green: #34B58A;
+  --hd-green-soft: #E8FAF3;
+  --hd-blue: #5AA2F0;
+  --hd-blue-soft: #EAF4FE;
+  --hd-amber: #F0AD2E;
+  --hd-amber-soft: #FFF6E0;
+  --hd-red: #EF6B6B;
+  --hd-red-soft: #FEEDED;
+
+  background: var(--hd-bg);
+  color: var(--hd-text);
+  padding: 24px;
+  font-family: "Inter", "Noto Sans Georgian", system-ui, sans-serif;
+  min-height: 100%;
+  overflow-y: auto;
+  max-height: 100vh;
+}
+
+.hd-card.clickable { cursor: pointer; }
+
+/* ---------- Header ---------- */
+.hd-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+.hd-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--hd-text);
+  margin: 0;
+}
+
+/* თარიღის ფილტრი – ერთი pill */
+.hd-date-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--hd-card);
+  border: 1px solid var(--hd-border);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 13px;
+  color: #64748B;
+}
+.hd-date-pill input[type="date"] {
+  border: 0;
+  background: transparent;
+  font-size: 13px;
+  color: var(--hd-text);
+  padding: 0;
+  outline: none;
+  box-shadow: none;
+}
+.hd-date-pill .hd-sep { color: var(--hd-muted); }
+
+/* ---------- Section title ---------- */
+.hd-section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--hd-text);
+  margin: 32px 0 16px;
+}
+
+/* ---------- Grid ---------- */
+.hd-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+}
+.hd-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 24px;
+}
+@media (max-width: 1100px) {
+  .hd-grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hd-grid-2 { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .hd-grid-4 { grid-template-columns: 1fr; }
+}
+
+/* ---------- Cards ---------- */
+.hd-card {
+  background: var(--hd-card);
+  border: 1px solid var(--hd-border);
+  border-radius: 16px;
+  padding: 20px 24px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, .04);
+  transition: box-shadow .2s ease, transform .2s ease;
+}
+.hd-card:hover {
+  box-shadow: 0 8px 24px rgba(99, 102, 241, .10);
+  transform: translateY(-2px);
+}
+
+.hd-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  margin-bottom: 14px;
+}
+.hd-icon.indigo { background: var(--hd-indigo-soft); color: var(--hd-indigo); }
+.hd-icon.green  { background: var(--hd-green-soft);  color: var(--hd-green); }
+.hd-icon.blue   { background: var(--hd-blue-soft);   color: var(--hd-blue); }
+.hd-icon.amber  { background: var(--hd-amber-soft);  color: var(--hd-amber); }
+
+.hd-label {
+  font-size: 13px;
+  color: var(--hd-muted);
+  line-height: 1.3;
+}
+.hd-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--hd-text);
+  line-height: 1.2;
+  margin-top: 4px;
+}
+.hd-value.sm { font-size: 26px; }
+
+.hd-trend {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--hd-green);
+  margin-left: 8px;
+}
+.hd-trend.down { color: var(--hd-red); }
+
+/* ---------- Finance cards ---------- */
+.hd-card.income  .hd-value { color: var(--hd-text); }
+.hd-card.expense .hd-value { color: var(--hd-text); }
+
+/* "მოგება" – გამორჩეული ბარათი */
+.hd-card.profit {
+  background: var(--hd-indigo-soft);
+  border-color: #DDE1FC;
+}
+.hd-card.profit .hd-label { color: var(--hd-indigo); }
+.hd-card.profit .hd-value { color: var(--hd-indigo-dark); }
+
+/* ---------- Chart cards ---------- */
+.hd-chart-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--hd-text);
+  margin-bottom: 16px;
+}
+.hd-chart-box { position: relative; height: 280px; }
+
+/* donut-ის ცენტრალური წარწერა */
+.hd-donut-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.hd-donut-center .num { font-size: 32px; font-weight: 700; color: var(--hd-text); }
+.hd-donut-center .txt { font-size: 12px; color: var(--hd-muted); }
+
+/* ---------- Odoo-ს ძველი სტილის გადაფარვა (საჭიროების შემთხვევაში) ---------- */
+.hd-root .card { border-radius: 16px; }
+.hd-root .bg-primary,
+.hd-root .bg-success,
+.hd-root .bg-info,
+.hd-root .bg-warning { background: var(--hd-card) !important; color: var(--hd-text) !important; }

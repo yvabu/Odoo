@@ -9,7 +9,7 @@ class HotelGuest(models.Model):
     _sql_constraints=[(
         'unique_personal_number',
         'unique(personal_number)',
-        'პირადი ნომერი უნდა იყოს უნიკალური!!!'
+        'The personal number must be unique.!!!'
     ) ]
 
     name=fields.Char(string="Full Name",required=True)
@@ -18,7 +18,7 @@ class HotelGuest(models.Model):
     email=fields.Char(string="Email")
     address=fields.Text(string='Address')
     active=fields.Boolean(string="active",default=True)
-    reservation_count=fields.Integer(string='ჯავშანთა რაოდენობა',compute="_compute_reservation_count")
+    reservation_count=fields.Integer(string='Number of reservations',compute="_compute_reservation_count")
     reservation_ids=fields.One2many('hotel.reservation','guest_id',string="Reservations")
     partner_id=fields.Many2one('res.partner',string="Contact",ondelete='restrict',readonly=True)
     user_id=fields.Many2one('res.users',string="Portal User",ondelete='set null',readonly=True)
@@ -32,9 +32,9 @@ class HotelGuest(models.Model):
         for rec in self:
             if rec.personal_number:
                 if len(rec.personal_number) !=11 or not rec.personal_number.isdigit():
-                    raise ValidationError('პირადი ნომერი უნდა შედგებოდეს 11 ციფრისაგან და არ უნდა შეიცავდეს სიმბოლოებს')
+                    raise ValidationError('The personal number must consist of 11 digits and must not contain any symbols.')
                 if self.search([('personal_number','=',rec.personal_number),('id','!=',rec.id)]):
-                    raise ValidationError('ასეთი პირადი ნომრით უკვე არსებობს მომხამრებელი')
+                    raise ValidationError('A user with this personal number already exists.')
 
 
     @api.constrains('email','phone')
@@ -42,10 +42,10 @@ class HotelGuest(models.Model):
         for rec in self:
             if rec.email:
                 if '@' not in rec.email or '.' not in rec.email:
-                    raise ValidationError('ემაილი უნდა შეიცავდეს @-სა და .-ილს')
+                    raise ValidationError('The email must contain an @ symbol and a dot.')
             if rec.phone:
                 if len(rec.phone) !=9 or not rec.phone.isdigit():
-                    raise ValidationError('მობილური ტელეფონის ნომერი უნდა შეიცავდეს 9 ციფრს,სიმბოლოების გამოყენება არ შეიძლება')
+                    raise ValidationError('The mobile phone number must contain 9 digits; the use of symbols is not permitted.')
 
     def _compute_reservation_count(self):
         for rec in self:
@@ -63,18 +63,37 @@ class HotelGuest(models.Model):
             'context': {'default_guest_id':self.id}
         }
 
-    @api.model_create_multi
-    def create(self,vals_list):
-        for vals in vals_list:
-            # 🔑 თუ partner_id უკვე გადმოცემულია (მაგ. საიტიდან ჯავშნის დროს, სადაც სტუმარს
-            # უკვე შეექმნა res.partner + res.users ანგარიში), აღარ ვქმნით ახალს —
-            # წინააღმდეგ შემთხვევაში ეს override ყოველთვის თავიდან ქმნიდა partner-ს და
-            # კარგავდა კავშირს ახლადრეგისტრირებული user-ის ანგარიშთან.
-            if not vals.get('partner_id'):
-                partner=self.env['res.partner'].create({
-                    'name':vals.get('name'),
-                    'phone':vals.get('phone'),
-                    'email':vals.get('email')
+
+@api.model_create_multi
+def create(self, vals_list):
+    guests = super().create(vals_list)
+
+    for guest in guests:
+        if not guest.partner_id:
+            partner = self.env['res.partner'].sudo().create({
+                'name': guest.name,
+                'phone': guest.phone,
+                'email': guest.email,
+            })
+            guest.partner_id = partner.id
+
+        if guest.email and not guest.user_id:
+            existing_user = self.env['res.users'].sudo().search([('login', '=', guest.email)], limit=1)
+
+            if not existing_user:
+                portal_group = self.env.ref('base.group_portal')
+                user = self.env['res.users'].sudo().create({
+                    'name': guest.name,
+                    'login': guest.email,
+                    'email': guest.email,
+                    'partner_id': guest.partner_id.id,
+                    'groups_id': [(6, 0, [portal_group.id])],
                 })
-                vals['partner_id']=partner.id
-        return super().create(vals_list)
+                guest.user_id = user.id
+            else:
+                guest.user_id = existing_user.id
+                user = existing_user
+
+            user.action_reset_password()
+
+    return guests

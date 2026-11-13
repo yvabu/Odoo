@@ -3,302 +3,253 @@
     <!-- 1. BOOKING FORM TEMPLATE -->
     <template id="hotel_booking_form_page" name="Hotel Booking Form">
         <t t-call="website.layout">
-            <!-- External Libraries -->
-            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"/>
-            <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_blue.css"/>
-            <link rel="stylesheet" type="text/css" href="/hotel_erp/static/src/css/flatpickr_custom.css"/>
+            <head>
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"/>
+                <link rel="stylesheet" type="text/css" href="/hotel_erp/static/src/css/flatpickr_custom.css"/>
+                <link rel="stylesheet" type="text/css" href="/hotel_erp/static/src/css/hotel_theme.css"/>
+            </head>
 
-            <div id="wrap" class="oe_structure oe_empty bg-light py-5">
-                <div class="container">
+            <div id="wrap" class="hx-page oe_structure oe_empty">
+                <div class="hx-container" style="padding-top:48px;padding-bottom:80px">
 
-                    <!-- Page Header -->
-                    <div class="text-center mb-5">
-                        <h2 class="fw-bold text-dark display-6">Complete Your Reservation</h2>
-                        <p class="text-muted">Please fill in your details to secure your stay</p>
+                    <div class="text-center mb-4">
+                        <h1 class="hx-title">Complete your reservation</h1>
+                        <p class="hx-sub mx-auto">Please fill in your details to secure your stay.</p>
                     </div>
 
-                    <div class="row g-4 justify-content-center">
+                    <t t-if="request.params.get('error')">
+                        <div class="hx-alert hx-alert-bad" style="max-width:760px;margin:0 auto 24px">
+                            <i class="fa fa-exclamation-triangle"/>
+                            <span>
+                                <t t-if="request.params.get('error') == 'email_required'">Email is required.</t>
+                                <t t-elif="request.params.get('error') == 'room_unavailable'">This room is occupied for the selected dates..</t>
+                                <t t-else=""><t t-out="request.params.get('error')"/></t>
+                            </span>
+                        </div>
+                    </t>
+                    <div class="hx-steps">
+                        <div class="hx-step done"><b><i class="fa fa-check"/></b> Choose room</div>
+                        <span class="hx-step-line"/>
+                        <div class="hx-step on"><b>2</b> Your details</div>
+                        <span class="hx-step-line"/>
+                        <div class="hx-step"><b>3</b> Confirmation</div>
+                    </div>
 
-                        <!-- Left Side: Selected Room Info Card -->
-                        <t t-if="selected_room">
-                            <div class="col-lg-4">
-                                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden card-hover position-relative">
+                    <div class="hx-booking">
 
-                                    <!-- ROOM CARD SLIDER -->
-                                    <div t-attf-id="roomCarousel_#{selected_room.id}"
-                                         class="carousel slide position-relative overflow-hidden style-card-img-container"
-                                         data-bs-ride="carousel" data-bs-interval="3000">
-                                        <div class="carousel-indicators mb-1" style="z-index: 5;">
-                                            <button type="button"
-                                                    t-attf-data-bs-target="#roomCarousel_#{selected_room.id}"
-                                                    data-bs-slide-to="0" class="active"></button>
-                                            <button type="button"
-                                                    t-attf-data-bs-target="#roomCarousel_#{selected_room.id}"
-                                                    data-bs-slide-to="1"></button>
-                                            <button type="button"
-                                                    t-attf-data-bs-target="#roomCarousel_#{selected_room.id}"
-                                                    data-bs-slide-to="2"></button>
+                        <!-- LEFT: FORM -->
+                        <div class="hx-form">
+
+                            <t t-if="is_public">
+                                <div class="hx-note info">
+                                    <i class="fa fa-info-circle mt-1"/>
+                                    <span>A personal account will be automatically created using your details; after check-in, you will be able to view your invoice and make an online payment.</span>
+                                </div>
+                            </t>
+                            <t t-if="is_staff">
+                                <div class="hx-note warn">
+                                    <i class="fa fa-user-plus mt-1"/>
+                                    <span>Booking on behalf of a guest — enter the guest's details (not your own).</span>
+                                </div>
+                            </t>
+
+                            <form action="/booking/submit" method="post" id="booking_form">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                                <div class="hx-fs">
+                                    <h4 class="hx-fs-title"><i class="fa fa-user"/> Guest details</h4>
+                                    <div class="hx-fgrid">
+                                        <div>
+                                            <label class="hx-label">Full name *</label>
+                                            <input type="text" name="guest_name" class="hx-input"
+                                                   placeholder="Guest's Full Name" required="1"
+                                                   t-att-value="user.name if is_self_service else None"
+                                                   t-att-readonly="'readonly' if is_self_service else None"/>
                                         </div>
-
-                                        <div class="carousel-inner h-100">
-                                            <div class="carousel-item active h-100">
-                                                <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&amp;fit=crop&amp;w=800&amp;q=80"
-                                                     class="d-block w-100 h-100 object-fit-cover transition-zoom"
-                                                     alt="Room 1"/>
-                                            </div>
-                                            <div class="carousel-item h-100">
-                                                <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&amp;fit=crop&amp;w=800&amp;q=80"
-                                                     class="d-block w-100 h-100 object-fit-cover transition-zoom"
-                                                     alt="Room 2"/>
-                                            </div>
-                                            <div class="carousel-item h-100">
-                                                <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&amp;fit=crop&amp;w=800&amp;q=80"
-                                                     class="d-block w-100 h-100 object-fit-cover transition-zoom"
-                                                     alt="Room 3"/>
-                                            </div>
+                                        <div>
+                                            <label class="hx-label">Personal ID / Passport *</label>
+                                            <input type="text" id="personal_number" name="personal_number" class="hx-input"
+                                                   placeholder="01219854892" maxlength="11" required="1"
+                                                   t-att-value="guest.personal_number if is_self_service else None"
+                                                   t-att-readonly="'readonly' if is_self_service else None"/>
+                                            <div id="personal_number_error" class="hx-err"></div>
                                         </div>
-
-                                        <button class="carousel-control-prev" type="button"
-                                                t-attf-data-bs-target="#roomCarousel_#{selected_room.id}"
-                                                data-bs-slide="prev" style="z-index: 5;">
-                                            <span class="carousel-control-prev-icon"
-                                                  style="width: 20px; height: 20px;"></span>
-                                        </button>
-                                        <button class="carousel-control-next" type="button"
-                                                t-attf-data-bs-target="#roomCarousel_#{selected_room.id}"
-                                                data-bs-slide="next" style="z-index: 5;">
-                                            <span class="carousel-control-next-icon"
-                                                  style="width: 20px; height: 20px;"></span>
-                                        </button>
-
-                                        <span class="position-absolute top-0 end-0 m-3 badge rounded-pill bg-dark bg-opacity-75 px-3 py-2 fs-6"
-                                              style="z-index: 5;">
-                                            $
-                                            <t t-out="selected_room.room_price"/>
-                                            / night
-                                        </span>
-                                    </div>
-
-                                    <!-- Card Body -->
-                                    <div class="card-body p-4 d-flex flex-column">
-                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <h4 class="card-title fw-bold text-dark mb-0">
-                                                <t t-out="selected_room.room_number"/>
-                                            </h4>
-                                            <span class="badge bg-info text-dark px-2 py-1">
-                                                <t t-out="selected_room.room_type"/>
-                                            </span>
+                                        <div>
+                                            <label class="hx-label">Email address *</label>
+                                            <input type="email" id="email" name="email" class="hx-input"
+                                                   placeholder="guest@example.com" required="1"
+                                                   t-att-value="user.email if is_self_service else None"
+                                                   t-att-readonly="'readonly' if is_self_service else None"/>
+                                            <t t-if="is_public">
+                                                <small class="hx-hint">This will be your login — for accessing your account.</small>
+                                            </t>
+                                            <div id="email_error" class="hx-err"></div>
                                         </div>
-
-                                        <ul class="list-unstyled text-muted my-3 flex-grow-1">
-                                            <li class="mb-2"><i class="fa fa-users me-2 text-warning"></i>Capacity:
-                                                <strong>
-                                                    <t t-out="selected_room.capacity"/>
-                                                    guests
-                                                </strong>
-                                            </li>
-                                            <li class="mb-2"><i class="fa fa-check-circle me-2 text-success"></i>Status:
-                                                <strong>
-                                                    <t t-out="selected_room.room_status"/>
-                                                </strong>
-                                            </li>
-                                            <li class="mb-2"><i class="fa fa-magic me-2 text-primary"></i>Cleanliness:
-                                                <strong>
-                                                    <t t-out="selected_room.housekeeping_status"/>
-                                                </strong>
-                                            </li>
-                                        </ul>
-
-                                        <div class="d-flex gap-2 mt-auto">
-                                            <a t-attf-href="/room/#{selected_room.id}"
-                                               class="btn btn-outline-dark rounded-3 flex-fill fw-semibold">
-                                                Details
-                                            </a>
+                                        <div>
+                                            <label class="hx-label">Phone number *</label>
+                                            <input type="tel" name="phone" id="phone" class="hx-input"
+                                                   placeholder="551234567" maxlength="9" required="1"
+                                                   t-att-value="user.phone if is_self_service else ''"/>
+                                            <div id="phone_error" class="hx-err"></div>
+                                        </div>
+                                        <div class="hx-full">
+                                            <label class="hx-label">Address *</label>
+                                            <input type="text" name="address" class="hx-input"
+                                                   placeholder="Street, City, Country" required="1"
+                                                   t-att-value="user.partner_id.street if is_self_service else ''"/>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </t>
 
-                        <!-- Right Side: Booking Form -->
-                        <div t-att-class="'col-lg-8' if selected_room else 'col-lg-10'">
-                            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
-
-                                <!-- 🔑 საინფორმაციო ბანერი -->
-                                <t t-if="is_public">
-                                    <div class="alert alert-info rounded-3 mb-4">
-                                        <i class="fa fa-info-circle me-2"></i>
-                                        თქვენი მონაცემებით ავტომატურად შეიქმნება პირადი ანგარიში — Check-in-ის შემდეგ,
-                                        იქიდან ნახავთ ინვოისს და შეგეძლებათ ონლაინ გადახდა.
-                                    </div>
-                                </t>
-                                <t t-if="is_staff">
-                                    <div class="alert alert-warning rounded-3 mb-4">
-                                        <i class="fa fa-user-plus me-2"></i>
-                                        სტუმრის სახელით ჯავშნა — შეავსეთ სტუმრის (არა თქვენი) მონაცემები.
-                                    </div>
-                                </t>
-
-                                <form action="/booking/submit" method="post" id="booking_form">
-                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-
-                                    <h5 class="fw-bold text-dark mb-4 border-bottom pb-2">
-                                        <i class="fa fa-user me-2 text-primary"></i>1. Guest Details
-                                    </h5>
-
-                                    <div class="row g-3 mb-4">
-                                        <div class="col-md-6">
-                                            <label class="form-label fw-semibold text-secondary">Full Name *</label>
-                                            <t t-if="is_self_service">
-                                                <input type="text" name="guest_name"
-                                                       class="form-control form-control-lg bg-light  fs-6"
-                                                       t-att-value="user.name" readonly="1" required="1"/>
-                                            </t>
-                                            <t t-else="">
-                                                <input type="text" name="guest_name"
-                                                       class="form-control form-control-lg fs-6"
-                                                       placeholder="სტუმრის სრული სახელი" required="1"/>
-                                            </t>
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <label class="form-label fw-semibold text-secondary">Personal ID / Passport *</label>
-                                            <t t-if="is_self_service">
-                                            <input type="text" id="personal_number" name="personal_number"
-                                                   class="form-control form-control-lg bg-light fs-6"
-                                                   t-att-value="guest.personal_number" readonly="1"  maxlength="11" required="1"/>
-                                            </t>
-                                            <t t-else="">
-                                                <input type="text" id="personal_number" name="personal_number" class="form-control form-control-lg bg-light  fs-6" placeholder="01219854892" maxlength="11" required="1"/>
-                                            </t>
-                                            <div id="personal_number_error" class="text-danger small mt-1" style="display: none;"/>
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <label class="form-label fw-semibold text-secondary">Email Address *</label>
-                                            <t t-if="is_self_service">
-                                                <input type="email" id="email" name="email"
-                                                       class="form-control form-control-lg bg-light  fs-6"
-                                                       t-att-value="user.email" readonly="1" required="1"/>
-                                            </t>
-                                            <t t-else="">
-                                                <input type="email" id="email" name="email"
-                                                       class="form-control form-control-lg  fs-6"
-                                                       placeholder="guest@example.com" required="1"/>
-                                                <t t-if="is_public">
-                                                    <small class="text-muted d-block mt-1">
-                                                        ეს იქნება თქვენი login — ანგარიშზე წვდომისთვის.
-                                                    </small>
-                                                </t>
-                                            </t>
-                                            <div id="email_error" class="text-danger small mt-1" style="display: none;"/>
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <label class="form-label fw-semibold text-secondary">Phone Number *</label>
-                                            <input type="tel" name="phone" id="phone"
-                                                   class="form-control form-control-lg bg-light  fs-6"
-                                                   placeholder="551234567"
-                                                   t-att-value="user.phone if is_self_service else ''"
-                                                   maxlength="9" required="1"/>
-                                            <div id="phone_error" class="text-danger small mt-1" style="display: none;"/>
-                                        </div>
-
-                                        <div class="col-12">
-                                            <label class="form-label fw-semibold text-secondary">Address *</label>
-                                            <input type="text" name="address"
-                                                   class="form-control form-control-lg bg-light  fs-6"
-                                                   t-att-value="user.partner_id.street if is_self_service else ''"
-                                                   placeholder="Street, City, Country" required="1"/>
-                                        </div>
-                                    </div>
-
-                                    <h5 class="fw-bold text-dark mb-4 border-bottom pb-2">
-                                        <i class="fa fa-bed me-2 text-primary"></i>2. Stay &amp; Room Details
-                                    </h5>
-
-                                    <div class="mb-4">
-                                        <label class="form-label fw-semibold text-secondary">Selected Room *</label>
-
-                                        <input t-if="selected_room" type="hidden" name="room_id"
-                                               t-att-value="selected_room.id"/>
-
-                                        <select id="room_id" name="room_id"
-                                                class="form-select form-select-lg bg-light  fs-6"
-                                                t-att-disabled="'disabled' if selected_room else None" required="1">
-
-                                            <t t-if="selected_room">
-                                                <option t-att-value="selected_room.id"
-                                                        t-att-data-price="selected_room.room_price" selected="selected">
-                                                    Room <t t-out="selected_room.room_number"/> — $
-                                                    <t t-out="selected_room.room_price"/> / night
-                                                    (<t t-out="selected_room.room_type"/>)
-                                                </option>
-                                            </t>
-
-                                            <t t-else="">
-                                                <option value="" disabled="1" selected="selected">Choose a room...</option>
-                                                <t t-foreach="rooms" t-as="r">
-                                                    <option t-att-value="r.id" t-att-data-price="r.room_price">
-                                                        Room <t t-out="r.room_number"/> — $
-                                                        <t t-out="r.room_price"/> / night
-                                                        (<t t-out="r.room_type"/>)
+                                <div class="hx-fs">
+                                    <h4 class="hx-fs-title"><i class="fa fa-bed"/> Stay and room</h4>
+                                    <div class="hx-fgrid">
+                                        <div class="hx-full">
+                                            <label class="hx-label">Selected room *</label>
+                                            <input t-if="selected_room" type="hidden" name="room_id" t-att-value="selected_room.id"/>
+                                            <select id="room_id" name="room_id" class="hx-input"
+                                                    t-att-disabled="'disabled' if selected_room else None" required="1">
+                                                <t t-if="selected_room">
+                                                    <option t-att-value="selected_room.id" t-att-data-price="selected_room.room_price" selected="selected">
+                                                        Room <t t-out="selected_room.room_number"/> — $<t t-out="selected_room.room_price"/> / night (<t t-out="selected_room.room_type"/>)
                                                     </option>
                                                 </t>
-                                            </t>
-                                        </select>
-                                    </div>
-
-                                    <div class="row g-3 mb-4">
-                                        <div class="col-md-6">
-                                            <label class="form-label fw-semibold text-secondary">Check-In Date *</label>
-                                            <input type="text" name="check_in" id="check_in"
-                                                   class="form-control form-control-lg bg-light  fs-6"
-                                                   placeholder="Select Check-in" t-att-value="check_in"
-                                                   t-att-data-prefill="check_in" required="1"/>
+                                                <t t-else="">
+                                                    <option value="" disabled="1" selected="selected">Choose a room...</option>
+                                                    <t t-foreach="rooms" t-as="r">
+                                                        <option t-att-value="r.id" t-att-data-price="r.room_price">
+                                                            Room <t t-out="r.room_number"/> — $<t t-out="r.room_price"/> / night (<t t-out="r.room_type"/>)
+                                                        </option>
+                                                    </t>
+                                                </t>
+                                            </select>
                                         </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label fw-semibold text-secondary">Check-Out Date *</label>
-                                            <input type="text" name="check_out" id="check_out"
-                                                   class="form-control form-control-lg bg-light  fs-6"
-                                                   placeholder="Select Check-out" t-att-value="check_out"
-                                                   t-att-data-prefill="check_out" required="1"/>
+                                        <div>
+                                            <label class="hx-label">Check-in date *</label>
+                                            <input type="text" name="check_in" id="check_in" class="hx-input"
+                                                   placeholder="Select check-in" autocomplete="off"
+                                                   t-att-value="check_in" t-att-data-prefill="check_in" required="1"/>
                                         </div>
-                                    </div>
-
-                                    <!-- Price Details Box -->
-                                    <div id="price_summary_box"
-                                         class="card bg-dark text-white border-0 rounded-4 p-4 mb-4 d-none">
-                                        <div class="d-flex justify-content-between mb-2 text-white-50">
-                                            <span>Price per Night:</span>
-                                            <strong class="text-white">$<span id="display_night_price">0</span></strong>
-                                        </div>
-                                        <div class="d-flex justify-content-between mb-2 text-white-50">
-                                            <span>Number of Nights:</span>
-                                            <strong class="text-white">
-                                                <span id="display_nights_count">0</span> night(s)
-                                            </strong>
-                                        </div>
-                                        <hr class="border-secondary my-3"/>
-                                        <div class="d-flex justify-content-between fs-4 fw-bold">
-                                            <span>Total Amount:</span>
-                                            <span class="text-success">$<span id="display_total_price">0</span></span>
+                                        <div>
+                                            <label class="hx-label">Check-out date *</label>
+                                            <input type="text" name="check_out" id="check_out" class="hx-input"
+                                                   placeholder="Select check-out" autocomplete="off"
+                                                   t-att-value="check_out" t-att-data-prefill="check_out" required="1"/>
                                         </div>
                                     </div>
+                                </div>
 
-                                    <button type="submit"
-                                            class="btn btn-primary btn-lg w-100 py-3 fw-bold rounded-3 shadow-sm text-uppercase border-0">
-                                        Confirm Reservation &amp; Proceed
-                                    </button>
-                                </form>
-                            </div>
+                                <button type="submit" class="hx-btn hx-btn-gold hx-submit">
+                                    Confirm reservation <i class="fa fa-arrow-right"/>
+                                </button>
+                            </form>
                         </div>
 
+                        <!-- RIGHT: SUMMARY -->
+                        <aside class="hx-sum">
+                            <t t-if="selected_room">
+                                <t t-set="carousel_id" t-value="'hxBookingCarousel_%s' % selected_room.id"/>
+                                <t t-set="has_main_image" t-value="bool(selected_room.image_1920)"/>
+                                <t t-set="photo_count" t-value="len(selected_room.image_ids) + (1 if has_main_image else 0)"/>
+
+                                <div class="hx-sum-card">
+                                    <!-- CAROUSEL START -->
+                                    <div t-att-id="carousel_id"
+                                         class="carousel slide hx-card-carousel"
+                                         data-bs-ride="carousel"
+                                         data-bs-interval="4000">
+
+                                        <div class="carousel-inner">
+                                            <!-- MAIN IMAGE -->
+                                            <t t-if="selected_room.image_1920">
+                                                <div class="carousel-item active">
+                                                    <a t-attf-href="/room/#{selected_room.id}" class="hx-card-image-link">
+                                                        <img t-attf-src="/web/image/hotel.room/#{selected_room.id}/image_1920"
+                                                             t-att-alt="selected_room.room_number"
+                                                             class="hx-card-image"
+                                                             loading="lazy"/>
+                                                    </a>
+                                                </div>
+                                            </t>
+
+                                            <!-- ADDITIONAL IMAGES -->
+                                            <t t-foreach="selected_room.image_ids" t-as="photo">
+                                                <div t-attf-class="carousel-item #{'active' if not has_main_image and photo_index == 0 else ''}">
+                                                    <a t-attf-href="/room/#{selected_room.id}" class="hx-card-image-link">
+                                                        <img t-attf-src="/web/image/hotel.room.images/#{photo.id}/image_1920"
+                                                             t-att-alt="selected_room.room_number"
+                                                             class="hx-card-image"
+                                                             loading="lazy"/>
+                                                    </a>
+                                                </div>
+                                            </t>
+
+                                            <!-- NO IMAGE -->
+                                            <t t-if="not photo_count">
+                                                <div class="carousel-item active">
+                                                    <div class="hx-card-ph">
+                                                        <i class="fa fa-bed"/>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                        </div>
+
+                                        <!-- ROOM TYPE TAG -->
+                                        <span class="hx-tag">
+                                            <t t-out="selected_room.room_type"/>
+                                        </span>
+
+                                        <!-- INDICATORS & CONTROLS -->
+                                        <t t-if="photo_count &gt; 1">
+                                            <div class="carousel-indicators hx-card-indicators">
+                                                <t t-foreach="range(photo_count)" t-as="index">
+                                                    <button type="button"
+                                                            t-attf-data-bs-target="##{carousel_id}"
+                                                            t-attf-data-bs-slide-to="#{index}"
+                                                            t-att-class="'active' if index == 0 else ''"
+                                                            t-att-aria-label="'Slide %s' % (index + 1)"/>
+                                                </t>
+                                            </div>
+
+                                            <button class="carousel-control-prev hx-card-control"
+                                                    type="button"
+                                                    t-attf-data-bs-target="##{carousel_id}"
+                                                    data-bs-slide="prev">
+                                                <span class="carousel-control-prev-icon" aria-hidden="true"/>
+                                            </button>
+
+                                            <button class="carousel-control-next hx-card-control"
+                                                    type="button"
+                                                    t-attf-data-bs-target="##{carousel_id}"
+                                                    data-bs-slide="next">
+                                                <span class="carousel-control-next-icon" aria-hidden="true"/>
+                                            </button>
+                                        </t>
+                                    </div>
+                                    <!-- CAROUSEL END -->
+
+                                    <div class="hx-sum-body">
+                                        <h3>Room <t t-out="selected_room.room_number"/></h3>
+                                        <div class="hx-meta" style="margin-bottom:0">
+                                            <span><i class="fa fa-users"/> <t t-out="selected_room.capacity"/> guests</span>
+                                            <span t-if="selected_room.is_wifi"><i class="fa fa-wifi"/> Wi-Fi</span>
+                                            <span t-if="selected_room.is_air_conditioning"><i class="fa fa-snowflake-o"/> A/C</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+
+                            <div id="price_summary_box" class="hx-total d-none">
+                                <div class="row-l"><span>Price per night</span><strong>$<span id="display_night_price">0</span></strong></div>
+                                <div class="row-l"><span>Number of nights</span><strong><span id="display_nights_count">0</span> night(s)</strong></div>
+                                <hr/>
+                                <div class="row-t"><span>Total</span><b>$<span id="display_total_price">0</span></b></div>
+                            </div>
+                        </aside>
                     </div>
                 </div>
             </div>
 
-            <!-- JS Script for Flatpickr & Calculations -->
             <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
             <script>
                 document.addEventListener("DOMContentLoaded", function () {
@@ -313,50 +264,44 @@
                     const emailError = document.getElementById('email_error');
                     const phoneError = document.getElementById('phone_error');
 
-                    // პირადი ნომრის შემოწმება
+                    function showErr(el, msg) {
+                        el.style.display = msg ? 'block' : 'none';
+                        el.textContent = msg || '';
+                    }
+
                     if (personalNumber) {
                         personalNumber.addEventListener("input", function () {
                             const value = this.value;
                             if (!/^\d*$/.test(value)) {
-                                personalNumberError.style.display = 'block';
-                                personalNumberError.textContent = "პირადი ნომერი უნდა შეიცავდეს მხოლოდ ციფრებს.";
-                            } else if (value.length > 0 &amp;&amp; value.length !== 11) {
-                                personalNumberError.style.display = 'block';
-                                personalNumberError.textContent = "პირადი ნომერი უნდა შედგებოდეს 11 ციფრისგან.";
+                                showErr(personalNumberError, "The personal number must contain only digits.");
+                            } else if (value.length &gt; 0 &amp;&amp; value.length !== 11) {
+                                showErr(personalNumberError, "The personal number must consist of 11 digits.");
                             } else {
-                                personalNumberError.style.display = 'none';
-                                personalNumberError.textContent = '';
+                                showErr(personalNumberError, '');
                             }
                         });
                     }
 
-                    // ემაილის შემოწმება
                     if (email) {
                         email.addEventListener("input", function () {
                             const value = this.value;
-                            if (value.length > 0 &amp;&amp; (!value.includes('@') || !value.includes('.'))) {
-                                emailError.style.display = 'block';
-                                emailError.textContent = "ემაილი უნდა შეიცავდეს '@' და '.' სიმბოლოებს.";
+                            if (value.length &gt; 0 &amp;&amp; (!value.includes('@') || !value.includes('.'))) {
+                                showErr(emailError, "The email must contain the '@' and '.' symbols.");
                             } else {
-                                emailError.style.display = 'none';
-                                emailError.textContent = '';
+                                showErr(emailError, '');
                             }
                         });
                     }
 
-                    // ტელეფონის შემოწმება
                     if (phone) {
                         phone.addEventListener("input", function () {
                             const value = this.value;
                             if (!/^\d*$/.test(value)) {
-                                phoneError.style.display = 'block';
-                                phoneError.textContent = "ტელეფონის ნომერი უნდა შეიცავდეს მხოლოდ ციფრებს.";
-                            } else if (value.length > 0 &amp;&amp; value.length !== 9) {
-                                phoneError.style.display = 'block';
-                                phoneError.textContent = "ტელეფონის ნომერი უნდა შედგებოდეს 9 ციფრისგან.";
+                                showErr(phoneError, "The phone number must contain only digits.");
+                            } else if (value.length &gt; 0 &amp;&amp; value.length !== 9) {
+                                showErr(phoneError, "The phone number must consist of 9 digits.");
                             } else {
-                                phoneError.style.display = 'none';
-                                phoneError.textContent = '';
+                                showErr(phoneError, '');
                             }
                         });
                     }
@@ -369,7 +314,6 @@
                     function calculateTotalPrice() {
                         const selectedOption = roomSelect.options[roomSelect.selectedIndex];
                         const roomPrice = selectedOption ? parseFloat(selectedOption.getAttribute("data-price") || 0) : 0;
-
                         const checkInDate = checkInPicker ? checkInPicker.selectedDates[0] : null;
                         const checkOutDate = checkOutPicker ? checkOutPicker.selectedDates[0] : null;
 
@@ -377,14 +321,10 @@
                             displayNightPrice.textContent = roomPrice.toFixed(2);
                             priceBox.classList.remove("d-none");
                         }
-
                         if (roomPrice &gt; 0 &amp;&amp; checkInDate &amp;&amp; checkOutDate &amp;&amp; checkOutDate &gt; checkInDate) {
-                            const diffTime = Math.abs(checkOutDate - checkInDate);
-                            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                            const totalPrice = diffDays * roomPrice;
-
+                            const diffDays = Math.ceil(Math.abs(checkOutDate - checkInDate) / (1000 * 60 * 60 * 24));
                             displayNightsCount.textContent = diffDays;
-                            displayTotalPrice.textContent = totalPrice.toFixed(2);
+                            displayTotalPrice.textContent = (diffDays * roomPrice).toFixed(2);
                         } else {
                             displayNightsCount.textContent = "1";
                             displayTotalPrice.textContent = roomPrice.toFixed(2);
@@ -399,27 +339,19 @@
                         const prefilledCheckOut = document.getElementById("check_out").getAttribute("data-prefill") || null;
 
                         checkOutPicker = flatpickr("#check_out", {
-                            minDate: "today",
-                            dateFormat: "Y-m-d",
-                            disable: disabledDates,
-                            defaultDate: prefilledCheckOut,
-                            onChange: function () {
-                                calculateTotalPrice();
-                            }
+                            minDate: "today", dateFormat: "Y-m-d",
+                            disable: disabledDates, defaultDate: prefilledCheckOut,
+                            onChange: function () { calculateTotalPrice(); }
                         });
 
                         checkInPicker = flatpickr("#check_in", {
-                            minDate: "today",
-                            dateFormat: "Y-m-d",
-                            disable: disabledDates,
-                            defaultDate: prefilledCheckIn,
+                            minDate: "today", dateFormat: "Y-m-d",
+                            disable: disabledDates, defaultDate: prefilledCheckIn,
                             onChange: function (selectedDates) {
                                 if (selectedDates.length &gt; 0) {
                                     let nextDay = new Date(selectedDates[0]);
                                     nextDay.setDate(nextDay.getDate() + 1);
-
                                     checkOutPicker.set("minDate", nextDay);
-
                                     if (checkOutPicker.selectedDates[0] &amp;&amp; checkOutPicker.selectedDates[0] &lt; nextDay) {
                                         checkOutPicker.clear();
                                     }
@@ -428,9 +360,7 @@
                             }
                         });
 
-                        if (prefilledCheckIn &amp;&amp; prefilledCheckOut) {
-                            calculateTotalPrice();
-                        }
+                        if (prefilledCheckIn &amp;&amp; prefilledCheckOut) { calculateTotalPrice(); }
                     }
 
                     initPickers();
@@ -439,21 +369,13 @@
                         calculateTotalPrice();
                         const roomId = this.value;
                         if (!roomId) return;
-
                         fetch('/hotel/get_booked_dates', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                jsonrpc: "2.0",
-                                method: "call",
-                                params: { room_id: roomId }
-                            })
+                            body: JSON.stringify({ jsonrpc: "2.0", method: "call", params: { room_id: roomId } })
                         })
                         .then(response =&gt; response.json())
-                        .then(data =&gt; {
-                            const bookedDates = data.result || [];
-                            initPickers(bookedDates);
-                        });
+                        .then(data =&gt; { initPickers(data.result || []); });
                     });
 
                     if (roomSelect.value) {
@@ -467,88 +389,55 @@
     <!-- 2. BOOKING SUCCESS TEMPLATE -->
     <template id="hotel_booking_success_page" name="Booking Success Page">
         <t t-call="website.layout">
+            <head>
+                <link rel="stylesheet" type="text/css" href="/hotel_erp/static/src/css/hotel_theme.css"/>
+            </head>
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-            <div class="container my-5 text-center py-5">
-                <div class="alert alert-success alert-dismissible fade show shadow-sm mb-4 text-start mx-auto rounded-3"
-                     style="max-width: 650px;" role="alert">
-                    <i class="fa fa-check-circle me-2 fs-5"></i>
-                    <strong>წარმატება!</strong>
-                    თქვენი ჯავშანი მიღებულია. ინვოისი და გადახდის საშუალება გამოჩნდება
-                    Check-in-ის შემდეგ — რეცეფციაზე ან თქვენს დაშბორდზე.
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
+            <div id="wrap" class="hx-page oe_structure oe_empty">
+                <div class="hx-container" style="padding-top:56px;padding-bottom:88px">
 
-                <div class="card shadow-sm p-4 p-md-5 border-0 mx-auto rounded-4" style="max-width: 650px;">
-                    <div class="mb-3">
-                        <i class="fa fa-check-circle text-success" style="font-size: 4.5rem;"></i>
-                    </div>
-                    <h2 class="fw-bold text-dark mb-2">Reservation Confirmed!</h2>
-                    <p class="text-muted fs-6 mb-4">
-                        Thank you,
-                        <strong class="text-dark">
-                            <t t-out="reservation.guest_id.name"/>
-                        </strong>
-                        . თქვენი ჯავშანი შენახულია სტატუსით
-                        <strong>
-                            <t t-out="reservation.state"/>
-                        </strong>
-                        .
-                    </p>
-
-                    <div class="bg-light p-4 rounded-3 text-start mb-4 border-0">
-                        <h6 class="fw-bold mb-3 text-uppercase text-primary">Reservation Summary</h6>
-                        <div class="row mb-2">
-                            <div class="col-6 text-muted fs-6">Reservation Ref:</div>
-                            <div class="col-6 fw-bold text-end fs-6">
-                                <t t-out="reservation.name"/>
-                            </div>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-6 text-muted fs-6">Room:</div>
-                            <div class="col-6 fw-bold text-end fs-6">
-                                <t t-out="reservation.room_id.room_number"/>
-                                (<t t-out="reservation.room_id.room_type"/>)
-                            </div>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-6 text-muted fs-6">Check-In / Out:</div>
-                            <div class="col-6 fw-bold text-end fs-6">
-                                <t t-out="reservation.check_in"/>
-                                /
-                                <t t-out="reservation.check_out"/>
-                            </div>
-                        </div>
-                        <hr class="my-2"/>
-                        <div class="row">
-                            <div class="col-6 text-muted fs-6">Estimated Total:</div>
-                            <div class="col-6 fw-bold text-end fs-5 text-dark">$
-                                <t t-out="reservation.total_price"/>
-                            </div>
-                        </div>
+                    <div class="hx-steps">
+                        <div class="hx-step done"><b><i class="fa fa-check"/></b> Choose room</div>
+                        <span class="hx-step-line"/>
+                        <div class="hx-step done"><b><i class="fa fa-check"/></b> Your details</div>
+                        <span class="hx-step-line"/>
+                        <div class="hx-step on"><b>3</b> Confirmation</div>
                     </div>
 
-                    <div class="d-grid gap-2">
-                        <t t-if="reservation.invoice_id">
-                            <a t-attf-href="/my/invoices/#{reservation.invoice_id.id}?access_token=#{reservation.invoice_id.access_token}"
-                               class="btn btn-success btn-lg rounded-3 fw-bold py-3 shadow-sm border-0">
-                                <i class="fa fa-credit-card me-2"></i>
-                                Pay Invoice Now
-                            </a>
-                        </t>
+                    <div class="hx-success">
+                        <div class="hx-success-ic"><i class="fa fa-check"/></div>
+                        <h1 class="hx-title">Reservation received</h1>
+                        <p class="text-muted mb-0">
+                            Thank you, <strong class="text-dark"><t t-out="reservation.guest_id.name"/></strong>.
+                            Your booking has been saved with the status <strong class="text-dark"><t t-out="reservation.state"/></strong>.
+                        </p>
 
-                        <a t-attf-href="/report/pdf/hotel_erp.report_reservation_document/#{reservation.id}"
-                           target="_blank"
-                           class="btn btn-outline-danger btn-lg rounded-3 fw-bold py-3 shadow-sm mt-2">
-                            <i class="fa fa-file-pdf-o me-2"></i>
-                            Download Reservation PDF
-                        </a>
+                        <div class="hx-sumbox">
+                            <h6>RESERVATION SUMMARY</h6>
+                            <div class="hx-row"><span>Reservation ref</span><span class="text-dark"><t t-out="reservation.name"/></span></div>
+                            <div class="hx-row"><span>Room</span><span class="text-dark"><t t-out="reservation.room_id.room_number"/> (<t t-out="reservation.room_id.room_type"/>)</span></div>
+                            <div class="hx-row"><span>Check-in / out</span><span class="text-dark"><t t-out="reservation.check_in"/> → <t t-out="reservation.check_out"/></span></div>
+                            <div class="hx-row tot"><span>Estimated total</span><b class="hx-serif">$<t t-out="reservation.total_price"/></b></div>
+                        </div>
 
-                        <div class="d-flex gap-2 justify-content-center mt-3">
-                            <a href="/" class="btn btn-light border rounded-3 px-4 fw-bold w-100 py-2">Back to Home</a>
-                            <a href="/my/dashboard" class="btn btn-light border rounded-3 px-4 fw-bold w-100 py-2">
-                                My Dashboard
+                        <p class="small text-muted mb-4">
+                            <i class="fa fa-info-circle me-1"/> The invoice and payment method will appear after check-in — at the reception or on your dashboard.
+                        </p>
+
+                        <div class="hx-actions">
+                            <t t-if="reservation.invoice_id">
+                                <a t-attf-href="/my/invoices/#{reservation.invoice_id.id}?access_token=#{reservation.invoice_id.access_token}" class="hx-btn hx-btn-gold">
+                                    <i class="fa fa-credit-card"/> Pay invoice now
+                                </a>
+                            </t>
+                            <a t-attf-href="/report/pdf/hotel_erp.report_reservation_document/#{reservation.id}" target="_blank" class="hx-btn hx-btn-line">
+                                <i class="fa fa-file-pdf-o"/> Download reservation PDF
                             </a>
+                            <div class="d-flex gap-2">
+                                <a href="/" class="hx-btn hx-btn-line w-100">Back to home</a>
+                                <a href="/my/dashboard" class="hx-btn hx-btn-dark w-100">My dashboard</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -556,13 +445,15 @@
 
             <script>
                 document.addEventListener("DOMContentLoaded", function () {
-                    Swal.fire({
-                        title: 'ჯავშანი მიღებულია! 🎉',
-                        text: 'Check-in-ის შემდეგ ავტომატურად შეიქმნება ინვოისი და შეძლებთ ონლაინ გადახდას.',
-                        icon: 'success',
-                        confirmButtonText: 'კარგი',
-                        confirmButtonColor: '#0d6efd'
-                    });
+                    if (window.Swal) {
+                        Swal.fire({
+                            title: 'Reservation accepted! 🎉',
+                            text: 'After check-in, an invoice will be automatically generated, and you will be able to make an online payment..',
+                            icon: 'success',
+                            confirmButtonText: 'Good',
+                            confirmButtonColor: '#12233A'
+                        });
+                    }
                 });
             </script>
         </t>

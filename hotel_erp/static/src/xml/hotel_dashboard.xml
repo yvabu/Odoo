@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hotel_erp.HotelDashboard">
+        <div class="hd-root h-100">
+
+            <!-- Header & Filter Bar -->
+            <div class="hd-header">
+                <h2 class="hd-title">Hotel Dashboard</h2>
+                <div class="hd-date-pill">
+                    <i class="fa fa-calendar-o"/>
+                    <input type="date" t-model="state.dateFrom" t-on-change="onDateChange"/>
+                    <span class="hd-sep">–</span>
+                    <input type="date" t-model="state.dateTo" t-on-change="onDateChange"/>
+                </div>
+            </div>
+
+            <!-- KPI Cards Section -->
+            <div class="hd-grid-4">
+                <div class="hd-card clickable" t-on-click="() => this.onOccupiedClick()">
+                    <div class="hd-icon indigo"><i class="fa fa-bed"/></div>
+                    <div class="hd-label">Occupied Rooms</div>
+                    <div class="hd-value" t-esc="state.data.occupied_rooms || 0"/>
+                </div>
+                <div class="hd-card clickable" t-on-click="() => this.onAvailableClick()">
+                    <div class="hd-icon green"><i class="fa fa-key"/></div>
+                    <div class="hd-label">Available Rooms</div>
+                    <div class="hd-value" t-esc="state.data.available_rooms || 0"/>
+                </div>
+                <div class="hd-card clickable" t-on-click="() => this.onTodayCheckinsClick()">
+                    <div class="hd-icon blue"><i class="fa fa-sign-in"/></div>
+                    <div class="hd-label">Today's Check-Ins</div>
+                    <div class="hd-value" t-esc="state.data.checkins_today || 0"/>
+                </div>
+                <div class="hd-card clickable" t-on-click="() => this.onTodayCheckOutClick()">
+                    <div class="hd-icon amber"><i class="fa fa-sign-out"/></div>
+                    <div class="hd-label">Today's Check-Outs</div>
+                    <div class="hd-value" t-esc="state.data.checkouts_today || 0"/>
+                </div>
+            </div>
+
+            <!-- Finance Section -->
+            <t t-if="state.data.is_manager or state.data.is_receptionist or state.data.is_admin">
+                <h4 class="hd-section-title">Financial Overview</h4>
+                <div class="hd-grid-4">
+                    <div class="hd-card clickable income" t-on-click="onRevenueClick">
+                        <div class="hd-label">Revenues</div>
+                        <div class="hd-value sm">₾ <t t-esc="state.data.revenue || 0"/></div>
+                    </div>
+                    <div class="hd-card clickable expense" t-on-click="onExpensesClick">
+                        <div class="hd-label">Expenses</div>
+                        <div class="hd-value sm">₾ <t t-esc="state.data.expenses || 0"/></div>
+                    </div>
+                    <div class="hd-card clickable profit" t-on-click="onProfitClick">
+                        <div class="hd-label">Profit</div>
+                        <div class="hd-value sm">₾ <t t-esc="state.data.net_profit || 0"/></div>
+                    </div>
+                    <div class="hd-card clickable" t-on-click="onPaidClick">
+                        <div class="hd-label">Total amount paid</div>
+                        <div class="hd-value sm">₾ <t t-esc="state.data.paid_amount || 0"/></div>
+                    </div>
+                </div>
+            </t>
+
+            <!-- Charts -->
+            <div class="hd-grid-2">
+                <div class="hd-card">
+                    <div class="hd-chart-title">Room Status Overview</div>
+                    <div class="hd-chart-box">
+                        <canvas t-ref="chartCanvas"></canvas>
+                        <div class="hd-donut-center">
+                            <span class="num" t-esc="(state.data.occupied_rooms || 0) + (state.data.available_rooms || 0)"/>
+                            <span class="txt">Room</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hd-card">
+                    <div class="hd-chart-title">Monthly financial data</div>
+                    <div class="hd-chart-box">
+                        <canvas t-ref="barChartCanvas"></canvas>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </t>
+</templates>

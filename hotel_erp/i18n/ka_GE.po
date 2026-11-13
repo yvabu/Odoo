@@ -1,0 +1,2383 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hotel_erp
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0-20260926\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-10 20:15+0000\n"
+"PO-Revision-Date: 2026-11-10 20:15+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: hotel_erp
+#: model:ir.actions.report,print_report_name:hotel_erp.reservation_report
+msgid "'Reservation Report PDF For Room - %s' % (object.room_id.room_number)"
+msgstr "'ოთახის დაჯავშნის ანგარიში (PDF) - %s' % (object.room_id.room_number)"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_success_page
+msgid ""
+".\n"
+"                            Your booking has been saved with the status"
+msgstr "                     თქვენი ჯავშანი შენახულია სტატუსით"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_form_page
+msgid "/ night ("
+msgstr "/ ღამე ("
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_homepage
+msgid "24/7 room service"
+msgstr "24/7 ოთახის სერვისი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_form_page
+msgid "<b>2</b>  Your details"
+msgstr "<b>2</b> შენი დეტალები"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_form_page
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_success_page
+msgid "<b>3</b> Confirmation"
+msgstr "<b>3</b> დადასტურება"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_form_page
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_success_page
+msgid "<b><i class=\"fa fa-check\"/></b> Choose room"
+msgstr "<b><i class=\"fa fa-check\"/></b> აირჩიე ოთახი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_success_page
+msgid "<b><i class=\"fa fa-check\"/></b> Your details"
+msgstr "<b><i class=\"fa fa-check\"/></b> შენი დეტალები"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.report_reservation_document
+msgid ""
+"<br/>\n"
+"                                <strong>Check Out</strong>"
+msgstr " <strong>გასვლა/ოთახის დატოვება</strong>  "
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.report_reservation_document
+msgid ""
+"<br/>\n"
+"                                <strong>Room</strong>"
+msgstr "      <strong>ოთახი</strong>"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_form_page
+msgid "<i class=\"fa fa-bed\"/> Stay and room"
+msgstr "<i class=\"fa fa-bed\"/> დაბინავება და ნომერი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "<i class=\"fa fa-bed\"/>There are no active bookings."
+msgstr "<i class=\"fa fa-bed\"/>არ გაქვთ აქტიური ჯავშნები"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "<i class=\"fa fa-bell\"/> Services"
+msgstr "<i class=\"fa fa-bell\"/> სერვისები"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "<i class=\"fa fa-bell\"/>Create service"
+msgstr "<i class=\"fa fa-bell\"/>სერვისის შექმნა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "<i class=\"fa fa-calendar-o\"/>ჯავშნები არ არის."
+msgstr ""
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "<i class=\"fa fa-calendar-plus-o\"/>Book now"
+msgstr "<i class=\"fa fa-calendar-plus-o\"/>დაჯავშნე ახლავე"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "<i class=\"fa fa-calendar-plus-o\"/>Create reservation"
+msgstr "<i class=\"fa fa-calendar-plus-o\"/>ჯავშანის შექმნა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "<i class=\"fa fa-check\"/>Clean this room"
+msgstr "<i class=\"fa fa-check\"/>ოთახის დასუფთავება"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "<i class=\"fa fa-check\"/>Confirm"
+msgstr "<i class=\"fa fa-check\"/>დადასტურება"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid ""
+"<i class=\"fa fa-check-circle\"/><span>The Room Was Successfully "
+"Cleaned.!</span>"
+msgstr "<i class=\"fa fa-check-circle\"/><span>ოთახი წარმატებით"
+"დასუფთავდა.!</span>"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "<i class=\"fa fa-check-circle\"/>There are no rooms to be cleaned."
+msgstr "<i class=\"fa fa-check-circle\"/>დასასუფთავებელი ოთახი არ მოიძებნა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_success_page
+msgid "<i class=\"fa fa-credit-card\"/> Pay invoice now"
+msgstr "<i class=\"fa fa-credit-card\"/> გადაიხადეთ ინვოისი ახლავე"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "<i class=\"fa fa-credit-card\"/>Advance payment"
+msgstr "<i class=\"fa fa-credit-card\"/>წინასწარი გადახდა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "<i class=\"fa fa-credit-card\"/>Pay advance"
+msgstr "<i class=\"fa fa-credit-card\"/>გადაიხადეთ წინასწარ"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "<i class=\"fa fa-credit-card\"/>Pay now"
+msgstr "<i class=\"fa fa-credit-card\"/>გადაიხადე ახლავე"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "<i class=\"fa fa-credit-card\"/>Payment Registration"
+msgstr "<i class=\"fa fa-credit-card\"/>გადახდის რეგისტრაცია"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_success_page
+msgid "<i class=\"fa fa-file-pdf-o\"/> Download reservation PDF"
+msgstr "<i class=\"fa fa-file-pdf-o\"/> ჩამოტვირთეთ ჯავშნის PDF-ფაილი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_details_page
+msgid ""
+"<i class=\"fa fa-fire\"/>\n"
+"\n"
+"                                        <span>Smoking available</span>"
+msgstr "   <span>მოწევა დასაშვებია</span>"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_success_page
+msgid ""
+"<i class=\"fa fa-info-circle me-1\"/> The invoice and payment method will "
+"appear after check-in — at the reception or on your dashboard."
+msgstr "ინვოისი და გადახდის მეთოდი გამოჩნდება ოთახში შესვლის შემდეგ(check-in) მისაღებში ან თქვენს დაშბოარდზე"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_form_page
+msgid ""
+"<i class=\"fa fa-info-circle mt-1\"/>\n"
+"                                    <span>A personal account will be automatically created using your details; after check-in, you will be able to view your invoice and make an online payment.</span>"
+msgstr "პირადი ანგარიში ავტომატურად შეიქმნება თქვენი მონაცემების გამოყენებით; ოთახის შესვლის შემდეგ(check-in), თქვენ შეძლებთ თქვენი ინვოისის ნახვას და ონლაინ გადახდას."
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid ""
+"<i class=\"fa fa-info-circle\"/>\n"
+"                                <span>Invoices and payment details will be available after check-in at the hotel.</span>"
+msgstr "<span>ინვოისები და გადახდის დეტალები ხელმისაწვდომი იქნება სასტუმროში შემოსვლის(check-in) შემდეგ</span>"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_service_list
+msgid ""
+"<i class=\"fa fa-info-circle\"/>No Service Has Been Added To This Booking "
+"Yet."
+msgstr "აღნიშნულ ჯავშანს  ჯერ არ აქვს სერვისი დამატებული"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "<i class=\"fa fa-key\"/>Check-in"
+msgstr "სასტუმროში შემოსვლა(Check-in)"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "<i class=\"fa fa-plus\"/>Add service"
+msgstr "<i class=\"fa fa-plus\"/>სერვისის დამატება"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "<i class=\"fa fa-plus\"/>Service"
+msgstr "<i class=\"fa fa-plus\"/>სერვისი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_homepage
+msgid ""
+"<i class=\"fa fa-search\"/>\n"
+"                        Search"
+msgstr "<i class=\"fa fa-search\"/>\n"
+"                        ძიება"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_rooms_page
+msgid "<i class=\"fa fa-search\"/> Search"
+msgstr "<i class=\"fa fa-search\"/> ძიება"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_details_page
+msgid ""
+"<i class=\"fa fa-shield me-1\" style=\"color:var(--hx-gold-d)\"/>\n"
+"\n"
+"                                You will confirm the dates at the next stage."
+msgstr "თარიღს დაადასტურებთ შემდომ ეტაპზე"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid ""
+"<i class=\"fa fa-sign-in\"/>არ არის დასადასტურებელი Check-In. (სტატუსი არ "
+"უდრის Confirmed-ს)"
+msgstr ""
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "<i class=\"fa fa-sign-out\"/>Check-out"
+msgstr "ოთახის/სასტუმროს დატოვება(Check-out)"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_details_page
+msgid ""
+"<i class=\"fa fa-snowflake-o\"/>\n"
+"\n"
+"                                        <span>Air conditioning</span>"
+msgstr "კონდიციონერი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_form_page
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_card
+msgid "<i class=\"fa fa-snowflake-o\"/> A/C"
+msgstr ""
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "<i class=\"fa fa-times\"/>Cancel"
+msgstr "<i class=\"fa fa-times\"/>გაუქმება"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_details_page
+msgid ""
+"<i class=\"fa fa-tv\"/>\n"
+"\n"
+"                                        <span>Smart TV</span>"
+msgstr "<span>ტელევიზორი</span>"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_form_page
+msgid "<i class=\"fa fa-user\"/> Guest details"
+msgstr "<i class=\"fa fa-user\"/> სტუმრის მინაცემები"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_form_page
+msgid ""
+"<i class=\"fa fa-user-plus mt-1\"/>\n"
+"                                    <span>Booking on behalf of a guest — enter the guest's details (not your own).</span>"
+msgstr "<span>დაჯავშნა სტუმრის სახელით — შეიყვანეთ სტუმრის დეტალები (არა თქვენი).</span>"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "<i class=\"fa fa-user-plus\"/>Add guest"
+msgstr "<i class=\"fa fa-user-plus\"/>სტუმრის დამატება"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_details_page
+msgid ""
+"<i class=\"fa fa-wifi\"/>\n"
+"\n"
+"                                        <span>Free Wi-Fi</span>"
+msgstr "უფასო ინტერნეტი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_form_page
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_card
+msgid "<i class=\"fa fa-wifi\"/> Wi-Fi"
+msgstr "<i class=\"fa fa-wifi\"/> ინტერნეტი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_form_page
+msgid "<option value=\"\" disabled=\"1\" selected=\"selected\">Choose a room...</option>"
+msgstr "აირჩიეთ ოთახი..."
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_reservation_modal
+msgid "<option value=\"\" disabled=\"1\" selected=\"selected\">Select Guest...</option>"
+msgstr "აირჩიეთ სტუმარი..."
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_reservation_modal
+msgid "<option value=\"\" disabled=\"1\" selected=\"selected\">Select Room...</option>"
+msgstr "აირჩიეთ ოთახი..."
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_invoice_pay_modal
+msgid ""
+"<select name=\"payment_method\" class=\"hx-input\">\n"
+"                                <option value=\"bank\">Bank / Card</option>\n"
+"                                <option value=\"cash\">Cash settlement</option>\n"
+"                            </select>"
+msgstr " <option value=\'bank\'>ბანკი / ბარათი</option>\n"
+"                                <option value=\"cash\'>ფულადი ანგარიშსწორება</option>\n'"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_advance_modal
+msgid ""
+"<small class=\"hx-hint\">The amount must not exceed the remaining balance to"
+" be paid.</small>"
+msgstr "თანხის ოდენობა არ უნდა აღემატებოდეს გადასახდელ ნაშთს"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_form_page
+msgid ""
+"<small class=\"hx-hint\">This will be your login — for accessing your "
+"account.</small>"
+msgstr "ეს იქნება თქვენი ლოგინი -თქვენს ანგარისში შესასვლელად"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_kanban_view
+msgid "<small class=\"text-muted fw-normal\">/Night</small>"
+msgstr "/ღამე"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "<small>All reservations</small>"
+msgstr "ყველა ჯავშანი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "<small>Arrivals pending</small>"
+msgstr "მოსალოდნელი გამოცხადება/შემოსვლა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "<small>Awaiting payment</small>"
+msgstr "გადახდის მოლოდინში"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "<small>CHECK-IN</small>"
+msgstr "სასტუმროში შემოსვლა(check-in)"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "<small>CHECK-OUT</small>"
+msgstr "სასტუმროს დატოვება(check-out)"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "<small>Checked in now</small>"
+msgstr "ახლანდელი შემოსულები(check-in)"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "<small>Guests in house</small>"
+msgstr "სტუმრები სახლში"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "<small>Rooms to clean</small>"
+msgstr "დასალაგებელი ოთახები"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "<small>Unpaid invoices</small>"
+msgstr "გადაუხდელი ინვოისები"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_card
+msgid "<small>from</small>"
+msgstr "-დან"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "<span class=\"hx-badge hx-b-mute\">Completed</span>"
+msgstr "span class=\"hx-badge hx-b-mute\">შესრულებული</span>"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "<span class=\"hx-badge hx-b-mute\">Draft</span>"
+msgstr ""
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "<span class=\"hx-badge hx-b-mute\">Paid</span>"
+msgstr "<span class=\"hx-badge hx-b-mute\">გადახდილი</span>"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_reservation_form_view
+msgid "<span class=\"o_stat_text\">Room Invoice</span>"
+msgstr "ოთახის ინვოისი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_reservation_form_view
+msgid "<span class=\"o_stat_text\">Service Invoices</span>"
+msgstr "სერვისის ინვოისი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_kanban_view
+msgid "<span class=\"text-muted small\">Price:</span>"
+msgstr "ფასი:"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_card
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_details_page
+msgid "<span>/ night</span>"
+msgstr " ღამე"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_success_page
+msgid "<span>Check-in / out</span>"
+msgstr ""
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_invoice_pay_modal
+msgid "<span>Client</span>"
+msgstr "კლიენტი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_success_page
+msgid "<span>საბოლოო გადასახდელი ჯამი</span>"
+msgstr ""
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_advance_modal
+msgid "<span>Guest</span>"
+msgstr "სტუმარი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_form_page
+msgid ""
+"<span>Number of nights</span><strong><span "
+"id=\"display_nights_count\">0</span> night(s)</strong>"
+msgstr "ღამის რაოდენობა 'id=\"display_nights_count\">0</span> ღამე</strong>' "
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_form_page
+msgid ""
+"<span>Price per night</span><strong>$<span "
+"id=\"display_night_price\">0</span></strong>"
+msgstr "ერთი ღამის ფასი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_success_page
+msgid "<span>Reservation ref</span>"
+msgstr "ჯავშნის ნომერი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_success_page
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_advance_modal
+msgid "<span>Room</span>"
+msgstr "ოთახი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_invoice_pay_modal
+msgid "<span>The Remaining Amount</span>"
+msgstr "დარჩენილი თანხა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_form_page
+msgid "<span>Total</span><b>$<span id=\"display_total_price\">0</span></b>"
+msgstr "სულ"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_advance_modal
+msgid "<span>the remaining amount</span>"
+msgstr "დარჩენილი თანხა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.report_reservation_document
+msgid "<strong>Check In:</strong>"
+msgstr "სასტუმროში შემოსვლა(check-in)"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.report_reservation_document
+msgid "<strong>Guest:</strong>"
+msgstr "სტუმარი:"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.report_reservation_document
+msgid "<strong>გადასახდელი თანხის ჯამი:</strong>"
+msgstr ""
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.report_reservation_document
+msgid "<strong>გადახდილი თანხის რაოდენობა:</strong>"
+msgstr ""
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.report_reservation_document
+msgid "<strong>დარჩენილი თანხის რაოდენობა</strong>"
+msgstr ""
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.report_reservation_document
+msgid "<strong>დასაბრუნებელი ხურდა</strong>"
+msgstr ""
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_homepage
+msgid "A temperature-controlled pool to unwind."
+msgstr "ტემპერატურაკონტროლირებადი აუზი განტვირთვისთვის."
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_homepage
+msgid "ACCOMMODATION"
+msgstr "განთავსება"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "Action"
+msgstr "მოქმედება"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__message_needaction
+msgid "Action Needed"
+msgstr "საჭიროა მოქმედება"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation__active
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_room__active
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_service__active
+msgid "Active"
+msgstr "აქტიური"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__activity_ids
+msgid "Activities"
+msgstr "აქტივობები"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "აქტივობის გამონაკლისი გაფორმება"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__activity_state
+msgid "Activity State"
+msgstr "აქტივობის მდგომარეობა"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "აქტივობის ტიპის ხატულა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_guest_modal
+msgid "Add new guest"
+msgstr "ახალი სტუმრის დამატება"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__address
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_guest_modal
+msgid "Address"
+msgstr "მისამართი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_form_page
+msgid "Address *"
+msgstr "მისამართი *"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_reservation_form_view
+msgid "Advance Payment"
+msgstr "წინასწარი გადახდა"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation__advance_payment_ids
+msgid "Advance payments / deposits"
+msgstr "წინასწარი გადახდები / დეპოზიტები"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_room__is_air_conditioning
+msgid "Air Conditioning"
+msgstr "კონდიციონერი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "All reservations"
+msgstr "ყველა ჯავშანი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_advance_modal
+msgid "Amount payable("
+msgstr "გადასახდელი თანხა("
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "Amount total"
+msgstr "საერთო თანხა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_reservation_search_view
+msgid "Archived"
+msgstr "დაარქივებულია"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_service_search_view
+msgid "Archived Services"
+msgstr "დაარქივებული სერვისები"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "Arrivals"
+msgstr "ჩამოსვლები"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "Arrivals, in-house guests and housekeeping."
+msgstr "ჩამოსვლა, შიდა სტუმრები და სახლის მოვლა."
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__message_attachment_count
+msgid "Attachment Count"
+msgstr "დანართის რაოდენობა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_reservation_form_view
+msgid "Audit/Cancelation Reason"
+msgstr "აუდიტის/გაუქმების მიზეზი"
+
+#. module: hotel_erp
+#: model:ir.model.fields.selection,name:hotel_erp.selection__hotel_room__room_status__available
+msgid "Available"
+msgstr "ხელმისაწვდომი"
+
+#. module: hotel_erp
+#. odoo-javascript
+#: code:addons/hotel_erp/static/src/xml/hotel_dashboard.xml:0
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_search_view
+msgid "Available Rooms"
+msgstr "ხელმისაწვდომი ოთახები"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_rooms_page
+msgid "Available rooms"
+msgstr "ხელმისაწვდომი ოთახები"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_success_page
+msgid "Back to home"
+msgstr "მთავარ გვერდზე დაბრუნება"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_room__balcony_count
+msgid "Balcony Count"
+msgstr "ბალკონის რაოდენობა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_homepage
+msgid "Book a room"
+msgstr "ოთახის დაჯავშვნა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "Book a room now"
+msgstr "დაჯავშვნე ოთახი ახლავე"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_details_page
+msgid "Book this room"
+msgstr "დაჯავშნე აღნიშნული ოთახი"
+
+#. module: hotel_erp
+#: model:ir.actions.act_window,name:hotel_erp.hotel_reservation_window_action
+#: model:ir.ui.menu,name:hotel_erp.hotel_reservation_menu
+msgid "Booking"
+msgstr "დაჯავშნა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_homepage
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_rooms_page
+msgid "CHECK-IN"
+msgstr "სასტუმროში შესვლა(check-in)"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_homepage
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_rooms_page
+msgid "CHECK-OUT"
+msgstr "სასტუმროს დატოვება(check-out)"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_reservation_form_view
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_form_view
+msgid "Cancel Reservation"
+msgstr "ჯავშნის გაუქმება"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_reservation_search_view
+msgid "Canceled Reservations"
+msgstr "გაუქმებული ჯავშნები"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation__cancellation_reason
+msgid "Cancellation Reason"
+msgstr "გაუქმების მიზეზი"
+
+#. module: hotel_erp
+#: model:ir.model.fields.selection,name:hotel_erp.selection__hotel_reservation__state__cancelled
+msgid "Cancelled"
+msgstr "გაუქმებულია"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation__cancelled_at
+msgid "Cancelled At"
+msgstr "გაუქმების დრო"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation__change_to_return
+msgid "Change to be returned"
+msgstr "დასაბრუნებელი ხურდა"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation__check_in
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_reservation_form_view
+msgid "Check In"
+msgstr "სასტუმროში შესვლა(check-in)"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation__check_out
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_reservation_form_view
+msgid "Check Out"
+msgstr "სასტუმროდან გასვლა(check-out)"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_reservation_modal
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "Check-in"
+msgstr "სასტუმროში შესვლა (check-in)"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "Check-in date"
+msgstr "სასტუმროში შესვლის თარიღი(check-in)"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_form_page
+msgid "Check-in date *"
+msgstr "სასტუმროში შესვლის თარიღი(check-in) *"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_reservation_modal
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "Check-out"
+msgstr "სასტუმროს დატოვება(check-out)"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_form_page
+msgid "Check-out date *"
+msgstr "სასტუმროს დატოვების თარიღი(check-out)"
+
+#. module: hotel_erp
+#: model:ir.model.fields.selection,name:hotel_erp.selection__hotel_reservation__state__checked_in
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_reservation_search_view
+msgid "Checked In"
+msgstr "რეგისტრაცია გავლილია"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation__checked_in_at
+msgid "Checked In At"
+msgstr "სასტუმროში შესვლის დრო(check-in)"
+
+#. module: hotel_erp
+#: model:ir.model.fields.selection,name:hotel_erp.selection__hotel_reservation__state__checked_out
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_reservation_form_view
+msgid "Checked Out"
+msgstr "სასტუმრო დატოვა"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation__checked_out_at
+msgid "Checked Out At"
+msgstr "სასტუმროს დატოვების დრო"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_homepage
+msgid "Choose the room that fits your stay."
+msgstr "აირჩიეთ ოთახი, რომელიც თქვენს ყოფნას შეესაბამება."
+
+#. module: hotel_erp
+#: model:ir.model.fields.selection,name:hotel_erp.selection__hotel_room__housekeeping_status__clean
+msgid "Clean"
+msgstr "სუფთა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_search_view
+msgid "Clean Rooms"
+msgstr "სუფთა ოთახები"
+
+#. module: hotel_erp
+#: model:ir.model.fields.selection,name:hotel_erp.selection__hotel_room__housekeeping_status__cleaning
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_search_view
+msgid "Cleaning"
+msgstr "დასუფთავება"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "Client"
+msgstr "კლიენტ"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_reservation_cancel_wizrd_view
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_advance_modal
+msgid "Close"
+msgstr "დახურვა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_form_page
+msgid "Complete your reservation"
+msgstr "შეასრულეთ თქვენი ჯავშანი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_erp_payment_form_view
+msgid "Confirm"
+msgstr "დადასტურება"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_reservation_cancel_wizrd_view
+msgid "Confirm Cancellation"
+msgstr "გაუქმების დადასტურება"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_form_page
+msgid "Confirm reservation <i class=\"fa fa-arrow-right\"/>"
+msgstr "დაადასტურეთ დაჯავშნა <i class=\'fa fa-arrow-right\'/>"
+
+#. module: hotel_erp
+#: model:ir.model.fields.selection,name:hotel_erp.selection__hotel_reservation__state__confirmed
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_reservation_search_view
+msgid "Confirmed"
+msgstr "დადასტურდა"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation__confirmed_at
+msgid "Confirmed At"
+msgstr "დადასტურების დრო"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation__confirmed_by
+msgid "Confirmed By"
+msgstr "დადასტურებული"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__partner_id
+msgid "Contact"
+msgstr "კონტაქტი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_form_view
+msgid "Copy room"
+msgstr "ოთახის კოპირება"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_reservation_form_view
+msgid "Create Invoice"
+msgstr "ინვოისის შექმნა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_reservation_modal
+msgid "Create Reservation"
+msgstr "ჯავშნის შექმნა"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_employee__create_uid
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__create_uid
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation__create_uid
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation_cancel_wizard__create_uid
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation_line__create_uid
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_room__create_uid
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_room_images__create_uid
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_service__create_uid
+msgid "Created by"
+msgstr "შექმნილია"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_employee__create_date
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__create_date
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation__create_date
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation_cancel_wizard__create_date
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation_line__create_date
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_room__create_date
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_room_images__create_date
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_service__create_date
+msgid "Created on"
+msgstr "შექმნილია "
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "Creating A New Service"
+msgstr "ახალი სერვისის შექმნა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_reservation_form_view
+msgid "Creating a Service Invoice"
+msgstr "სერვისის ინვოისის შექმნა"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation__currency_id
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation_cancel_wizard__currency_id
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation_line__currency_id
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_room__currency_id
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_service__currency_id
+msgid "Currency"
+msgstr "ვალუტა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_homepage
+msgid "Daily breakfast"
+msgstr "ყოველდღიური საუზმე"
+
+#. module: hotel_erp
+#: model:ir.actions.client,name:hotel_erp.action_hotel_dashboard
+#: model:ir.ui.menu,name:hotel_erp.menu_hotel_dashboard
+msgid "Dashboard"
+msgstr "დაფა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "Date"
+msgstr "თარიღი"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_room__description
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_service__description
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_service_form_view
+#: model_terms:ir.ui.view,arch_db:hotel_erp.report_reservation_document
+msgid "Description"
+msgstr "აღწერა"
+
+#. module: hotel_erp
+#: model:ir.model.fields.selection,name:hotel_erp.selection__hotel_room__housekeeping_status__dirty
+msgid "Dirty"
+msgstr "ჭუჭყიანი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_search_view
+msgid "Dirty Rooms"
+msgstr "ჭუჭყიანი ოთახები"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_erp_payment_form_view
+msgid "Discard"
+msgstr "გაუქმება"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_employee__display_name
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__display_name
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation__display_name
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation_cancel_wizard__display_name
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation_line__display_name
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_room__display_name
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_room_images__display_name
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_service__display_name
+msgid "Display Name"
+msgstr "საჩვენებელი სახელი"
+
+#. module: hotel_erp
+#: model:ir.model.fields.selection,name:hotel_erp.selection__hotel_room__room_type__double
+msgid "Double"
+msgstr "ორმაგი"
+
+#. module: hotel_erp
+#: model:ir.model.fields.selection,name:hotel_erp.selection__hotel_reservation__state__draft
+msgid "Draft"
+msgstr "სამუშაო ვერსია (draft)"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_employee__email
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__email
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_guest_modal
+msgid "Email"
+msgstr "ელექტრონული ფოსტა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_form_page
+msgid "Email address *"
+msgstr "ელექტრონული ფოსტა *"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_form_page
+msgid "Email is required."
+msgstr "საჭიროა ელ.ფოსტა."
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_employee__name
+msgid "Employee Name"
+msgstr "თანამშრომლის სახელი"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_employee__surname
+msgid "Employee Surname"
+msgstr "თანამშრომლის გვარი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_service_form_view
+msgid "Enter Description...."
+msgstr "დაწერეთ აღწერა...."
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_employee__password
+msgid "Enter the password you want"
+msgstr "შეიყვანეთ სასურველი პაროლი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_guest_modal
+msgid "Enter your local address"
+msgstr "შეიყვანეთ თქვენი ადგილობრივი მისამართი "
+
+#. module: hotel_erp
+#. odoo-javascript
+#: code:addons/hotel_erp/static/src/xml/hotel_dashboard.xml:0
+msgid "Expenses"
+msgstr "ხარჯები"
+
+#. module: hotel_erp
+#: model:ir.model.fields.selection,name:hotel_erp.selection__hotel_reservation__state__expired
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_reservation_search_view
+msgid "Expired"
+msgstr "ვადაგასული"
+
+#. module: hotel_erp
+#. odoo-javascript
+#: code:addons/hotel_erp/static/src/xml/hotel_dashboard.xml:0
+msgid "Financial Overview"
+msgstr "ფინანსური მიმოხილვა"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_room__floor
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_search_view
+msgid "Floor"
+msgstr "სართული"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__message_follower_ids
+msgid "Followers"
+msgstr "გამომწერები/მიმდევრები"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "გამომწერები/მიმდევრები (პარტნიორები)"
+
+#. module: hotel_erp
+#: model:ir.model.fields,help:hotel_erp.field_hotel_guest__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font Awesome-ის ხატულა, მაგ.: fa-tasks"
+
+#. module: hotel_erp
+#: model:ir.model.fields.selection,name:hotel_erp.selection__hotel_service__service_type__food
+msgid "Food & Beverage"
+msgstr "საკვები და სასმელები"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_homepage
+msgid "Free high-speed Wi-Fi"
+msgstr "უფასო, მაღალსიჩქარიანი Wi-Fi"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_homepage
+msgid "Fresh buffet breakfast, every morning."
+msgstr "ახალი ბუფეტის საუზმე, ყოველ დილით."
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__name
+msgid "Full Name"
+msgstr "სრული სახელი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_guest_modal
+msgid "Full name"
+msgstr "სრული სახელი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_form_page
+msgid "Full name *"
+msgstr "სრული სახელი *"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_room__image_ids
+msgid "Gallery"
+msgstr "ფოტო-გალერეა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_form_view
+msgid "Gallery / Photos"
+msgstr "გალრეა/ფოტოები"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_reservation_search_view
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_search_view
+msgid "Group By"
+msgstr "დაჯგუფება"
+
+#. module: hotel_erp
+#: model:ir.actions.act_window,name:hotel_erp.hotel_guest_window_action
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation__guest_id
+#: model:ir.ui.menu,name:hotel_erp.hotel_guest_menu
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_reservation_search_view
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_kanban_view
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_reservation_modal
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "Guest"
+msgstr "სტუმარი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_guest_form_view
+msgid "Guest Information"
+msgstr "სტუმრის ინფორმაცია"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_form_page
+msgid "Guest's Full Name"
+msgstr "სტუმრის სრული სახელი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "Guests in house"
+msgstr "სტუმრები სახლში"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__has_message
+msgid "Has Message"
+msgstr "აქვს შეტყობინება"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation__hold_expires_at
+msgid "Hold Expires At"
+msgstr "დაკავების ვადის ამოწურვა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_details_page
+msgid "Home"
+msgstr "სახლი"
+
+#. module: hotel_erp
+#. odoo-javascript
+#: code:addons/hotel_erp/static/src/xml/hotel_dashboard.xml:0
+#: model:ir.model,name:hotel_erp.model_hotel_dashboard
+msgid "Hotel Dashboard"
+msgstr "სასტურმოს დაფა(dashboard)"
+
+#. module: hotel_erp
+#: model:ir.ui.menu,name:hotel_erp.hotel_erp_menu_root
+msgid "Hotel ERP"
+msgstr "სასტუმროს ERP"
+
+#. module: hotel_erp
+#: model:ir.model,name:hotel_erp.model_hotel_employee
+msgid "Hotel Employee"
+msgstr "სასტუმროს თანამშრომელი"
+
+#. module: hotel_erp
+#: model:ir.ui.menu,name:hotel_erp.hotel_employee_menu
+msgid "Hotel Employees"
+msgstr "სასტუმროს თანამშრომლები"
+
+#. module: hotel_erp
+#: model:ir.model,name:hotel_erp.model_hotel_guest
+msgid "Hotel Guest"
+msgstr "სასტუმროს სტუმარი"
+
+#. module: hotel_erp
+#: model:ir.module.category,name:hotel_erp.module_category_hotel
+msgid "Hotel Management"
+msgstr "სასტუმროს მენეჯმენტი"
+
+#. module: hotel_erp
+#: model:ir.model,name:hotel_erp.model_hotel_reservation
+msgid "Hotel Reservation"
+msgstr "სასტურმოს დაჯავშვნა"
+
+#. module: hotel_erp
+#: model:ir.model,name:hotel_erp.model_hotel_reservation_cancel_wizard
+msgid "Hotel Reservation Cancel Wizard"
+msgstr "სასტუმროს ჯავშნის გაუქმება ოსტატი(wizard)"
+
+#. module: hotel_erp
+#: model:ir.model,name:hotel_erp.model_hotel_reservation_line
+msgid "Hotel Reservation Line"
+msgstr "სასტუმროს დაჯავშვნის ხაზი"
+
+#. module: hotel_erp
+#: model:ir.model,name:hotel_erp.model_hotel_room
+msgid "Hotel Room"
+msgstr "სასტუმროს ოთახი"
+
+#. module: hotel_erp
+#: model:ir.model,name:hotel_erp.model_hotel_room_images
+msgid "Hotel Room Images"
+msgstr "სასტუმროს ოტახის ფოტოები"
+
+#. module: hotel_erp
+#: model:ir.actions.act_window,name:hotel_erp.hotel_service_window_action
+#: model:ir.model,name:hotel_erp.model_hotel_service
+#: model:ir.ui.menu,name:hotel_erp.hotel_service_menu
+msgid "Hotel Service"
+msgstr "სასტუმროს სერვისი"
+
+#. module: hotel_erp
+#: model:ir.actions.server,name:hotel_erp.ir_cron_auto_check_out_reservations_ir_actions_server
+msgid "Hotel: Auto Check out System"
+msgstr "სასტუმრო: ავტომატური გასვლის სისტემა "
+
+#. module: hotel_erp
+#: model:ir.actions.server,name:hotel_erp.ir_cron_expire_pending_reservations_ir_actions_server
+msgid "Hotel: Expire Pending Reservations"
+msgstr "სასტუმრო: იწურება მომლოდინე ჯავშნები"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_search_view
+msgid "HouseKeeping Status"
+msgstr "დასუფთავების სტატუსი"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_room__housekeeping_status
+msgid "Housekeeping Status"
+msgstr "დასუფთავების სტატუსი"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_employee__id
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__id
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation__id
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation_cancel_wizard__id
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation_line__id
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_room__id
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_room_images__id
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_service__id
+msgid "ID"
+msgstr "უნიკალური იდენთიფიკატორი"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__activity_exception_icon
+msgid "Icon"
+msgstr "ხატულა(icon)"
+
+#. module: hotel_erp
+#: model:ir.model.fields,help:hotel_erp.field_hotel_guest__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "ხატულა გამონაკლისი აქტივობის მითითებისთვის."
+
+#. module: hotel_erp
+#: model:ir.model.fields,help:hotel_erp.field_hotel_guest__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "თუ მონიშნულია, ახალი შეტყობინებები თქვენს ყურადღებას მოითხოვს."
+
+#. module: hotel_erp
+#: model:ir.model.fields,help:hotel_erp.field_hotel_guest__message_has_error
+#: model:ir.model.fields,help:hotel_erp.field_hotel_guest__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "თუ მონიშნულია, ზოგიერთ შეტყობინებას აქვს მიწოდების შეცდომა."
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_room_images__image_1920
+msgid "Image"
+msgstr "სურათი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_service_list
+msgid "In Expectation"
+msgstr "მოლოდინში"
+
+#. module: hotel_erp
+#: model:ir.model.fields.selection,name:hotel_erp.selection__hotel_room__room_status__inactive
+msgid "Inactive"
+msgstr "არააქტიური"
+
+#. module: hotel_erp
+#: model:ir.model.fields,help:hotel_erp.field_hotel_reservation_line__invoiced
+msgid ""
+"Indicates that this service line item is already included in an invoice "
+"(created during check-in or check-out). This helps the system avoid "
+"invoicing the same service twice."
+msgstr "'მიუთითებს, რომ სერვისის ხაზის ეს ელემენტი უკვე შედის ინვოისში"
+"(შექმნილია შემოწმების ან გასვლის დროს). ეს ეხმარება სისტემას თავიდან აიცილოს "
+"იგივე სერვისის ორჯერ ინვოისის შედგენა.'"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "Invoice #"
+msgstr "ინვოისი #"
+
+#. module: hotel_erp
+#: model:ir.model.fields,help:hotel_erp.field_hotel_reservation__invoice_id
+msgid "Invoice for room charges."
+msgstr "ოთახის საფასურის ანგარიშ-ფაქტურა."
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_reservation_search_view
+msgid "Invoiced"
+msgstr "ინვოისი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "Invoices"
+msgstr "ინვოისები"
+
+#. module: hotel_erp
+#: model:ir.model.fields,help:hotel_erp.field_hotel_reservation__service_invoice_ids
+msgid "Invoices for additional services."
+msgstr "დამატებითი მომსახურების ინვოისები."
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__message_is_follower
+msgid "Is Follower"
+msgstr "არის გამომწერი/მიმდევარი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_service_list
+msgid "It Is In The Invoice."
+msgstr "ინვოისშია"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_employee__write_uid
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__write_uid
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation__write_uid
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation_cancel_wizard__write_uid
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation_line__write_uid
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_room__write_uid
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_room_images__write_uid
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_service__write_uid
+msgid "Last Updated by"
+msgstr "ბოლოს განაახლა"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_employee__write_date
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__write_date
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation__write_date
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation_cancel_wizard__write_date
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation_line__write_date
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_room__write_date
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_room_images__write_date
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_service__write_date
+msgid "Last Updated on"
+msgstr "ბოლოს განახლდა"
+
+#. module: hotel_erp
+#: model:ir.model.fields.selection,name:hotel_erp.selection__hotel_service__service_type__laundry
+msgid "Laundry & Cleaning"
+msgstr "სარეცხი და დასუფთავება"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_room__image_1920
+msgid "Main image"
+msgstr "მთავარი ფოტო"
+
+#. module: hotel_erp
+#: model:ir.model.fields.selection,name:hotel_erp.selection__hotel_room__room_status__maintenance
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_search_view
+msgid "Maintenance"
+msgstr "მოვლა"
+
+#. module: hotel_erp
+#: model:ir.model.fields.selection,name:hotel_erp.selection__hotel_employee__role__manager
+#: model:res.groups,name:hotel_erp.group_hotel_manager
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "Manager"
+msgstr "მენეჯერი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "Manager dashboard"
+msgstr "მენეჯერის დაფა(dashboard)"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__message_has_error
+msgid "Message Delivery error"
+msgstr "შეტყობინების მიწოდების შეცდომა"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__message_ids
+msgid "Messages"
+msgstr "შეტყობინებები"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_invoice_pay_modal
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "Money"
+msgstr "თანხა"
+
+#. module: hotel_erp
+#. odoo-javascript
+#: code:addons/hotel_erp/static/src/xml/hotel_dashboard.xml:0
+msgid "Monthly financial data"
+msgstr "ყოველთვიური ფინანსური მონაცემები"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_form_view
+msgid "Mosanishnebi"
+msgstr "მოსანიშნები"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "ჩემი აქტივობის ვადა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "My bookings"
+msgstr "ჩემი ჯავშნები"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_success_page
+msgid "My dashboard"
+msgstr "ჩემი დაფა(dashboard)"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "My invoices"
+msgstr "ჩემი ინვოისები"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_reservation_modal
+msgid "New Reservation"
+msgstr "ახალი ჯავშანი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_room_carousel
+msgid "Next"
+msgstr "შემდეგი"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "შემდეგი აქტივობის კალენდარი ღონისძიება"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "მომდევნო აქტივობის ბოლო ვადა"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__activity_summary
+msgid "Next Activity Summary"
+msgstr "მომდევნო აქტივობის შეჯამება"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__activity_type_id
+msgid "Next Activity Type"
+msgstr "შემდეგი აქტივობის ტიპი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_card
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_details_page
+msgid "Next image"
+msgstr "შემდეგი სურათი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_homepage
+msgid "Next slide"
+msgstr "შემდეგი სლაიდი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_rooms_page
+msgid "No room could be found for these dates."
+msgstr "ამ თარიღებისთვის ოთახი ვერ მოიძებნა."
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__message_needaction_counter
+msgid "Number of Actions"
+msgstr "მოქმედებების რაოდენობა"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__message_has_error_counter
+msgid "Number of errors"
+msgstr "შეცდომების რაოდენობა"
+
+#. module: hotel_erp
+#: model:ir.model.fields,help:hotel_erp.field_hotel_guest__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "შეტყობინებების რაოდენობა, რომლებიც საჭიროებენ მოქმედებას"
+
+#. module: hotel_erp
+#: model:ir.model.fields,help:hotel_erp.field_hotel_guest__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "მიწოდების შეცდომით შეტყობინებების რაოდენობა"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__reservation_count
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_room__reservation_count
+msgid "Number of reservations"
+msgstr "ჯავშნების რაოდენობა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "N°"
+msgstr ""
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_room__is_occupied_now
+#: model:ir.model.fields.selection,name:hotel_erp.selection__hotel_room__room_status__occupied
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_kanban_view
+msgid "Occupied"
+msgstr "დაკავებული"
+
+#. module: hotel_erp
+#. odoo-javascript
+#: code:addons/hotel_erp/static/src/xml/hotel_dashboard.xml:0
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_search_view
+msgid "Occupied Rooms"
+msgstr "დაკავებული ოთახები"
+
+#. module: hotel_erp
+#: model:ir.model.fields.selection,name:hotel_erp.selection__hotel_service__service_type__other
+msgid "Other"
+msgstr "სხვა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_homepage
+msgid "Our rooms"
+msgstr "ჩვენი ოთახები"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_homepage
+msgid "Our team is here around the clock."
+msgstr "ჩვენი გუნდი აქ არის მთელი საათის განმავლობაში."
+
+#. module: hotel_erp
+#: model:ir.model.fields.selection,name:hotel_erp.selection__hotel_reservation__payment_status__overpaid
+msgid "Overpaid"
+msgstr "ზედმეტად გადახდილი"
+
+#. module: hotel_erp
+#: model:ir.model.fields.selection,name:hotel_erp.selection__hotel_reservation__payment_status__paid
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_reservation_form_view
+msgid "Paid"
+msgstr "გადახდილი"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation__paid_amount
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation_cancel_wizard__paid_amount
+msgid "Paid Amount"
+msgstr "გადახდილი თანხა"
+
+#. module: hotel_erp
+#: model:ir.model.fields.selection,name:hotel_erp.selection__hotel_reservation__payment_status__partial
+msgid "Partially Paid"
+msgstr "ნაწილობრივ გადახდილი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_invoice_pay_modal
+msgid "Payment Method"
+msgstr "გადახდის მეთოდი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_invoice_pay_modal
+msgid "Payment Registration —"
+msgstr "გადახდის რეგისტრაცია —"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation__payment_status
+msgid "Payment Status"
+msgstr "გადახდის სტატუსი"
+
+#. module: hotel_erp
+#: model:ir.model,name:hotel_erp.model_account_payment
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation__payment_ids
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_reservation_form_view
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "Payments"
+msgstr "გადახდები"
+
+#. module: hotel_erp
+#: model:ir.model.fields.selection,name:hotel_erp.selection__hotel_reservation__state__pending
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_reservation_search_view
+msgid "Pending"
+msgstr "მოლოდინის რეჟიმში"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation__pending_date
+msgid "Pending Date"
+msgstr "მოლოდინის თარიღი"
+
+#. module: hotel_erp
+#: model:ir.actions.act_window,name:hotel_erp.hotel_pending_reservation_window_action
+#: model:ir.ui.menu,name:hotel_erp.hotel_pending_reservation_menu
+msgid "Pending Reservations"
+msgstr "მომლოდინე ჯავშნები"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_form_page
+msgid "Personal ID / Passport *"
+msgstr "პირადი ნომერი / პასპორტი *"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__personal_number
+msgid "Personal Number"
+msgstr "პირადი ნომერი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_guest_modal
+msgid "Personal number *"
+msgstr "პირადი ნომერი *"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_guest_modal
+msgid "Phone"
+msgstr "ტელეფინი"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_employee__phone
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__phone
+msgid "Phone Number"
+msgstr "ტელეფონის ნომერი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_form_page
+msgid "Phone number *"
+msgstr "ტელეფონის ნომერი *"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_room_images__name
+msgid "Photo Title/Description"
+msgstr "სურათის სათაური/აღწერა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_form_page
+msgid "Please fill in your details to secure your stay."
+msgstr "გთხოვთ შეავსოთ თქვენი მონაცემები თქვენი ყოფნის უზრუნველსაყოფად."
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_rooms_page
+msgid "Please select the dates correctly."
+msgstr "გთხოვთ სწორად აირჩიოთ თარიღები."
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__user_id
+msgid "Portal User"
+msgstr "პორტალის მომხმარებელი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_erp_payment_form_view
+msgid "Prepayment / Deposit"
+msgstr "წინასწარი გადახდა / ანაბარი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_advance_modal
+msgid "Prepayment — Booking #"
+msgstr "წინასწარი გადახდა — ჯავშანი #"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_room_carousel
+msgid "Previous"
+msgstr "წინა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_card
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_details_page
+msgid "Previous image"
+msgstr "წინა სურათი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_homepage
+msgid "Previous slide"
+msgstr "წინა სლაიდი"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_service__price
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_service_list
+msgid "Price"
+msgstr "ფასი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "Price (USD)"
+msgstr "ფასი (USD)"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_advance_modal
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_invoice_pay_modal
+msgid "Processing a payment"
+msgstr "გადახდის დამუშავება"
+
+#. module: hotel_erp
+#. odoo-javascript
+#: code:addons/hotel_erp/static/src/xml/hotel_dashboard.xml:0
+msgid "Profit"
+msgstr "მოგება"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation_line__quantity
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_service_modal
+msgid "Quantity"
+msgstr "რაოდენობა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.report_reservation_document
+msgid "Quantity(Amount of Days)"
+msgstr "რაოდენობა (დღეების რაოდენობა)"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_service_list
+msgid "Quantity."
+msgstr "რაოდენობა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_homepage
+msgid "Quiet rooms, warm service, and a bed you will not want to leave."
+msgstr "მშვიდი ოთახები, თბილი მომსახურება და საწოლი, რომლის დატოვებაც არ მოგინდებათ."
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_success_page
+msgid "RESERVATION SUMMARY"
+msgstr "ჯავშნის შეჯამება"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation_cancel_wizard__reason
+msgid "Reason for cancellation"
+msgstr "გაუქმების მიზეზი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "Reception"
+msgstr "მიმღები"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "Reception desk"
+msgstr "მიმღების დაფა(dashboard)"
+
+#. module: hotel_erp
+#: model:ir.model.fields.selection,name:hotel_erp.selection__hotel_employee__role__receptionist
+msgid "Receptionist"
+msgstr "მიმღები"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation_line__invoiced
+msgid "Recorded in the invoice"
+msgstr "ჩაწერილია ინვოისში"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_reservation_form_view
+msgid "Refund"
+msgstr "თანხის დაბრუნება"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation__amount_due
+msgid "Remaining balance"
+msgstr "დარჩენილი ბალანსი"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_account_payment__reservation_id
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation_cancel_wizard__reservation_id
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation_line__reservation_id
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_reservation_calendar_view
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "Reservation"
+msgstr "ჯავშანი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "Reservation #"
+msgstr "ჯავშანი #"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_reservation_graph_view
+msgid "Reservation Analysis"
+msgstr "დაჯავშნის ანალიზი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.report_reservation_document
+msgid "Reservation Confirmation"
+msgstr "ჯავშნის დადასტურება"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_reservation_pivot_view
+msgid "Reservation Pivot Analysis"
+msgstr "დაჯავშნის Pivot ანალიზი"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation__name
+msgid "Reservation Reference"
+msgstr "ჯავშნის საცნობარო ნომერი"
+
+#. module: hotel_erp
+#: model:ir.actions.report,name:hotel_erp.reservation_report
+msgid "Reservation Report PDF"
+msgstr "დაჯავშნის ანგარიში PDF"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_success_page
+msgid "Reservation received"
+msgstr "დაჯავშნა მიღებულია"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__reservation_ids
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_room__reservation_ids
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_guest_form_view
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_form_view
+msgid "Reservations"
+msgstr "დაჯავშნა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "Reservations, invoices and payments at a glance."
+msgstr "დაჯავშნა, ინვოისები და გადახდები ერთი შეხედვით."
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__activity_user_id
+msgid "Responsible User"
+msgstr "პასუხისმგებელი მომხმარებელი"
+
+#. module: hotel_erp
+#. odoo-javascript
+#: code:addons/hotel_erp/static/src/xml/hotel_dashboard.xml:0
+msgid "Revenues"
+msgstr "შემოსავლები"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_employee__role
+msgid "Role"
+msgstr "როლი"
+
+#. module: hotel_erp
+#. odoo-javascript
+#: code:addons/hotel_erp/static/src/xml/hotel_dashboard.xml:0
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation__room_id
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_room_images__room_id
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_form_page
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_reservation_search_view
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_card
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_details_page
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_reservation_modal
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "Room"
+msgstr "ოთახი"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation__invoice_id
+msgid "Room Invoice"
+msgstr "ოთახის ინვოისი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_kanban_view
+msgid "Room N:"
+msgstr "ოთახი N:"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_room__room_number
+msgid "Room Number"
+msgstr "ოთახის ნომერი"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_room__room_price
+msgid "Room Price For One Night"
+msgstr "ოთახის ფასი ერთი ღამისთვის"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_form_view
+msgid "Room Reservation"
+msgstr "ოთახის დაჯავშნა"
+
+#. module: hotel_erp
+#. odoo-javascript
+#: code:addons/hotel_erp/static/src/xml/hotel_dashboard.xml:0
+msgid "Room Status Overview"
+msgstr "ოთახის სტატუსის მიმოხილვა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_search_view
+msgid "Room Type"
+msgstr "ოთახის ტიპი"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_room__capacity
+msgid "Room capacity"
+msgstr "ოთახის ტევადობა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_form_view
+msgid "Room details.."
+msgstr "ოთახის დეტალები.."
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation__room_price
+msgid "Room price (1 night)"
+msgstr "ოთახის ფასი (1 ღამე)"
+
+#. module: hotel_erp
+#: model:ir.actions.act_window,name:hotel_erp.hotel_room_window_action
+#: model:ir.ui.menu,name:hotel_erp.hotel_room_menu
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_details_page
+msgid "Rooms"
+msgstr "ოთახები"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "Rooms needing attention"
+msgstr "ოთახები საჭიროებს ყურადღებას"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "SMS-ის მიწოდების შეცდომა"
+
+#. module: hotel_erp
+#: model:ir.model.fields.selection,name:hotel_erp.selection__hotel_service__service_type__spa
+msgid "SPA & Wellness"
+msgstr "სპა & კეთილდღეობა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_guest_modal
+msgid "Save guest"
+msgstr "სტუმრის დამახსოვრება"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_service_modal
+msgid "Select a service"
+msgstr "აირჩიე სერვისი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_form_page
+msgid "Select check-in"
+msgstr "აირჩიე სასტუმროში შესვლის თარიღი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_form_page
+msgid "Select check-out"
+msgstr "აირჩიე სასტუმროს დატოვების თარიღი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_homepage
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_rooms_page
+msgid "Select date"
+msgstr "აირჩიე თარიღი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_rooms_page
+msgid "Select dates — I will show you rooms available only on those days."
+msgstr "აირჩიეთ თარიღები — გაჩვენებთ ოთახებს, რომლებიც მხოლოდ ამ დღეებშია ხელმისაწვდომი."
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_form_page
+msgid "Selected room *"
+msgstr "არჩეული ოთახი *"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation_line__service_id
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_service_list
+msgid "Service"
+msgstr "სერვისი"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation__service_invoice_ids
+msgid "Service Invoices"
+msgstr "სერვისის ინვოისები"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation__service_line_ids
+msgid "Service Lines"
+msgstr "სერვისის ხაზები"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_service__name
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "Service Name"
+msgstr "სერვისის სახელი"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_service__service_type
+msgid "Service Type"
+msgstr "სერვისის ტიპი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_reservation_form_view
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "Services"
+msgstr "სერვისები"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_form_view
+msgid "Set Available"
+msgstr "გახადე ხელმისაწვდომი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_form_view
+msgid "Set Clean"
+msgstr "გახადე სუფთა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_form_view
+msgid "Set Confirm"
+msgstr "დაადასტურე"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_form_view
+msgid "Set Dirty"
+msgstr "გახადე ბინძური"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_form_view
+msgid "Set Inactive"
+msgstr "გახადე არააქტიური"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_form_view
+msgid "Set Maintenance"
+msgstr "გახადე რემონტში"
+
+#. module: hotel_erp
+#: model:ir.model.fields.selection,name:hotel_erp.selection__hotel_room__room_type__single
+msgid "Single"
+msgstr "ერთადგილიანი ნომერი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_room_carousel
+msgid "Slide"
+msgstr "სლაიდი"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_room__is_smoking
+msgid "Smoking Allowed"
+msgstr "მოწევა დაშვებულია"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_form_view
+msgid "Start Cleaning"
+msgstr "დაიწყეთ გაწმენდა"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation__state
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "State"
+msgstr "მდგომარეობა"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_room__room_status
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_reservation_search_view
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_service_list
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "Status"
+msgstr "სტატუსი"
+
+#. module: hotel_erp
+#: model:ir.model.fields,help:hotel_erp.field_hotel_guest__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr "'სტატუსი აქტივობების მიხედვით\n"
+"ვადაგასული: შესრულების ვადა უკვე გასულია\n"
+"დღეს: აქტივობის თარიღი დღევანდელი დღეა\n"
+"დაგეგმილი: სამომავლო აქტივობები.'"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_homepage
+msgid "Stay connected everywhere in the hotel."
+msgstr "იყავით დაკავშირებული სასტუმროში ყველგან."
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_homepage
+msgid "Stay somewhere you will remember"
+msgstr "დარჩი სადმე, სადაც გაგახსენდება"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_form_page
+msgid "Street, City, Country"
+msgstr "ქუჩა,ქალაქი,ქვეყანა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_reservation_form_view
+msgid "Submit"
+msgstr "გაგზავნა"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation_line__price_subtotal
+msgid "Subtotal"
+msgstr "ჯამი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_service_list
+msgid "Sum"
+msgstr "ჯამი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_homepage
+msgid "Swimming pool"
+msgstr "საცურაო აუზი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_success_page
+msgid "Thank you,"
+msgstr "გმადლობთ,"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "The booking linked to this invoice could not be found."
+msgstr "ამ ინვოისთან დაკავშირებული ჯავშანი ვერ მოიძებნა."
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_rooms_page
+msgid "The check-out date must be later than the check-in date."
+msgstr "გასვლის თარიღი უნდა იყოს შეყვანის თარიღზე უგვიანეს."
+
+#. module: hotel_erp
+#: model:ir.model.constraint,message:hotel_erp.constraint_hotel_guest_unique_personal_number
+msgid "The personal number must be unique.!!!"
+msgstr "პირადი ნომერი უნდა იყოს უნიკალური.!!!"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_rooms_page
+msgid "The room is available."
+msgstr "ოთახი ხელმისაწვდომია"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "There Are No Invoices."
+msgstr "ინვოისები არ მოიძებნა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "There Are No Payments."
+msgstr "გადახდები არ არის"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_form_page
+msgid "This room is occupied for the selected dates.."
+msgstr "ეს ოთახი დაკავებულია შერჩეული თარიღებისთვის.."
+
+#. module: hotel_erp
+#. odoo-javascript
+#: code:addons/hotel_erp/static/src/xml/hotel_dashboard.xml:0
+msgid "Today's Check-Ins"
+msgstr "დღევანდელი სასტუმროში შემოსვლები(check-ins)"
+
+#. module: hotel_erp
+#. odoo-javascript
+#: code:addons/hotel_erp/static/src/xml/hotel_dashboard.xml:0
+msgid "Today's Check-Outs"
+msgstr "დღევანდელი სასტუმროდან გასვლა(check-outs)"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_reservation_form_view
+msgid "Total Advance"
+msgstr "სულ წინასწარი გადახდა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.report_reservation_document
+msgid "Total Amount"
+msgstr "ჯამური თანხა"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation__total_price
+msgid "Total Price"
+msgstr "ჯამური ფასი"
+
+#. module: hotel_erp
+#. odoo-javascript
+#: code:addons/hotel_erp/static/src/xml/hotel_dashboard.xml:0
+msgid "Total amount paid"
+msgstr "ჯამურად გადახდილი თანხა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_service_list
+msgid "Total services"
+msgstr "ჯამური სერვისები"
+
+#. module: hotel_erp
+#: model:ir.model.fields.selection,name:hotel_erp.selection__hotel_service__service_type__transport
+msgid "Transportation"
+msgstr "ტრანსპორტირება"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_rooms_page
+msgid "Try other dates."
+msgstr "სცადეთ სხვა თარიღი"
+
+#. module: hotel_erp
+#: model:ir.model.fields,help:hotel_erp.field_hotel_guest__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "ჩანაწერში არსებული გამონაკლისი ქმედების ტიპი."
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_service_modal
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "USD"
+msgstr ""
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_reservation_line__price_unit
+msgid "Unit Price"
+msgstr "ერტეულის ღირებულება"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.report_reservation_document
+msgid "Unit Price(One Night)"
+msgstr "ერთეულის ღირებულება(ერთი ღამე)"
+
+#. module: hotel_erp
+#: model:ir.model.fields.selection,name:hotel_erp.selection__hotel_reservation__payment_status__unpaid
+msgid "Unpaid"
+msgstr "გადაუხდელი"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_employee__user_id
+msgid "User"
+msgstr "მომხმარებელი"
+
+#. module: hotel_erp
+#: model:res.groups,name:hotel_erp.group_hotel_user
+msgid "User/Receptionist"
+msgstr "მომხმარებელი/მიმღები"
+
+#. module: hotel_erp
+#: model:ir.model.fields.selection,name:hotel_erp.selection__hotel_room__room_type__vip
+msgid "VIP"
+msgstr ""
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_search_view
+msgid "VIP Rooms"
+msgstr "VIP ოთახები"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_card
+msgid "View room"
+msgstr "ოთახის დათვალიერება"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_homepage
+msgid "View rooms"
+msgstr "ოთახების დათვალიერება"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_room__is_wifi
+msgid "WI-FI"
+msgstr ""
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__website_message_ids
+msgid "Website Messages"
+msgstr "საიტის შეტყობინებები"
+
+#. module: hotel_erp
+#: model:ir.model.fields,help:hotel_erp.field_hotel_guest__website_message_ids
+msgid "Website communication history"
+msgstr "ვებგვერდთან კომუნიკაციის ისტორია"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "You Have No Active Bookings."
+msgstr "არ გაქვთ აქტიური ჯავშნები"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "Your reservations, invoices and services in one place."
+msgstr "თქვენი ჯავშნები,ინვოისები და სერვისები ერთ სივრცეში"
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_guest__active
+msgid "active"
+msgstr "აქტიური"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_details_page
+msgid "balcony"
+msgstr "ბალკონი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_details_page
+msgid "breadcrumb"
+msgstr "ნავიგაციის ჯაჭვი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_form_view
+msgid "description"
+msgstr "აღწერა"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_form_view
+msgid "enter room number"
+msgstr "შეიტანეთ ოთახის ნომერი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_form_page
+msgid "guest@example.com"
+msgstr ""
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_booking_form_page
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_card
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_room_details_page
+msgid "guests"
+msgstr "სტუმრები"
+
+#. module: hotel_erp
+#: model:ir.actions.act_window,name:hotel_erp.hotel_employee_window_action
+msgid "hotel.employee.window.action"
+msgstr ""
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "· Room"
+msgstr "· ოთახი"
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "ამ ინვოისზე მიბმული ჯავშანი ვერ მოიძებნა."
+msgstr ""
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.report_reservation_document
+msgid "ბეჭედი და სტუმრის ხელმოწერა:"
+msgstr ""
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hx_advance_modal
+msgid "გაუქმება"
+msgstr ""
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "გთხოვთ, ჩაწერეთ ჯავშნის გაუქმების მიზეზი"
+msgstr ""
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_reservation_cancel_wizrd_view
+msgid "გთხოვთ,შეიყვანეთ გაუქმების მიზეზი"
+msgstr ""
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "ვადა:"
+msgstr ""
+
+#. module: hotel_erp
+#: model:ir.model.fields,field_description:hotel_erp.field_hotel_room__room_type
+msgid "ოთახის ტიპი"
+msgstr ""
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.report_reservation_document
+msgid "ოთახის ქირაობა (ოთახის სახელი:"
+msgstr ""
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_rooms_page
+msgid "პერიოდში."
+msgstr ""
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.portal_my_dashboard
+msgid "შექმნა"
+msgstr ""
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_reservation_form_view
+msgid "წინასწარი გადახდები / დეპოზიტები"
+msgstr ""
+
+#. module: hotel_erp
+#: model_terms:ir.ui.view,arch_db:hotel_erp.hotel_reservation_cancel_wizrd_view
+msgid ""
+"⚠️ Payment has been made for the booking; the matter of a refund must be "
+"addressed separately."
+msgstr "'⚠️ ჯავშნისთვის გადახდა განხორციელებულია; თანხის დაბრუნების საკითხი "
+"ცალკე უნდა განიხილოს.'"

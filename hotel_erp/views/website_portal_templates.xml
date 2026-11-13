@@ -1,1750 +1,835 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <!-- ===================== REUSABLE MODALS ===================== -->
+
+    <!-- params: mid, rsv, title, btn -->
+    <template id="hx_service_modal" name="HX Add Service Modal">
+        <div class="modal fade" t-att-id="mid" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <form action="/reservation/add_service" method="post" class="modal-content">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <input type="hidden" name="reservation_id" t-att-value="rsv.id"/>
+                    <div class="modal-header">
+                        <h5 class="modal-title"><t t-out="title"/> #<t t-out="rsv.id"/></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"/>
+                    </div>
+                    <div class="modal-body text-start">
+                        <div class="hx-mfield">
+                            <label class="hx-label">Select a service</label>
+                            <select name="service_id" class="hx-input" required="1">
+                                <t t-foreach="available_services" t-as="s">
+                                    <option t-att-value="s.id"><t t-out="s.name"/> - <t t-out="s.price"/> USD</option>
+                                </t>
+                            </select>
+                        </div>
+                        <div class="hx-mfield">
+                            <label class="hx-label">Quantity</label>
+                            <input type="number" name="quantity" class="hx-input" value="1" min="1" required="1"/>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="hx-btn hx-btn-dark hx-btn-sm"><t t-out="btn"/></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </template>
+
+    <!-- params: mid, rsv, cur, show_guest -->
+    <template id="hx_advance_modal" name="HX Advance Payment Modal">
+        <div class="modal fade" t-att-id="mid" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <form action="/dashboard/advance_payment/register" method="POST" class="modal-content">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <input type="hidden" name="reservation_id" t-att-value="rsv.id"/>
+                    <div class="modal-header">
+                        <h5 class="modal-title">Prepayment — Booking #<t t-out="rsv.id"/></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"/>
+                    </div>
+                    <div class="modal-body text-start">
+                        <div class="hx-mrow" t-if="show_guest"><span>Guest</span><b t-out="rsv.guest_id.name"/></div>
+                        <div class="hx-mrow"><span>Room</span><b t-out="rsv.room_id.room_number"/></div>
+                        <div class="hx-mdue">
+                            <span>the remaining amount</span>
+                            <b><t t-out="rsv.amount_due"/> <t t-out="cur"/></b>
+                        </div>
+                        <label class="hx-label">Amount payable(<t t-out="cur"/>)</label>
+                        <input type="number" step="0.01" min="0.01" t-att-max="rsv.amount_due" name="amount" class="hx-input"
+                               t-att-value="rsv.amount_due" required="1"/>
+                        <small class="hx-hint">The amount must not exceed the remaining balance to be paid.</small>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="hx-btn hx-btn-line hx-btn-sm" data-bs-dismiss="modal">გაუქმება</button>
+                        <button type="submit" class="hx-btn hx-btn-gold hx-btn-sm">Processing a payment</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </template>
+
+    <!-- params: mid, action -->
+    <template id="hx_guest_modal" name="HX Create Guest Modal">
+        <div class="modal fade" t-att-id="mid" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <form t-att-action="action" method="post" class="modal-content">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add new guest</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"/>
+                    </div>
+                    <div class="modal-body">
+                        <div class="hx-mfield"><label class="hx-label">Full name</label><input type="text" name="name" class="hx-input" required="1"/></div>
+                        <div class="hx-mfield"><label class="hx-label">Email</label><input type="email" name="email" class="hx-input" required="1"/></div>
+                        <div class="hx-mfield"><label class="hx-label">Phone</label><input type="text" name="phone" class="hx-input"/></div>
+                        <div class="hx-mfield"><label class="hx-label">Personal number *</label><input type="text" name="personal_number" class="hx-input" required="1"/></div>
+                        <div class="hx-mfield"><label class="hx-label">Address</label><input type="text" name="address" class="hx-input" placeholder="Enter your local address"/></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="hx-btn hx-btn-dark hx-btn-sm">Save guest</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </template>
+
+    <!-- params: mid, inv_rec  (manager: register payment on an invoice -> /manager/payment/create) -->
+    <template id="hx_invoice_pay_modal" name="HX Invoice Payment Modal">
+        <div class="modal fade" t-att-id="mid" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <form action="/manager/payment/create" method="post" class="modal-content">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <input type="hidden" name="invoice_id" t-att-value="inv_rec.id"/>
+                    <div class="modal-header">
+                        <h5 class="modal-title">Payment Registration — <t t-out="inv_rec.name"/></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"/>
+                    </div>
+                    <div class="modal-body text-start">
+                        <div class="hx-mrow"><span>Client</span><b t-out="inv_rec.partner_id.name"/></div>
+                        <div class="hx-mdue">
+                            <span>The Remaining Amount</span>
+                            <b><t t-out="inv_rec.amount_residual"/> <t t-out="inv_rec.currency_id.symbol"/></b>
+                        </div>
+                        <div class="hx-mfield">
+                            <label class="hx-label">Money</label>
+                            <input type="number" step="0.01" min="0.01" name="amount" class="hx-input" t-att-value="inv_rec.amount_residual" required="1"/>
+                        </div>
+                        <div class="hx-mfield">
+                            <label class="hx-label">Payment Method</label>
+                            <select name="payment_method" class="hx-input">
+                                <option value="bank">Bank / Card</option>
+                                <option value="cash">Cash settlement</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="hx-btn hx-btn-gold hx-btn-sm">Processing a payment</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </template>
+
+    <!-- params: mid  (manager: needs `guests` and `rooms` from the controller -> /dashboard/reservation/create) -->
+    <template id="hx_reservation_modal" name="HX Create Reservation Modal">
+        <div class="modal fade" t-att-id="mid" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <form action="/dashboard/reservation/create" method="post" class="modal-content">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <div class="modal-header">
+                        <h5 class="modal-title">New Reservation</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"/>
+                    </div>
+                    <div class="modal-body text-start">
+                        <div class="hx-mfield">
+                            <label class="hx-label">Guest</label>
+                            <select name="guest_id" class="hx-input" required="1">
+                                <option value="" disabled="1" selected="selected">Select Guest...</option>
+                                <t t-foreach="guests" t-as="g">
+                                    <option t-att-value="g.id"><t t-out="g.name"/> (<t t-out="g.personal_number"/>)</option>
+                                </t>
+                            </select>
+                        </div>
+                        <div class="hx-mfield">
+                            <label class="hx-label">Room</label>
+                            <select name="room_id" class="hx-input" required="1">
+                                <option value="" disabled="1" selected="selected">Select Room...</option>
+                                <t t-foreach="rooms" t-as="rm">
+                                    <option t-att-value="rm.id">Room <t t-out="rm.room_number"/> — $<t t-out="rm.room_price"/> (<t t-out="rm.room_type"/>)</option>
+                                </t>
+                            </select>
+                        </div>
+                        <div class="hx-fgrid">
+                            <div><label class="hx-label">Check-in</label><input type="date" name="check_in" class="hx-input" required="1"/></div>
+                            <div><label class="hx-label">Check-out</label><input type="date" name="check_out" class="hx-input" required="1"/></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="hx-btn hx-btn-dark hx-btn-sm">Create Reservation</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </template>
+
+    <!-- params: rsv, all_lines  -> table of services attached to a reservation -->
+    <template id="hx_service_list" name="HX Reservation Services">
+        <t t-set="svc_lines" t-value="[l for l in all_lines if l.reservation_id.id == rsv.id]"/>
+        <div class="hx-svc-box">
+            <t t-if="svc_lines">
+                <table class="hx-svc-table">
+                    <thead><tr><th>Service</th><th>Quantity.</th><th>Price</th><th>Sum</th><th>Status</th></tr></thead>
+                    <tbody>
+                        <t t-foreach="svc_lines" t-as="sl">
+                            <tr>
+                                <td><i class="fa fa-bell-o"/> <t t-out="sl.service_id.name"/></td>
+                                <td>× <t t-out="sl.quantity"/></td>
+                                <td>$<t t-out="'%.2f' % sl.price_unit"/></td>
+                                <td>$<t t-out="'%.2f' % sl.price_subtotal"/></td>
+                                <td>
+                                    <span t-if="sl.invoiced" class="hx-badge hx-b-ok">It Is In The Invoice.</span>
+                                    <span t-else="" class="hx-badge hx-b-warn">In Expectation</span>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3">Total services</td>
+                            <td>$<t t-out="'%.2f' % sum([x.price_subtotal for x in svc_lines])"/></td>
+                            <td/>
+                        </tr>
+                    </tfoot>
+                </table>
+            </t>
+            <t t-else="">
+                <div class="hx-svc-empty"><i class="fa fa-info-circle"/>No Service Has Been Added To This Booking Yet.</div>
+            </t>
+        </div>
+    </template>
+
+    <!-- params: room, cid  -> carousel of all room photos -->
+    <template id="hx_room_carousel" name="HX Room Carousel">
+        <t t-set="total_imgs" t-value="(1 if room.image_1920 else 0) + len(room.image_ids)"/>
+        <div t-att-id="cid" class="carousel slide hx-resv-car" data-bs-ride="carousel" data-bs-interval="4500">
+            <div class="carousel-inner">
+                <t t-if="room.image_1920">
+                    <div class="carousel-item active">
+                        <a t-attf-href="/room/#{room.id}" class="hx-resv-link">
+                            <img t-attf-src="/web/image/hotel.room/#{room.id}/image_1920/720x540" class="hx-resv-img" t-att-alt="room.room_number"/>
+                        </a>
+                    </div>
+                </t>
+                <t t-foreach="room.image_ids" t-as="img">
+                    <div t-attf-class="carousel-item #{'active' if (not room.image_1920 and img_index == 0) else ''}">
+                        <a t-attf-href="/room/#{room.id}" class="hx-resv-link">
+                            <img t-attf-src="/web/image/hotel.room.images/#{img.id}/image_1920/720x540" class="hx-resv-img" t-att-alt="room.room_number"/>
+                        </a>
+                    </div>
+                </t>
+                <t t-if="total_imgs == 0">
+                    <div class="carousel-item active"><div class="hx-card-ph"><i class="fa fa-bed"/></div></div>
+                </t>
+            </div>
+            <t t-if="total_imgs &gt; 1">
+                <div class="carousel-indicators">
+                    <t t-foreach="range(total_imgs)" t-as="i">
+                        <button type="button" t-att-data-bs-target="'#' + cid" t-att-data-bs-slide-to="i"
+                                t-att-class="'active' if i == 0 else None" aria-label="Slide"></button>
+                    </t>
+                </div>
+                <button class="carousel-control-prev" type="button" t-att-data-bs-target="'#' + cid" data-bs-slide="prev" aria-label="Previous">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                </button>
+                <button class="carousel-control-next" type="button" t-att-data-bs-target="'#' + cid" data-bs-slide="next" aria-label="Next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                </button>
+            </t>
+        </div>
+    </template>
+
+    <!-- ===================== DASHBOARD ===================== -->
+
     <template id="portal_my_dashboard" name="My Hotel Dashboard">
         <t t-call="website.layout">
+            <head>
+                <link rel="stylesheet" type="text/css" href="/hotel_erp/static/src/css/hotel_theme.css"/>
+            </head>
 
-            <div class="container my-5">
+            <t t-set="closed" t-value="['checked_out', 'cancelled', 'expired', 'no_show']"/>
+            <t t-set="st_map" t-value="{'checked_in': 'ok', 'confirmed': 'info', 'pending': 'warn', 'draft': 'mute', 'checked_out': 'mute', 'cancelled': 'bad', 'expired': 'bad', 'no_show': 'bad'}"/>
+            <t t-set="msgs" t-value="{
+                'guest_created': 'New guest successfully added!',
+                'booking_created': 'The Booking Has Been Successfully Registered.!',
+                'payment_registered': 'The Payment Was Successfully Registered.!',
+                'checkin_done': 'Check-in Completed Successfully!',
+                'checkout_done': 'Check-out Completed Successfully!',
+                'confirm_done': 'Confirm Completed Successfully!',
+                'booking_cancelled': 'The Booking Has Been Successfully Cancelled..',
+                'service_added': 'The Service Has Been Successfully Added To The Booking.!',
+                'service_created': 'The New Service Was Successfully Created.!',
+                'account_created': 'Your account has been created and your booking has been received! We have sent a link to your email to set your password.'}"/>
+            <t t-set="errmap" t-value="{
+                'guest_exists': 'A guest with this personal number is already registered.',
+                'invalid_data': 'The data is incomplete — please provide your name and personal number.',
+                'invalid_invoice': 'Invoice not found.',
+                'invoice_not_posted': 'The invoice has not yet been confirmed.',
+                'invalid_amount': 'The amount is incorrect.',
+                'amount_exceeds_due': 'The amount exceeds the remaining balance to be paid.',
+                'no_journal': 'Payment log not found.',
+                'payment_journal_not_found': 'Payment log not found.',
+                'payment_failed': 'The payment could not be processed..',
+                'reservation_not_found': 'Booking not found.',
+                'guest_partner_not_found': 'Guest has no attached partner.',
+                'guest_email_not_found': 'The guest has not specified an email.',
+                'access_denied': 'You are not allowed to do this.',
+                'service_failed': 'Failed to add the service.',
+                'invalid_service_data': 'Service name and price are mandatory.',
+                'room_unavailable': 'This room is occupied on the selected dates.',
+                'email_required': 'Email is required.'}"/>
 
-                <h1 class="mb-4">
-                    <i class="fa fa-user-circle text-primary me-2"/>
+            <div id="wrap" class="hx-page">
+                <div class="hx-container" style="padding-top:40px;padding-bottom:88px">
+
+                    <!-- ============ HEADER ============ -->
+                    <div class="hx-dash-head">
+                        <div>
+                            <span class="hx-role">
+                                <i t-attf-class="fa #{'fa-briefcase' if role == 'manager' else 'fa-bell' if role == 'receptionist' else 'fa-user'}"/>
+                                <t t-if="role == 'manager'">Manager</t>
+                                <t t-elif="role == 'receptionist'">Reception</t>
+                                <t t-else="">Guest</t>
+                            </span>
+                            <h1>
+                                <t t-if="role == 'manager'">Manager dashboard</t>
+                                <t t-elif="role == 'receptionist'">Reception desk</t>
+                                <t t-else="">My bookings</t>
+                            </h1>
+                            <p>
+                                <t t-if="role == 'manager'">Reservations, invoices and payments at a glance.</t>
+                                <t t-elif="role == 'receptionist'">Arrivals, in-house guests and housekeeping.</t>
+                                <t t-else="">Your reservations, invoices and services in one place.</t>
+                            </p>
+                        </div>
+                        <div class="hx-qa">
+                            <t t-if="role == 'manager'">
+                                <button type="button" class="hx-qa-btn" data-bs-toggle="modal" data-bs-target="#createGuestModal"><i class="fa fa-user-plus"/>Add guest</button>
+                                <button type="button" class="hx-qa-btn" data-bs-toggle="modal" data-bs-target="#addServiceModal"><i class="fa fa-bell"/>Create service</button>
+                                <button type="button" class="hx-qa-btn main" data-bs-toggle="modal" data-bs-target="#createReservationModal"><i class="fa fa-calendar-plus-o"/>Create reservation</button>
+                            </t>
+                            <t t-elif="role == 'receptionist'">
+                                <button type="button" class="hx-qa-btn" data-bs-toggle="modal" data-bs-target="#createReceptionGuestModal"><i class="fa fa-user-plus"/>Add guest</button>
+                                <a href="/rooms" class="hx-qa-btn main"><i class="fa fa-calendar-plus-o"/>Create reservation</a>
+                            </t>
+                            <t t-else="">
+                                <a href="/rooms" class="hx-qa-btn main"><i class="fa fa-calendar-plus-o"/>Book now</a>
+                            </t>
+                        </div>
+                    </div>
+
+                    <!-- ============ ALERTS ============ -->
+                    <t t-if="success in msgs">
+                        <div t-attf-class="alert alert-dismissible fade show hx-alert #{'hx-alert-warn' if success == 'booking_cancelled' else 'hx-alert-ok'}" role="alert">
+                            <i t-attf-class="fa #{'fa-exclamation-circle' if success == 'booking_cancelled' else 'fa-check-circle'}"/>
+                            <span t-out="msgs[success]"/>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"/>
+                        </div>
+                    </t>
+                    <t t-if="request.params.get('error')">
+                        <div class="alert alert-dismissible fade show hx-alert hx-alert-bad" role="alert">
+                            <i class="fa fa-exclamation-triangle"/>
+                            <span t-out="errmap.get(request.params.get('error'), request.params.get('error'))"/>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"/>
+                        </div>
+                    </t>
+                    <t t-if="request.params.get('clean_rooms')">
+                        <div class="alert alert-dismissible fade show hx-alert hx-alert-ok" role="alert">
+                            <i class="fa fa-check-circle"/><span>The Room Was Successfully Cleaned.!</span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"/>
+                        </div>
+                    </t>
+
+                    <!-- ==================== 1. MANAGER ==================== -->
                     <t t-if="role == 'manager'">
-                        Manager Dashboard
-                    </t>
-                    <t t-elif="role == 'receptionist'">
-                        Receptionist Dashboard
-                    </t>
-                    <t t-else="">
-                        My Bookings &amp; Profile
-                    </t>
-                </h1>
+                        <t t-set="all_lines" t-value="request.env['hotel.reservation.line'].sudo().search([('reservation_id', 'in', reservations.ids)])"/>
 
-                <!-- ==================== ALERT MESSAGES ==================== -->
-
-                <t t-if="success == 'guest_created'">
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        👤 ახალი სტუმარი წარმატებით დაემატა!
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"/>
-                    </div>
-                </t>
-
-                <t t-if="success == 'booking_created'">
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        ✅ ჯავშანი წარმატებით დარეგისტრირდა!
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"/>
-                    </div>
-                </t>
-
-                <t t-if="success == 'payment_registered'">
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        💳 გადახდა წარმატებით დარეგისტრირდა!
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"/>
-                    </div>
-                </t>
-
-                <t t-if="success == 'checkin_done'">
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        🔑 Check-In წარმატებით შესრულდა!
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"/>
-                    </div>
-                </t>
-
-                <t t-if="success == 'checkout_done'">
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        🚪 Check-Out წარმატებით შესრულდა!
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"/>
-                    </div>
-                </t>
-
-                <t t-if="success == 'confirm_done'">
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        ✅ Confirm წარმატებით შესრულდა!
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"/>
-                    </div>
-                </t>
-
-                <t t-if="success == 'booking_cancelled'">
-                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                        ❌ ჯავშანი წარმატებით გაუქმდა.
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"/>
-                    </div>
-                </t>
-
-                <!-- NEW: სერვისის დამატება/შექმნის შეტყობინებები -->
-                <t t-if="success == 'service_added'">
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        🛎️ სერვისი წარმატებით დაემატა ჯავშანს!
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"/>
-                    </div>
-                </t>
-
-                <t t-if="success == 'service_created'">
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        🛎️ ახალი სერვისი წარმატებით შეიქმნა!
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"/>
-                    </div>
-                </t>
-
-                <t t-if="request.params.get('error')">
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        ⚠️
-                        <t t-out="request.params.get('error')"/>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"/>
-                    </div>
-                </t>
-
-                <t t-if="request.params.get('guest_exists')">
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        ⚠️ სტუმარი ამ პირადი ნომრით უკვე რეგისტრირებულია
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"/>
-                    </div>
-                </t>
-
-                <t t-if="request.params.get('errors')">
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        ⚠️
-                        <t t-out="request.params.get('errors')"/>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"/>
-                    </div>
-                </t>
-
-                <t t-if="request.params.get('clean_rooms')">
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        🚪 ოთახი წარმატებით დასუფთავდა!
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"/>
-                    </div>
-                </t>
-
-                <!-- ==================== 1. MANAGER DASHBOARD ==================== -->
-
-                <t t-if="role == 'manager'">
-
-                    <!-- Quick Actions -->
-
-                    <div class="row mb-4">
-
-                        <div class="col-md-3">
-                            <button
-                                    class="btn btn-outline-primary w-100 py-3 shadow-sm"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#createGuestModal"
-                            >
-                                <i class="fa fa-user-plus fa-2x d-block mb-1"/>
-                                Add New Guest
-                            </button>
+                        <div class="hx-stats">
+                            <div class="hx-stat"><small>All reservations</small><b t-out="len(reservations)"/></div>
+                            <div class="hx-stat"><small>Checked in now</small><b t-out="len([x for x in reservations if x.state == 'checked_in'])"/></div>
+                            <div class="hx-stat"><small>Awaiting payment</small><b t-out="len([x for x in reservations if x.amount_due &gt; 0 and x.state not in closed])"/></div>
+                            <div class="hx-stat gold"><small>Unpaid invoices</small><b t-out="len([i for i in invoices if i.payment_state not in ['paid', 'in_payment']])"/></div>
                         </div>
 
-                        <div class="col-md-3">
-                            <a href="/rooms" class="btn btn-outline-success w-100 py-3 shadow-sm">
-                                <i class="fa fa-calendar-plus-o fa-2x d-block mb-1"/>
-                                Create Reservation
-                            </a>
-                        </div>
-
-                        <div class="col-md-3">
-                            <button
-                                    class="btn btn-outline-info w-100 py-3 shadow-sm"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#registerPaymentModal"
-                            >
-                                <i class="fa fa-money fa-2x d-block mb-1"/>
-                                Register Payment
-                            </button>
-                        </div>
-
-                        <!-- NEW: Create Service quick action -->
-                        <div class="col-md-3">
-                            <button
-                                    type="button"
-                                    class="btn btn-outline-warning w-100 py-3 shadow-sm"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#addServiceModal"
-                            >
-                                <i class="fa fa-bell fa-2x d-block mb-1"/>
-                                Create Service
-                            </button>
-                        </div>
-
-                    </div>
-
-                    <!-- All Reservations Table -->
-
-                    <div class="card shadow-sm mb-4">
-
-                        <div class="card-header bg-primary text-white">
-                            <h4 class="mb-0">All Reservations</h4>
-                        </div>
-
-                        <div class="card-body p-0">
-
-                            <table class="table table-hover mb-0">
-
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Guest</th>
-                                        <th>Room</th>
-                                        <th>Check-In</th>
-                                        <th>Check-Out</th>
-                                        <th>State</th>
-                                        <!-- NEW -->
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-
-                                    <t t-foreach="reservations" t-as="res">
-
-                                        <tr>
-                                            <td>
-                                                <t t-out="res.name"/>
-                                            </td>
-
-                                            <td>
-                                                <t t-out="res.guest_id.name"/>
-                                            </td>
-
-                                            <td>
-                                                <t t-out="res.room_id.room_number"/>
-                                            </td>
-
-                                            <td>
-                                                <t t-out="res.check_in"/>
-                                            </td>
-
-                                            <td>
-                                                <t t-out="res.check_out"/>
-                                            </td>
-
-                                            <td>
-                                                <span
-                                                        t-attf-class="badge bg-#{'success' if res.state == 'checked_in' else 'secondary'}"
-                                                >
-                                                    <t t-out="res.state"/>
-                                                </span>
-                                            </td>
-
-                                            <!-- NEW: Add Service & Advance Payment -->
-                                            <td>
-                                                <t t-if="res.state not in ['checked_out', 'cancelled', 'expired', 'no_show']">
-                                                    <div class="d-flex align-items-center gap-1">
-
-                                                        <button
-                                                                type="button"
-                                                                class="btn btn-sm btn-outline-primary"
-                                                                data-bs-toggle="modal"
-                                                                t-attf-data-bs-target="#addServiceModalToRes#{res.id}"
-                                                        >
-                                                            <i class="fa fa-plus me-1"/>
-                                                            Add Service
-                                                        </button>
-
-                                                        <!-- NEW: Advance Payment Button -->
-                                                        <t t-if="res.amount_due > 0 and res.state not in ('checked_out', 'cancelled', 'expired', 'no_show')">
-                                                          <button
-                                                                type="button"
-                                                                class="btn btn-sm btn-outline-success"
-                                                                data-bs-toggle="modal"
-                                                                t-attf-data-bs-target="#advancePaymentModalRes#{res.id}">
-                                                            <i class="fa fa-credit-card me-1"/>
-                                                            Advance Payment
-                                                          </button>
-                                                        </t>
-
-                                                    </div>
-
-                                                    <!-- NEW: Reservation Service Modal -->
-                                                    <div
-                                                            class="modal fade"
-                                                            t-attf-id="addServiceModalToRes#{res.id}"
-                                                            tabindex="-1"
-                                                    >
-                                                        <div class="modal-dialog">
-
-                                                            <form
-                                                                    action="/reservation/add_service"
-                                                                    method="post"
-                                                                    class="modal-content"
-                                                            >
-
-                                                                <input
-                                                                        type="hidden"
-                                                                        name="csrf_token"
-                                                                        t-att-value="request.csrf_token()"
-                                                                />
-
-                                                                <input
-                                                                        type="hidden"
-                                                                        name="reservation_id"
-                                                                        t-att-value="res.id"
-                                                                />
-
-                                                                <div class="modal-header">
-                                                                    <h5 class="modal-title">
-                                                                        სერვისის დამატება ჯავშანზე #
-                                                                        <t t-out="res.id"/>
-                                                                    </h5>
-
-                                                                    <button
-                                                                            type="button"
-                                                                            class="btn-close"
-                                                                            data-bs-dismiss="modal"
-                                                                    />
-                                                                </div>
-
-                                                                <div class="modal-body text-start">
-
-                                                                    <div class="mb-3">
-                                                                        <label class="form-label fw-bold">
-                                                                            აირჩიეთ სერვისი
-                                                                        </label>
-
-                                                                        <select
-                                                                                name="service_id"
-                                                                                class="form-select"
-                                                                                required="1"
-                                                                        >
-                                                                            <t t-foreach="available_services" t-as="s">
-                                                                                <option t-att-value="s.id">
-                                                                                    <t t-out="s.name"/>
-                                                                                    -
-                                                                                    <t t-out="s.price"/>
-                                                                                    USD
-                                                                                </option>
-                                                                            </t>
-                                                                        </select>
-                                                                    </div>
-
-                                                                    <div class="mb-3">
-                                                                        <label class="form-label fw-bold">
-                                                                            რაოდენობა
-                                                                        </label>
-
-                                                                        <input
-                                                                                type="number"
-                                                                                name="quantity"
-                                                                                class="form-control"
-                                                                                value="1"
-                                                                                min="1"
-                                                                                required="1"
-                                                                        />
-                                                                    </div>
-
-                                                                </div>
-
-                                                                <div class="modal-footer">
-                                                                    <button
-                                                                            type="submit"
-                                                                            class="btn btn-primary"
-                                                                    >
-                                                                        დამატება
-                                                                    </button>
-                                                                </div>
-
-                                                            </form>
-
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- NEW: Advance Payment Modal for Manager -->
-                                                    <div class="modal fade"
-                                                         t-attf-id="advancePaymentModalRes#{res.id}"
-                                                         tabindex="-1"
-                                                         aria-hidden="true">
-                                                        <div class="modal-dialog modal-dialog-centered">
-                                                            <form action="/dashboard/advance_payment/register" method="POST" class="modal-content">
-                                                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                                                                <input type="hidden" name="reservation_id" t-att-value="res.id"/>
-
-                                                                <div class="modal-header bg-success text-white">
-                                                                    <h5 class="modal-title">წინასწარი გადახდა — ჯავშანი #<t t-out="res.id"/></h5>
-                                                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                                </div>
-
-                                                                <div class="modal-body text-start">
-                                                                    <div class="mb-3">
-                                                                        <label class="form-label fw-bold">სტუმარი:</label>
-                                                                        <p class="mb-1" t-out="res.guest_id.name"/>
-                                                                    </div>
-                                                                    <div class="mb-3">
-                                                                        <label class="form-label fw-bold">ოთახი:</label>
-                                                                        <p class="mb-1" t-out="res.room_id.room_number"/>
-                                                                    </div>
-                                                                    <div class="mb-3">
-                                                                        <label class="form-label fw-bold">შესატანი / დარჩენილი თანხა:</label>
-                                                                        <p class="mb-1 text-danger fw-bold">
-                                                                            <t t-out="res.amount_due"/> GEL
-                                                                        </p>
-                                                                    </div>
-                                                                    <div class="mb-3">
-                                                                        <label class="form-label fw-bold">თანხა (GEL):</label>
-                                                                        <input type="number"
-                                                                               step="0.01"
-                                                                               name="amount"
-                                                                               class="form-control"
-                                                                               t-att-value="res.amount_due"
-                                                                               required="1"/>
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">გაუქმება</button>
-                                                                    <button type="submit" class="btn btn-success">გადახდის გატარება</button>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-
-                                                </t>
-
-                                                <t t-else="">
-                                                    <span class="badge bg-secondary">
-                                                        Completed
-                                                    </span>
-                                                </t>
-                                            </td>
-
-                                        </tr>
-
-                                    </t>
-
-                                </tbody>
-
-                            </table>
-
-                        </div>
-                    </div>
-
-                    <!-- NEW: Invoices & Payments Overview -->
-
-                    <div class="row">
-
-                        <div class="col-md-6 mb-4">
-
-                            <div class="card shadow-sm h-100">
-
-                                <div class="card-header bg-secondary text-white">
-                                    <h5 class="mb-0">
-                                        ინვოისები
-                                    </h5>
-                                </div>
-
-                                <div class="card-body p-0 table-responsive">
-
-                                    <table class="table table-sm align-middle mb-0">
-
-                                        <thead>
-                                            <tr>
-                                                <th>N°</th>
-                                                <th>კლიენტი</th>
-                                                <th>თანხა</th>
-                                                <th>სტატუსი</th>
-                                                <th>მოქმედება</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-
-                                            <t t-foreach="invoices" t-as="inv">
-
-                                                <tr>
-
-                                                    <td>
-                                                        <t t-out="inv.name"/>
-                                                    </td>
-
-                                                    <td>
-                                                        <t t-out="inv.partner_id.name"/>
-                                                    </td>
-
-                                                    <td>
-                                                        <t t-out="inv.amount_total"/>
-                                                        USD
-                                                    </td>
-
-                                                    <td>
-                                                        <t t-out="inv.payment_state"/>
-                                                    </td>
-
-                                                    <td>
-
-                                                        <t t-if="inv.payment_state not in ['paid', 'in_payment']">
-
-                                                            <!-- access_token-ის დამატება აუცილებელია, რომ მენეჯერმა
-                                                                 შეძლოს ნებისმიერი მომხმარებლის ინვოისის გადახდა,
-                                                                 და არა მხოლოდ საკუთარის — ეს ის ზუსტად იგივე გვერდია,
-                                                                 რომელზეც სტუმარი გადადის "Pay Now"-ზე დაჭერისას. -->
-                                                            <a
-                                                                    t-attf-href="/my/invoices/#{inv.id}?access_token=#{inv.access_token}"
-                                                                    class="btn btn-sm btn-warning"
-                                                            >
-                                                                <i class="fa fa-credit-card me-1"/>
-                                                                გადახდა
-                                                            </a>
-
-                                                        </t>
-
-                                                        <t t-else="">
-                                                            <span class="badge bg-secondary">Paid</span>
-                                                        </t>
-
-                                                    </td>
-
-                                                </tr>
-
-                                            </t>
-
-                                            <t t-if="not invoices">
-                                                <tr>
-                                                    <td colspan="5" class="text-center text-muted py-3">
-                                                        ინვოისები არ არის.
-                                                    </td>
-                                                </tr>
-                                            </t>
-
-                                        </tbody>
-
-                                    </table>
-
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div class="col-md-6 mb-4">
-
-                            <div class="card shadow-sm h-100">
-
-                                <div class="card-header bg-secondary text-white">
-                                    <h5 class="mb-0">
-                                        გადახდები
-                                    </h5>
-                                </div>
-
-                                <div class="card-body p-0 table-responsive">
-
-                                    <table class="table table-sm align-middle mb-0">
-
-                                        <thead>
-                                            <tr>
-                                                <th>თარიღი</th>
-                                                <th>კლიენტი</th>
-                                                <th>თანხა</th>
-                                                <th>სტატუსი</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-
-                                            <t t-foreach="payments" t-as="pay">
-
-                                                <tr>
-
-                                                    <td>
-                                                        <t t-out="pay.date"/>
-                                                    </td>
-
-                                                    <td>
-                                                        <t t-out="pay.partner_id.name"/>
-                                                    </td>
-
-                                                    <td>
-                                                        <t t-out="pay.amount"/>
-                                                        USD
-                                                    </td>
-
-                                                    <td>
-                                                        <t t-out="pay.state"/>
-                                                    </td>
-
-                                                </tr>
-
-                                            </t>
-
-                                            <t t-if="not payments">
-                                                <tr>
-                                                    <td colspan="4" class="text-center text-muted py-3">
-                                                        გადახდები არ არის.
-                                                    </td>
-                                                </tr>
-                                            </t>
-
-                                        </tbody>
-
-                                    </table>
-
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <!-- MODAL 1: Create Guest -->
-
-                    <div class="modal fade" id="createGuestModal" tabindex="-1">
-
-                        <div class="modal-dialog">
-
-                            <form
-                                    action="/dashboard/guest/create"
-                                    method="post"
-                                    class="modal-content"
-                            >
-
-                                <input
-                                        type="hidden"
-                                        name="csrf_token"
-                                        t-att-value="request.csrf_token()"
-                                />
-
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Add New Guest</h5>
-
-                                    <button
-                                            type="button"
-                                            class="btn-close"
-                                            data-bs-dismiss="modal"
-                                    />
-                                </div>
-
-                                <div class="modal-body">
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Full Name</label>
-
-                                        <input
-                                                type="text"
-                                                name="name"
-                                                class="form-control"
-                                                required="1"
-                                        />
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Email</label>
-
-                                        <input
-                                                type="email"
-                                                name="email"
-                                                class="form-control"
-                                                required="1"
-                                        />
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Phone</label>
-
-                                        <input
-                                                type="text"
-                                                name="phone"
-                                                class="form-control"
-                                        />
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Personal Number</label>
-
-                                        <input
-                                                type="text"
-                                                name="personal_number"
-                                                class="form-control"
-                                        />
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Address</label>
-
-                                        <input
-                                                type="text"
-                                                name="address"
-                                                class="form-control"
-                                                placeholder="Enter Your Local Address"
-                                        />
-                                    </div>
-
-                                </div>
-
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary">
-                                        Save Guest
-                                    </button>
-                                </div>
-
-                            </form>
-
-                        </div>
-                    </div>
-
-                    <!-- MODAL 3: Register Payment -->
-
-                    <div class="modal fade" id="registerPaymentModal" tabindex="-1">
-
-                        <div class="modal-dialog">
-
-                            <form
-                                    action="/dashboard/payment/register"
-                                    method="post"
-                                    class="modal-content"
-                            >
-
-                                <input
-                                        type="hidden"
-                                        name="csrf_token"
-                                        t-att-value="request.csrf_token()"
-                                />
-
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Register Payment</h5>
-
-                                    <button
-                                            type="button"
-                                            class="btn-close"
-                                            data-bs-dismiss="modal"
-                                    />
-                                </div>
-
-                                <div class="modal-body">
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Select Invoice</label>
-
-                                        <select
-                                                name="invoice_id"
-                                                class="form-select"
-                                                required="1"
-                                        >
-
-                                            <t t-foreach="invoices" t-as="inv">
-                                                <option t-att-value="inv.id">
-                                                    <t t-out="inv.name"/>
-                                                    -
-                                                    <t t-out="inv.amount_total"/>
-                                                    <t t-out="inv.currency_id.symbol"/>
-                                                </option>
-                                            </t>
-
-                                        </select>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Amount</label>
-
-                                        <input
-                                                type="number"
-                                                step="0.01"
-                                                name="amount"
-                                                class="form-control"
-                                                required="1"
-                                        />
-                                    </div>
-
-                                </div>
-
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-info text-white">
-                                        Register Payment
-                                    </button>
-                                </div>
-
-                            </form>
-
-                        </div>
-                    </div>
-
-                    <!-- NEW MODAL 4: Create Service -->
-
-                    <div class="modal fade" id="addServiceModal" tabindex="-1">
-
-                        <div class="modal-dialog">
-
-                            <form
-                                    action="/manager/create_service"
-                                    method="post"
-                                    class="modal-content"
-                            >
-
-                                <input
-                                        type="hidden"
-                                        name="csrf_token"
-                                        t-att-value="request.csrf_token()"
-                                />
-
-                                <div class="modal-header">
-
-                                    <h5 class="modal-title">
-                                        ახალი სერვისის შექმნა
-                                    </h5>
-
-                                    <button
-                                            type="button"
-                                            class="btn-close"
-                                            data-bs-dismiss="modal"
-                                    />
-
-                                </div>
-
-                                <div class="modal-body">
-
-                                    <div class="mb-3">
-                                        <label class="form-label">
-                                            სერვისის დასახელება
-                                        </label>
-
-                                        <input
-                                                type="text"
-                                                name="name"
-                                                class="form-control"
-                                                required="1"
-                                        />
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">
-                                            ფასი (USD)
-                                        </label>
-
-                                        <input
-                                                type="number"
-                                                step="0.01"
-                                                name="price"
-                                                class="form-control"
-                                                required="1"
-                                        />
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label fw-bold">
-                                            რაოდენობა
-                                        </label>
-
-                                        <input
-                                                type="number"
-                                                name="quantity"
-                                                class="form-control"
-                                                value="1"
-                                                min="1"
-                                                required="1"
-                                        />
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button
-                                            type="submit"
-                                            class="btn btn-info text-white"
-                                    >
-                                        შექმნა
-                                    </button>
-
-                                </div>
-
-                            </form>
-
-                        </div>
-                    </div>
-
-                </t>
-
-                <!-- ==================== 2. RECEPTIONIST DASHBOARD ==================== -->
-
-                <t t-elif="role == 'receptionist'">
-
-                    <!-- Quick Actions -->
-
-                    <div class="row mb-4">
-
-                        <div class="col-md-4">
-                            <button
-                                    class="btn btn-outline-primary w-100 py-3 shadow-sm"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#createReceptionGuestModal"
-                            >
-                                <i class="fa fa-user-plus fa-2x d-block mb-1"/>
-                                Add New Guest
-                            </button>
-                        </div>
-
-                        <div class="col-md-4">
-                            <a href="/rooms" class="btn btn-outline-success w-100 py-3 shadow-sm">
-                                <i class="fa fa-calendar-plus-o fa-2x d-block mb-1"/>
-                                Create Reservation
-                            </a>
-                        </div>
-
-                    </div>
-
-                    <!-- MODAL: Create Guest -->
-
-                    <div class="modal fade" id="createReceptionGuestModal" tabindex="-1">
-
-                        <div class="modal-dialog">
-
-                            <form action="/receptionist/guest/create" method="post" class="modal-content">
-
-                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Add New Guest</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"/>
-                                </div>
-
-                                <div class="modal-body">
-                                    <div class="mb-3">
-                                        <label class="form-label">Full Name</label>
-                                        <input type="text" name="name" class="form-control" required="1"/>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Email</label>
-
-                                        <input
-                                                type="email"
-                                                name="email"
-                                                class="form-control"
-                                                required="1"
-                                        />
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Phone</label>
-
-                                        <input
-                                                type="text"
-                                                name="phone"
-                                                class="form-control"
-                                        />
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Personal Number</label>
-
-                                        <input type="text" name="personal_number" class="form-control"/>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Address</label>
-                                        <input type="text" name="address" class="form-control"
-                                               placeholder="Enter Your Local Address"/>
-                                    </div>
-
-                                </div>
-
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary">
-                                        Save Guest
-                                    </button>
-                                </div>
-
-                            </form>
-                        </div>
-                    </div>
-
-                    <!-- Confirmed Check-Ins -->
-
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-header bg-info text-white">
-                            <h4 class="mb-0">
-                                <i class="fa fa-sign-in me-2"/>
-                                Confirmed Check-Ins Pending
-                            </h4>
-                        </div>
-
-                        <div class="card-body p-0">
-
-                            <table class="table table-hover mb-0">
-
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Guest</th>
-                                        <th>Room</th>
-                                        <th>Check-In Date</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-
-                                    <t t-foreach="checkins" t-as="res">
-                                        <tr>
-                                            <td>
-                                                <t t-out="res.guest_id.name"/>
-                                            </td>
-
-                                            <td>
-                                                <t t-out="res.room_id.room_number"/>
-                                            </td>
-
-                                            <td>
-                                                <t t-out="res.check_in"/>
-                                            </td>
-
-                                            <td>
-                                                <div class="d-flex gap-2">
-
-                                                    <!-- Confirm button -->
-                                                    <t t-if="res.state == 'pending'">
-                                                        <form action="/receptionist/set_confirm" method="post"
-                                                              class="m-0">
-                                                            <input type="hidden"
-                                                                   name="csrf_token"
-                                                                   t-att-value="request.csrf_token()"/>
-
-                                                            <input type="hidden"
-                                                                   name="reservation_id"
-                                                                   t-att-value="res.id"/>
-
-                                                            <button type="submit" class="btn btn-sm btn-success">
-                                                                <i class="fa fa-check me-1"/>
-                                                                Confirm
-                                                            </button>
-                                                        </form>
-                                                    </t>
-
-                                                    <!-- Check-In button -->
-                                                    <t t-if="res.state == 'confirmed'">
-                                                        <form action="/receptionist/checkin" method="post" class="m-0">
-                                                            <input type="hidden"
-                                                                   name="csrf_token"
-                                                                   t-att-value="request.csrf_token()"/>
-
-                                                            <input type="hidden"
-                                                                   name="reservation_id"
-                                                                   t-att-value="res.id"/>
-
-                                                            <button type="submit" class="btn btn-sm btn-primary">
-                                                                <i class="fa fa-key me-1"/>
-                                                                Check-In
-                                                            </button>
-                                                        </form>
-                                                    </t>
-                                                </div>
-                                            </td>
-                                        </tr>
-
-                                    </t>
-
-                                    <t t-if="not checkins">
-                                        <tr>
-                                            <td
-                                                    colspan="4"
-                                                    class="text-center text-muted py-3"
-                                            >
-                                                არ არის დასადასტურებელი Check-In.
-                                                (სტატუსი არ უდრის Confirmed-ს)
-                                            </td>
-                                        </tr>
-                                    </t>
-
-                                </tbody>
-
-                            </table>
-
-                        </div>
-                    </div>
-
-                    <!-- Active Reservations & Housekeeping Status -->
-
-                    <div class="row">
-
-                        <!-- Active Checked-In Guests -->
-
-                        <div class="col-md-6 mb-4">
-
-                            <div class="card shadow-sm h-100">
-
-                                <div class="card-header bg-success text-white">
-                                    <h5 class="mb-0">Active Checked-In Guests</h5>
-                                </div>
-
-                                <div class="card-body p-0">
-
-                                    <ul class="list-group list-group-flush">
-
-                                        <t t-foreach="active_reservations" t-as="act">
-
-                                            <li
-                                                    class="list-group-item py-2"
-                                            >
-
-                                                <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
-
-                                                    <div class="me-2">
-                                                        <strong>
-                                                            <t t-out="act.guest_id.name"/>
-                                                        </strong>
-
-                                                        <small class="text-muted d-block">
-                                                            Room:
-                                                            <t t-out="act.room_id.room_number"/>
-                                                        </small>
-                                                    </div>
-
-                                                    <span class="badge bg-success align-self-center">
-                                                        Checked-In
-                                                    </span>
-
-                                                </div>
-
-                                                <div class="d-flex align-items-center flex-wrap gap-2 mt-2">
-
-                                                    <!-- NEW: Add Service -->
-                                                    <button
-                                                            type="button"
-                                                            class="btn btn-sm btn-outline-primary"
-                                                            data-bs-toggle="modal"
-                                                            t-attf-data-bs-target="#addServiceModalToActiveRes#{act.id}">
-                                                        <i class="fa fa-plus me-1"/>
-                                                        Add Service
-                                                    </button>
-
-                                                    <!-- NEW: Guest Advance Payment Button -->
-                                                    <t t-if="act.amount_due > 0 and act.state not in ('checked_out', 'cancelled', 'expired', 'no_show')">
-                                                        <button
-                                                                type="button"
-                                                                class="btn btn-sm btn-outline-success"
-                                                                data-bs-toggle="modal"
-                                                                t-attf-data-bs-target="#advancePaymentModalGuest#{act.id}">
-                                                            <i class="fa fa-credit-card me-1"/>
-                                                            Pay Advance
-                                                        </button>
-                                                    </t>
-
-                                                    <form
-                                                            action="/receptionist/checkout"
-                                                            method="post"
-                                                            class="m-0">
-
-                                                        <input
-                                                                type="hidden"
-                                                                name="csrf_token"
-                                                                t-att-value="request.csrf_token()"
-                                                        />
-
-                                                        <input
-                                                                type="hidden"
-                                                                name="reservation_id"
-                                                                t-att-value="act.id"
-                                                        />
-
-                                                        <button
-                                                                type="submit"
-                                                                class="btn btn-sm btn-outline-danger"
-                                                        >
-                                                            <i class="fa fa-sign-out me-1"/>
-                                                            Check-Out
-                                                        </button>
-
-                                                    </form>
-
-                                                </div>
-
-                                            </li>
-
-                                            <!-- NEW: Advance Payment Modal for Guest -->
-                                            <div class="modal fade"
-                                                 t-attf-id="advancePaymentModalGuest#{act.id}"
-                                                 tabindex="-1"
-                                                 aria-hidden="true">
-                                                <div class="modal-dialog modal-dialog-centered">
-                                                    <form action="/dashboard/advance_payment/register" method="POST" class="modal-content">
-                                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                                                        <input type="hidden" name="reservation_id" t-att-value="act.id"/>
-
-                                                        <div class="modal-header bg-success text-white">
-                                                            <h5 class="modal-title">წინასწარი გადახდა — ჯავშანი #<t t-out="act.id"/></h5>
-                                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                        </div>
-
-                                                        <div class="modal-body text-start">
-                                                            <div class="mb-3">
-                                                                <label class="form-label fw-bold">ოთახი:</label>
-                                                                <p class="mb-1" t-out="act.room_id.room_number"/>
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label class="form-label fw-bold">შესატანი / დარჩენილი თანხა:</label>
-                                                                <p class="mb-1 text-danger fw-bold">
-                                                                    <t t-out="act.amount_due"/> USD
-                                                                </p>
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label class="form-label fw-bold">გადასახდელი თანხა (USD):</label>
-                                                                <input type="number"
-                                                                       step="0.01"
-                                                                       name="amount"
-                                                                       class="form-control"
-                                                                       t-att-value="act.amount_due"
-                                                                       required="1"/>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">გაუქმება</button>
-                                                            <button type="submit" class="btn btn-success">გადახდა</button>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-
-                                            <!-- NEW: Service Modal for Active Reservation -->
-                                            <div
-                                                    class="modal fade"
-                                                    t-attf-id="addServiceModalToActiveRes#{act.id}"
-                                                    tabindex="-1"
-                                            >
-
-                                                <div class="modal-dialog">
-
-                                                    <form
-                                                            action="/reservation/add_service"
-                                                            method="post"
-                                                            class="modal-content"
-                                                    >
-
-                                                        <input
-                                                                type="hidden"
-                                                                name="csrf_token"
-                                                                t-att-value="request.csrf_token()"
-                                                        />
-
-                                                        <input
-                                                                type="hidden"
-                                                                name="reservation_id"
-                                                                t-att-value="act.id"
-                                                        />
-
-                                                        <div class="modal-header">
-
-                                                            <h5 class="modal-title">
-                                                                სერვისის დამატება ჯავშანზე #
-                                                                <t t-out="act.id"/>
-                                                            </h5>
-
-                                                            <button
-                                                                    type="button"
-                                                                    class="btn-close"
-                                                                    data-bs-dismiss="modal"
-                                                            />
-
-                                                        </div>
-
-                                                        <div class="modal-body text-start">
-
-                                                            <div class="mb-3">
-
-                                                                <label class="form-label fw-bold">
-                                                                    აირჩიეთ სერვისი
-                                                                </label>
-
-                                                                <select
-                                                                        name="service_id"
-                                                                        class="form-select"
-                                                                        required="1"
-                                                                >
-
-                                                                    <t t-foreach="available_services" t-as="s">
-
-                                                                        <option t-att-value="s.id">
-                                                                            <t t-out="s.name"/>
-                                                                            -
-                                                                            <t t-out="s.price"/>
-                                                                            USD
-                                                                        </option>
-
-                                                                    </t>
-
-                                                                </select>
-
-                                                            </div>
-
-                                                            <div class="mb-3">
-
-                                                                <label class="form-label fw-bold">
-                                                                    რაოდენობა
-                                                                </label>
-
-                                                                <input
-                                                                        type="number"
-                                                                        name="quantity"
-                                                                        class="form-control"
-                                                                        value="1"
-                                                                        min="1"
-                                                                        required="1"
-                                                                />
-
-                                                            </div>
-
-                                                        </div>
-
-                                                        <div class="modal-footer">
-
-                                                            <button
-                                                                    type="submit"
-                                                                    class="btn btn-primary"
-                                                                    >
-                                                                დამატება
-                                                            </button>
-
-                                                        </div>
-
-                                                    </form>
-
-                                                </div>
-
-                                            </div>
-
-                                        </t>
-
-                                        <t t-if="not active_reservations">
-                                            <li
-                                                    class="list-group-item text-center text-muted py-3"
-                                            >
-                                                აქტიური ჯავშნები არ არის.
-                                            </li>
-                                        </t>
-
-                                    </ul>
-
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <!-- Rooms Needing Attention -->
-
-                        <div class="col-md-6 mb-4">
-
-                            <div class="card shadow-sm h-100">
-
-                                <div class="card-header bg-warning text-dark">
-                                    <h5 class="mb-0">Rooms Needing Attention</h5>
-                                </div>
-
-                                <div class="card-body p-0">
-
-                                    <ul class="list-group list-group-flush">
-
-                                        <t t-foreach="dirty_rooms" t-as="dr">
-
-                                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                <div>
-                                                    <strong>
-                                                        <t t-out="dr.room_number"/>
-                                                    </strong>
-
-                                                    <span class="badge bg-warning text-dark ms-2">
-                                                        <t t-out="dr.housekeeping_status"/>
-                                                    </span>
-                                                </div>
-
-                                                <form action="/housekeeping_status/switcher" method="post" class="m-0">
-                                                    <input type="hidden" name="csrf_token"
-                                                           t-att-value="request.csrf_token()"/>
-                                                    <input type="hidden" name="room_id" t-att-value="dr.id"/>
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger">
-                                                        <i class="fa fa-broom me-1"/>
-                                                        Clean This Room
-                                                    </button>
-                                                </form>
-                                            </li>
-                                        </t>
-                                        <t t-if="not dirty_rooms">
-                                            <li class="list-group-item text-center text-muted py-3">
-                                                დასასუფთავებელი ოთახები არ არის.
-                                            </li>
-                                        </t>
-
-                                    </ul>
-
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </t>
-
-                <!-- ==================== 3. GUEST DASHBOARD ==================== -->
-
-                <t t-else="">
-
-                    <!-- My Reservations -->
-
-                    <div class="card shadow-sm mb-4">
-
-                        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
-
-                            <h3 class="mb-0">My Reservations</h3>
-
-                            <a href="/rooms" class="btn btn-primary btn-sm">
-                                <i class="fa fa-calendar-plus-o me-1"/>
-                                Book Now
-                            </a>
-
-                        </div>
-
-                        <div class="card-body p-0">
-
-                            <table class="table table-hover mb-0">
-
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Reservation #</th>
-                                        <th>Room</th>
-                                        <th>Check-In</th>
-                                        <th>Check-Out</th>
-                                        <th>Status</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <t t-foreach="reservations" t-as="res">
-                                        <tr>
-                                            <td>
-                                                #
-                                                <t t-out="res.name"/>
-                                            </td>
-                                            <td>
-                                                <a
-                                                        t-attf-href="/room/#{res.room_id.id}?reservation_id=#{res.id}"
-                                                        class="fw-bold text-decoration-none"
-                                                >
-                                                    <t t-out="res.room_id.room_number"/>
-                                                    <i class="fa fa-external-link ms-1 small"/>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <t t-out="res.check_in"/>
-                                            </td>
-                                            <td>
-                                                <t t-out="res.check_out"/>
-                                            </td>
-                                            <td>
-                                                <span
-                                                        t-attf-class="badge bg-#{'success' if res.state == 'checked_in' else 'info'}">
-                                                    <t t-out="res.state"/>
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <div class="d-flex align-items-center gap-2">
-
-                                                    <!-- NEW: Add Service -->
-                                                    <t t-if="res.state not in ['checked_out', 'cancelled', 'expired', 'no_show']">
-                                                        <button
-                                                                type="button"
-                                                                class="btn btn-sm btn-outline-primary"
-                                                                data-bs-toggle="modal"
-                                                                t-attf-data-bs-target="#addServiceModalGuest#{res.id}"
-                                                        >
-                                                            <i class="fa fa-plus me-1"/>
-                                                            Add Service
-                                                        </button>
-
-                                                        <!-- NEW: Guest Advance Payment Button -->
-                                                        <t t-if="res.amount_due > 0 and res.state not in ('checked_out', 'cancelled', 'expired', 'no_show')">
-                                                          <button
-                                                                type="button"
-                                                                class="btn btn-sm btn-outline-success"
-                                                                data-bs-toggle="modal"
-                                                                t-attf-data-bs-target="#advancePaymentModalGuest#{res.id}">
-                                                            <i class="fa fa-credit-card me-1"/>
-                                                            Pay Advance
-                                                          </button>
-                                                        </t>
-                                                    </t>
-
-                                                    <!-- OLD: Cancel -->
-                                                    <form action="/my/reservation/cancel" method="post" class="m-0">
-                                                        <input type="hidden" name="csrf_token"
-                                                               t-att-value="request.csrf_token()"/>
-                                                        <input type="hidden" name="reservation_id"
-                                                               t-att-value="res.id"/>
-                                                        <button type="submit" class="btn btn-sm btn-danger">
-                                                            <i class="fa fa-times me-1"/>
-                                                            Cancel
-                                                        </button>
-                                                    </form>
-
-                                                </div>
-
-                                                <!-- NEW: Guest Service Modal -->
-                                                <t t-if="res.state not in ['checked_out', 'cancelled', 'expired', 'no_show']">
-                                                    <div
-                                                            class="modal fade"
-                                                            t-attf-id="addServiceModalGuest#{res.id}"
-                                                            tabindex="-1"
-                                                    >
-
-                                                        <div class="modal-dialog">
-
-                                                            <form
-                                                                    action="/reservation/add_service"
-                                                                    method="post"
-                                                                    class="modal-content"
-                                                            >
-
-                                                                <input
-                                                                        type="hidden"
-                                                                        name="csrf_token"
-                                                                        t-att-value="request.csrf_token()"
-                                                                />
-
-                                                                <input
-                                                                        type="hidden"
-                                                                        name="reservation_id"
-                                                                        t-att-value="res.id"
-                                                                />
-
-                                                                <div class="modal-header">
-
-                                                                    <h5 class="modal-title">
-                                                                        სერვისის შეკვეთა ჯავშანზე #
-                                                                        <t t-out="res.id"/>
-                                                                    </h5>
-
-                                                                    <button
-                                                                            type="button"
-                                                                            class="btn-close"
-                                                                            data-bs-dismiss="modal"
-                                                                    />
-
-                                                                </div>
-
-                                                                <div class="modal-body text-start">
-
-                                                                    <div class="mb-3">
-
-                                                                        <label class="form-label fw-bold">
-                                                                            აირჩიეთ სერვისი
-                                                                        </label>
-
-                                                                        <select
-                                                                                name="service_id"
-                                                                                class="form-select"
-                                                                                required="1"
-                                                                        >
-
-                                                                            <t t-foreach="available_services" t-as="s">
-
-                                                                                <option t-att-value="s.id">
-                                                                                    <t t-out="s.name"/>
-                                                                                    -
-                                                                                    <t t-out="s.price"/>
-                                                                                    USD
-                                                                                </option>
-
-                                                                            </t>
-
-                                                                        </select>
-
-                                                                    </div>
-
-                                                                    <div class="mb-3">
-
-                                                                        <label class="form-label fw-bold">
-                                                                            რაოდენობა
-                                                                        </label>
-
-                                                                        <input
-                                                                                type="number"
-                                                                                name="quantity"
-                                                                                class="form-control"
-                                                                                value="1"
-                                                                                min="1"
-                                                                                required="1"
-                                                                        />
-
-                                                                    </div>
-
-                                                                </div>
-
-                                                                <div class="modal-footer">
-
-                                                                    <button
-                                                                            type="submit"
-                                                                            class="btn btn-primary"
-                                                                    >
-                                                                        შეკვეთა
-                                                                    </button>
-
-                                                                </div>
-
-                                                            </form>
-
-                                                        </div>
-
-                                                    </div>
-
-                                                    <!-- NEW: Advance Payment Modal for Guest -->
-                                                    <div class="modal fade"
-                                                         t-attf-id="advancePaymentModalGuest#{res.id}"
-                                                         tabindex="-1"
-                                                         aria-hidden="true">
-                                                        <div class="modal-dialog modal-dialog-centered">
-                                                            <form action="/dashboard/advance_payment/register" method="POST" class="modal-content">
-                                                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                                                                <input type="hidden" name="reservation_id" t-att-value="res.id"/>
-
-                                                                <div class="modal-header bg-success text-white">
-                                                                    <h5 class="modal-title">წინასწარი გადახდა — ჯავშანი #<t t-out="res.id"/></h5>
-                                                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                                </div>
-
-                                                                <div class="modal-body text-start">
-                                                                    <div class="mb-3">
-                                                                        <label class="form-label fw-bold">ოთახი:</label>
-                                                                        <p class="mb-1" t-out="res.room_id.room_number"/>
-                                                                    </div>
-                                                                    <div class="mb-3">
-                                                                        <label class="form-label fw-bold">შესატანი / დარჩენილი თანხა:</label>
-                                                                        <p class="mb-1 text-danger fw-bold">
-                                                                            <t t-out="res.amount_due"/> USD
-                                                                        </p>
-                                                                    </div>
-                                                                    <div class="mb-3">
-                                                                        <label class="form-label fw-bold">გადასახდელი თანხა (USD):</label>
-                                                                        <input type="number"
-                                                                               step="0.01"
-                                                                               name="amount"
-                                                                               class="form-control"
-                                                                               t-att-value="res.amount_due"
-                                                                               required="1"/>
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">გაუქმება</button>
-                                                                    <button type="submit" class="btn btn-success">გადახდა</button>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-
-                                                </t>
-                                            </td>
-                                        </tr>
-                                    </t>
-                                    <t t-if="not reservations">
-                                        <tr>
-                                            <td
-                                                    colspan="6"
-                                                    class="text-center text-muted py-4"
-                                            >
-
-                                                <p class="mb-2">
-                                                    თქვენ არ გაქვთ აქტიური ჯავშნები.
-                                                </p>
-
-                                                <a
-                                                        href="/rooms"
-                                                        class="btn btn-outline-primary btn-sm"
-                                                >
-                                                    <i class="fa fa-bed me-1"/>
-                                                    Book a Room Now
-                                                </a>
-
-                                            </td>
-                                        </tr>
-                                    </t>
-
-                                </tbody>
-
-                            </table>
-
-                        </div>
-                    </div>
-
-                    <!-- Check-In Notice -->
-
-                    <t t-if="show_checkin_notice">
-
-                        <div
-                                class="alert alert-info my-3 shadow-sm"
-                                role="alert"
-                        >
-                            ℹ️ ინვოისები და გადახდის დეტალები ხელმისაწვდომი გახდება
-                            სასტუმროში Check-In-ის გავლის შემდეგ.
-                        </div>
-
-                    </t>
-
-                    <!-- My Invoices -->
-
-                    <t t-if="invoices or payments">
-
-                        <div class="card shadow-sm mb-4">
-
-                            <div class="card-header bg-white">
-                                <h4 class="mb-0">My Invoices</h4>
-                            </div>
-
-                            <div class="card-body p-0">
-
-                                <table class="table table-hover mb-0">
-
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>Invoice #</th>
-                                            <th>Date</th>
-                                            <th>Amount Total</th>
-                                            <th>Status</th>
-                                            <th class="text-end">Action</th>
-                                        </tr>
+                        <div class="hx-panel">
+                            <div class="hx-panel-h"><h3>All reservations</h3><span class="hx-count"><t t-out="len(reservations)"/></span></div>
+                            <div class="hx-twrap">
+                                <table class="hx-table">
+                                    <thead>
+                                        <tr><th>#</th><th>Guest</th><th>Room</th><th>Check-in</th><th>Check-out</th><th>State</th><th>Action</th></tr>
                                     </thead>
-
                                     <tbody>
-
-                                        <t t-foreach="invoices" t-as="inv">
-
+                                        <t t-foreach="reservations" t-as="res">
                                             <tr>
-
-                                                <td>
-                                                    <t t-out="inv.name"/>
+                                                <td class="num">
+                                                    <button type="button" class="hx-chev-btn" data-bs-toggle="collapse" t-attf-data-bs-target="#svcRow#{res.id}" aria-expanded="false" title="Services"><i class="fa fa-chevron-down hx-chev"/></button>
+                                                    <t t-out="res.name"/>
                                                 </td>
-
+                                                <td><t t-out="res.guest_id.name"/></td>
+                                                <td><t t-out="res.room_id.room_number"/></td>
+                                                <td><t t-out="res.check_in"/></td>
+                                                <td><t t-out="res.check_out"/></td>
+                                                <td><span t-attf-class="hx-badge hx-b-#{st_map.get(res.state, 'mute')}"><t t-out="res.state"/></span></td>
                                                 <td>
-                                                    <t t-out="inv.invoice_date"/>
-                                                </td>
-
-                                                <td>
-                                                    <t t-out="inv.amount_total"/>
-                                                    <t t-out="inv.currency_id.symbol"/>
-                                                </td>
-
-                                                <td>
-                                                    <span
-                                                            t-attf-class="badge bg-#{'success' if inv.payment_state in ['paid', 'in_payment'] else 'warning'}"
-                                                    >
-                                                        <t t-out="inv.payment_state"/>
-                                                    </span>
-                                                </td>
-
-                                                <td class="text-end">
-
-                                                    <t t-if="inv.payment_state not in ['paid', 'in_payment']">
-
-                                                        <a
-                                                                t-attf-href="/my/invoices/#{inv.id}?access_token=#{inv.access_token}"
-                                                                class="btn btn-sm btn-primary"
-                                                        >
-                                                            <i class="fa fa-credit-card me-1"/>
-                                                            Pay Now
-                                                        </a>
+                                                    <t t-if="res.state not in closed">
+                                                        <div class="hx-acts">
+                                                            <button type="button" class="hx-btn hx-btn-line hx-btn-sm" data-bs-toggle="modal"
+                                                                    t-attf-data-bs-target="#addServiceModalToRes#{res.id}">
+                                                                <i class="fa fa-plus"/>Add service
+                                                            </button>
+                                                            <t t-if="res.amount_due &gt; 0">
+                                                                <button type="button" class="hx-btn hx-btn-pay hx-btn-sm" data-bs-toggle="modal"
+                                                                        t-attf-data-bs-target="#advancePaymentModalRes#{res.id}">
+                                                                    <i class="fa fa-credit-card"/>Advance payment
+                                                                </button>
+                                                            </t>
+                                                        </div>
                                                     </t>
-                                                    <t t-else="">
-
-                                                        <span class="badge bg-secondary">
-                                                            Paid
-                                                        </span>
-                                                    </t>
+                                                    <t t-else=""><span class="hx-badge hx-b-mute">Completed</span></t>
                                                 </td>
                                             </tr>
+                                            <tr class="collapse hx-svc-row" t-attf-id="svcRow#{res.id}">
+                                                <td colspan="7"><t t-call="hotel_erp.hx_service_list"><t t-set="rsv" t-value="res"/></t></td>
+                                            </tr>
+                                        </t>
+                                        <t t-if="not reservations">
+                                            <tr><td colspan="7"><div class="hx-empty"><i class="fa fa-calendar-o"/>ჯავშნები არ არის.</div></td></tr>
                                         </t>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
+
+                        <div class="hx-stack">
+                            <div class="hx-panel">
+                                <div class="hx-panel-h"><h3>Invoices</h3><span class="hx-count"><t t-out="len(invoices)"/></span></div>
+                                <div class="hx-twrap">
+                                    <table class="hx-table">
+                                        <thead><tr><th>N°</th><th>Client</th><th>Money</th><th>Status</th><th></th></tr></thead>
+                                        <tbody>
+                                            <t t-foreach="invoices" t-as="inv">
+                                                <t t-set="inv_rs" t-value="[x for x in reservations if x.invoice_id.id == inv.id or inv.id in x.service_invoice_ids.ids]"/>
+                                                <tr>
+                                                    <td class="num">
+                                                    <button type="button" class="hx-chev-btn" data-bs-toggle="collapse" t-attf-data-bs-target="#svcInv#{inv.id}" aria-expanded="false" title="Services"><i class="fa fa-chevron-down hx-chev"/></button>
+                                                    <t t-out="inv.name"/>
+                                                </td>
+                                                    <td><t t-out="inv.partner_id.name"/></td>
+                                                    <td><t t-out="inv.amount_total"/> USD</td>
+                                                    <td><span t-attf-class="hx-badge hx-b-#{'ok' if inv.payment_state in ['paid', 'in_payment'] else 'warn'}"><t t-out="inv.payment_state"/></span></td>
+                                                    <td>
+                                                        <t t-if="inv.state == 'posted' and inv.payment_state not in ['paid', 'in_payment']">
+                                                            <button type="button" class="hx-btn hx-btn-gold hx-btn-sm" data-bs-toggle="modal"
+                                                                    t-attf-data-bs-target="#invoicePayModal#{inv.id}">
+                                                                <i class="fa fa-credit-card"/>Payment Registration
+                                                            </button>
+                                                        </t>
+                                                        <t t-elif="inv.payment_state in ['paid', 'in_payment']"><span class="hx-badge hx-b-mute">Paid</span></t>
+                                                        <t t-else=""><span class="hx-badge hx-b-mute">Draft</span></t>
+                                                    </td>
+                                                </tr>
+                                                <tr class="collapse hx-svc-row" t-attf-id="svcInv#{inv.id}">
+                                                    <td colspan="5">
+                                                        <t t-if="inv_rs">
+                                                            <div class="hx-svc-title">Reservation <t t-out="inv_rs[0].name"/> · Room <t t-out="inv_rs[0].room_id.room_number"/></div>
+                                                            <t t-call="hotel_erp.hx_service_list"><t t-set="rsv" t-value="inv_rs[0]"/></t>
+                                                        </t>
+                                                        <t t-else=""><div class="hx-svc-empty">The booking linked to this invoice could not be found.</div></t>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                            <t t-if="not invoices">
+                                                <tr><td colspan="5"><div class="hx-empty">There Are No Invoices.</div></td></tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="hx-panel">
+                                <div class="hx-panel-h"><h3>Payments</h3><span class="hx-count"><t t-out="len(payments)"/></span></div>
+                                <div class="hx-twrap">
+                                    <table class="hx-table">
+                                        <thead><tr><th>Date</th><th>Client</th><th>Money</th><th>Status</th></tr></thead>
+                                        <tbody>
+                                            <t t-foreach="payments" t-as="pay">
+                                                <tr>
+                                                    <td><t t-out="pay.date"/></td>
+                                                    <td><t t-out="pay.partner_id.name"/></td>
+                                                    <td><t t-out="pay.amount"/> USD</td>
+                                                    <td><span class="hx-badge hx-b-info"><t t-out="pay.state"/></span></td>
+                                                </tr>
+                                            </t>
+                                            <t t-if="not payments">
+                                                <tr><td colspan="4"><div class="hx-empty">There Are No Payments.</div></td></tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- MODALS (manager) -->
+                        <t t-foreach="reservations" t-as="res">
+                            <t t-if="res.state not in closed">
+                                <t t-call="hotel_erp.hx_service_modal">
+                                    <t t-set="mid" t-value="'addServiceModalToRes%s' % res.id"/>
+                                    <t t-set="rsv" t-value="res"/>
+                                    <t t-set="title" t-value="'Add service to reservation'"/>
+                                    <t t-set="btn" t-value="'Addition'"/>
+                                </t>
+                                <t t-if="res.amount_due &gt; 0">
+                                    <t t-call="hotel_erp.hx_advance_modal">
+                                        <t t-set="mid" t-value="'advancePaymentModalRes%s' % res.id"/>
+                                        <t t-set="rsv" t-value="res"/>
+                                        <t t-set="cur" t-value="'USD'"/>
+                                        <t t-set="show_guest" t-value="True"/>
+                                    </t>
+                                </t>
+                            </t>
+                        </t>
+
+                        <t t-foreach="invoices" t-as="inv">
+                            <t t-if="inv.state == 'posted' and inv.payment_state not in ['paid', 'in_payment']">
+                                <t t-call="hotel_erp.hx_invoice_pay_modal">
+                                    <t t-set="mid" t-value="'invoicePayModal%s' % inv.id"/>
+                                    <t t-set="inv_rec" t-value="inv"/>
+                                </t>
+                            </t>
+                        </t>
+
+                        <t t-call="hotel_erp.hx_guest_modal">
+                            <t t-set="mid" t-value="'createGuestModal'"/>
+                            <t t-set="action" t-value="'/manager/guest/create'"/>
+                        </t>
+                        <t t-call="hotel_erp.hx_reservation_modal">
+                            <t t-set="mid" t-value="'createReservationModal'"/>
+                        </t>
+
+                        <div class="modal fade" id="addServiceModal" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <form action="/manager/create_service" method="post" class="modal-content">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Creating A New Service</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"/>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="hx-mfield"><label class="hx-label">Service Name</label><input type="text" name="name" class="hx-input" required="1"/></div>
+                                        <div class="hx-mfield"><label class="hx-label">Price (USD)</label><input type="number" step="0.01" name="price" class="hx-input" required="1"/></div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="hx-btn hx-btn-dark hx-btn-sm">შექმნა</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </t>
-                </t>
+
+                    <!-- ==================== 2. RECEPTIONIST ==================== -->
+                    <t t-elif="role == 'receptionist'">
+                        <t t-set="all_lines" t-value="request.env['hotel.reservation.line'].sudo().search([('reservation_id', 'in', active_reservations.ids)])"/>
+
+                        <div class="hx-stats">
+                            <div class="hx-stat"><small>Arrivals pending</small><b t-out="len(checkins)"/></div>
+                            <div class="hx-stat"><small>Guests in house</small><b t-out="len(active_reservations)"/></div>
+                            <div class="hx-stat gold"><small>Rooms to clean</small><b t-out="len(dirty_rooms)"/></div>
+                        </div>
+
+                        <div class="hx-panel">
+                            <div class="hx-panel-h"><h3>Arrivals</h3><span class="hx-count"><t t-out="len(checkins)"/></span></div>
+                            <div class="hx-twrap">
+                                <table class="hx-table">
+                                    <thead><tr><th>Guest</th><th>Room</th><th>Check-in date</th><th>Status</th><th>Action</th></tr></thead>
+                                    <tbody>
+                                        <t t-foreach="checkins" t-as="res">
+                                            <tr>
+                                                <td class="num"><t t-out="res.guest_id.name"/></td>
+                                                <td><t t-out="res.room_id.room_number"/></td>
+                                                <td><t t-out="res.check_in"/></td>
+                                                <td><span t-attf-class="hx-badge hx-b-#{st_map.get(res.state, 'mute')}"><t t-out="res.state"/></span></td>
+                                                <td>
+                                                    <div class="hx-acts">
+                                                        <t t-if="res.state == 'pending'">
+                                                            <button type="button" class="hx-btn hx-btn-pay hx-btn-sm" data-bs-toggle="modal"
+                                                                    t-attf-data-bs-target="#advancePaymentModalPending#{res.id}">
+                                                                <i class="fa fa-credit-card"/>Pay advance
+                                                            </button>
+                                                            <form action="/receptionist/set_confirm" method="post">
+                                                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                                                <input type="hidden" name="reservation_id" t-att-value="res.id"/>
+                                                                <button type="submit" class="hx-btn hx-btn-line hx-btn-sm"><i class="fa fa-check"/>Confirm</button>
+                                                            </form>
+                                                            <small class="text-muted" t-if="res.hold_expires_at">ვადა: <t t-out="res.hold_expires_at" t-options="{'widget': 'datetime'}"/></small>
+                                                        </t>
+                                                        <t t-if="res.state == 'confirmed'">
+                                                            <form action="/receptionist/checkin" method="post">
+                                                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                                                <input type="hidden" name="reservation_id" t-att-value="res.id"/>
+                                                                <button type="submit" class="hx-btn hx-btn-dark hx-btn-sm"><i class="fa fa-key"/>Check-in</button>
+                                                            </form>
+                                                        </t>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                        <t t-if="not checkins">
+                                            <tr><td colspan="5"><div class="hx-empty"><i class="fa fa-sign-in"/>არ არის დასადასტურებელი Check-In. (სტატუსი არ უდრის Confirmed-ს)</div></td></tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="hx-two">
+                            <div class="hx-panel">
+                                <div class="hx-panel-h"><h3>Guests in house</h3><span class="hx-count"><t t-out="len(active_reservations)"/></span></div>
+                                <t t-foreach="active_reservations" t-as="act">
+                                    <div class="hx-li">
+                                        <div>
+                                            <b t-out="act.guest_id.name"/>
+                                            <small>Room <t t-out="act.room_id.room_number"/></small>
+                                        </div>
+                                        <div class="hx-acts">
+                                            <button type="button" class="hx-svc-toggle" data-bs-toggle="collapse"
+                                                    t-attf-data-bs-target="#svcAct#{act.id}" aria-expanded="false">
+                                                <i class="fa fa-bell"/> Services
+                                                <span class="hx-count"><t t-out="len([l for l in all_lines if l.reservation_id.id == act.id])"/></span>
+                                                <i class="fa fa-chevron-down hx-chev"/>
+                                            </button>
+                                            <button type="button" class="hx-btn hx-btn-line hx-btn-sm" data-bs-toggle="modal"
+                                                    t-attf-data-bs-target="#addServiceModalToActiveRes#{act.id}">
+                                                <i class="fa fa-plus"/>Service
+                                            </button>
+                                            <t t-if="act.amount_due &gt; 0 and act.state not in closed">
+                                                <button type="button" class="hx-btn hx-btn-pay hx-btn-sm" data-bs-toggle="modal"
+                                                        t-attf-data-bs-target="#advancePaymentModalGuest#{act.id}">
+                                                    <i class="fa fa-credit-card"/>Pay advance
+                                                </button>
+                                            </t>
+                                            <form action="/receptionist/checkout" method="post">
+                                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                                <input type="hidden" name="reservation_id" t-att-value="act.id"/>
+                                                <button type="submit" class="hx-btn hx-btn-danger hx-btn-sm"><i class="fa fa-sign-out"/>Check-out</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="collapse hx-svc-inli" t-attf-id="svcAct#{act.id}">
+                                        <t t-call="hotel_erp.hx_service_list"><t t-set="rsv" t-value="act"/></t>
+                                    </div>
+                                </t>
+                                <t t-if="not active_reservations">
+                                    <div class="hx-empty"><i class="fa fa-bed"/>There are no active bookings.</div>
+                                </t>
+                            </div>
+
+                            <div class="hx-panel">
+                                <div class="hx-panel-h"><h3>Rooms needing attention</h3><span class="hx-count"><t t-out="len(dirty_rooms)"/></span></div>
+                                <t t-foreach="dirty_rooms" t-as="dr">
+                                    <div class="hx-li">
+                                        <div>
+                                            <b>Room <t t-out="dr.room_number"/></b>
+                                            <small><span class="hx-badge hx-b-warn"><t t-out="dr.housekeeping_status"/></span></small>
+                                        </div>
+                                        <form action="/housekeeping_status/switcher" method="post" class="m-0">
+                                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                            <input type="hidden" name="room_id" t-att-value="dr.id"/>
+                                            <button type="submit" class="hx-btn hx-btn-line hx-btn-sm"><i class="fa fa-check"/>Clean this room</button>
+                                        </form>
+                                    </div>
+                                </t>
+                                <t t-if="not dirty_rooms">
+                                    <div class="hx-empty"><i class="fa fa-check-circle"/>There are no rooms to be cleaned.</div>
+                                </t>
+                            </div>
+                        </div>
+
+                        <!-- MODALS (receptionist) -->
+                        <t t-foreach="checkins" t-as="res">
+                            <t t-if="res.state == 'pending'">
+                                <t t-call="hotel_erp.hx_advance_modal">
+                                    <t t-set="mid" t-value="'advancePaymentModalPending%s' % res.id"/>
+                                    <t t-set="rsv" t-value="res"/>
+                                    <t t-set="cur" t-value="'USD'"/>
+                                    <t t-set="show_guest" t-value="True"/>
+                                </t>
+                            </t>
+                        </t>
+                        <t t-foreach="active_reservations" t-as="act">
+                            <t t-call="hotel_erp.hx_service_modal">
+                                <t t-set="mid" t-value="'addServiceModalToActiveRes%s' % act.id"/>
+                                <t t-set="rsv" t-value="act"/>
+                                <t t-set="title" t-value="'Add Service To Reservation'"/>
+                                <t t-set="btn" t-value="'Addition'"/>
+                            </t>
+                            <t t-if="act.amount_due &gt; 0 and act.state not in closed">
+                                <t t-call="hotel_erp.hx_advance_modal">
+                                    <t t-set="mid" t-value="'advancePaymentModalGuest%s' % act.id"/>
+                                    <t t-set="rsv" t-value="act"/>
+                                    <t t-set="cur" t-value="'USD'"/>
+                                    <t t-set="show_guest" t-value="False"/>
+                                </t>
+                            </t>
+                        </t>
+                        <t t-call="hotel_erp.hx_guest_modal">
+                            <t t-set="mid" t-value="'createReceptionGuestModal'"/>
+                            <t t-set="action" t-value="'/receptionist/guest/create'"/>
+                        </t>
+                    </t>
+
+                    <!-- ==================== 3. GUEST ==================== -->
+                    <t t-else="">
+                        <t t-set="all_lines" t-value="request.env['hotel.reservation.line'].sudo().search([('reservation_id', 'in', reservations.ids)])"/>
+
+                        <t t-if="show_checkin_notice">
+                            <div class="hx-alert hx-alert-ok" style="background:#EEF3F8;border-color:#D6E2EE;color:#2B4560">
+                                <i class="fa fa-info-circle"/>
+                                <span>Invoices and payment details will be available after check-in at the hotel.</span>
+                            </div>
+                        </t>
+
+                        <t t-foreach="reservations" t-as="res">
+                            <article class="hx-resv">
+                                <div class="hx-resv-main">
+                                <div class="hx-resv-media">
+                                    <t t-call="hotel_erp.hx_room_carousel">
+                                        <t t-set="room" t-value="res.room_id"/>
+                                        <t t-set="cid" t-value="'resCar%s' % res.id"/>
+                                    </t>
+                                </div>
+                                <div class="hx-res-body">
+                                    <div class="hx-res-top">
+                                        <div>
+                                            <h3>Room <t t-out="res.room_id.room_number"/></h3>
+                                            <small>Reservation #<t t-out="res.name"/></small>
+                                        </div>
+                                        <span t-attf-class="hx-badge hx-b-#{st_map.get(res.state, 'mute')}"><t t-out="res.state"/></span>
+                                    </div>
+                                    <div class="hx-res-dates">
+                                        <span><small>CHECK-IN</small><t t-out="res.check_in"/></span>
+                                        <span><small>CHECK-OUT</small><t t-out="res.check_out"/></span>
+                                    </div>
+                                    <t t-if="res.state not in closed">
+                                        <div class="hx-acts">
+                                            <button type="button" class="hx-btn hx-btn-line hx-btn-sm" data-bs-toggle="modal"
+                                                    t-attf-data-bs-target="#addServiceModalGuest#{res.id}">
+                                                <i class="fa fa-plus"/>Add service
+                                            </button>
+                                            <t t-if="res.amount_due &gt; 0">
+                                                <button type="button" class="hx-btn hx-btn-pay hx-btn-sm" data-bs-toggle="modal"
+                                                        t-attf-data-bs-target="#advancePaymentModalGuest#{res.id}">
+                                                    <i class="fa fa-credit-card"/>Pay advance
+                                                </button>
+                                            </t>
+                                        </div>
+                                    </t>
+                                    <div>
+                                        <button type="button" class="hx-svc-toggle" data-bs-toggle="collapse"
+                                                t-attf-data-bs-target="#svcRes#{res.id}" aria-expanded="false">
+                                            <i class="fa fa-bell"/> Services
+                                            <span class="hx-count"><t t-out="len([l for l in all_lines if l.reservation_id.id == res.id])"/></span>
+                                            <i class="fa fa-chevron-down hx-chev"/>
+                                        </button>
+                                    </div>
+                                    <t t-if="res.state in ('draft', 'pending', 'confirmed')">
+                                        <form action="/my/reservation/cancel" method="post" class="hx-res-cancel">
+                                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                            <input type="hidden" name="reservation_id" t-att-value="res.id"/>
+                                            <input type="text" name="reason" class="hx-input" maxlength="500" placeholder="გთხოვთ, ჩაწერეთ ჯავშნის გაუქმების მიზეზი"/>
+                                            <button type="submit" class="hx-btn hx-btn-danger hx-btn-sm"><i class="fa fa-times"/>Cancel</button>
+                                        </form>
+                                    </t>
+                                </div>
+                                </div>
+                                <div class="collapse hx-resv-svc" t-attf-id="svcRes#{res.id}">
+                                    <t t-call="hotel_erp.hx_service_list"><t t-set="rsv" t-value="res"/></t>
+                                </div>
+                            </article>
+                        </t>
+
+                        <t t-if="not reservations">
+                            <div class="hx-panel">
+                                <div class="hx-empty" style="padding:56px 20px">
+                                    <i class="fa fa-bed"/>
+                                    <p>You Have No Active Bookings.</p>
+                                    <a href="/rooms" class="hx-btn hx-btn-dark hx-btn-sm">Book a room now</a>
+                                </div>
+                            </div>
+                        </t>
+
+                        <t t-if="invoices or payments">
+                            <div class="hx-panel">
+                                <div class="hx-panel-h"><h3>My invoices</h3><span class="hx-count"><t t-out="len(invoices)"/></span></div>
+                                <div class="hx-twrap">
+                                    <table class="hx-table">
+                                        <thead><tr><th>Invoice #</th><th>Date</th><th>Amount total</th><th>Status</th><th>Action</th></tr></thead>
+                                        <tbody>
+                                            <t t-foreach="invoices" t-as="inv">
+                                                <t t-set="inv_rs" t-value="[x for x in reservations if x.invoice_id.id == inv.id or inv.id in x.service_invoice_ids.ids]"/>
+                                                <tr>
+                                                    <td class="num">
+                                                    <button type="button" class="hx-chev-btn" data-bs-toggle="collapse" t-attf-data-bs-target="#svcInv#{inv.id}" aria-expanded="false" title="Services"><i class="fa fa-chevron-down hx-chev"/></button>
+                                                    <t t-out="inv.name"/>
+                                                </td>
+                                                    <td><t t-out="inv.invoice_date"/></td>
+                                                    <td><t t-out="inv.amount_total"/> <t t-out="inv.currency_id.symbol"/></td>
+                                                    <td><span t-attf-class="hx-badge hx-b-#{'ok' if inv.payment_state in ['paid', 'in_payment'] else 'warn'}"><t t-out="inv.payment_state"/></span></td>
+                                                    <td>
+                                                        <t t-if="inv.payment_state not in ['paid', 'in_payment']">
+                                                            <a t-attf-href="/my/invoices/#{inv.id}?access_token=#{inv.access_token}" class="hx-btn hx-btn-gold hx-btn-sm">
+                                                                <i class="fa fa-credit-card"/>Pay now
+                                                            </a>
+                                                        </t>
+                                                        <t t-else=""><span class="hx-badge hx-b-mute">Paid</span></t>
+                                                    </td>
+                                                </tr>
+                                                <tr class="collapse hx-svc-row" t-attf-id="svcInv#{inv.id}">
+                                                    <td colspan="5">
+                                                        <t t-if="inv_rs">
+                                                            <div class="hx-svc-title">Reservation <t t-out="inv_rs[0].name"/> · Room <t t-out="inv_rs[0].room_id.room_number"/></div>
+                                                            <t t-call="hotel_erp.hx_service_list"><t t-set="rsv" t-value="inv_rs[0]"/></t>
+                                                        </t>
+                                                        <t t-else=""><div class="hx-svc-empty">ამ ინვოისზე მიბმული ჯავშანი ვერ მოიძებნა.</div></t>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </t>
+
+                        <!-- MODALS (guest) -->
+                        <t t-foreach="reservations" t-as="res">
+                            <t t-if="res.state not in closed">
+                                <t t-call="hotel_erp.hx_service_modal">
+                                    <t t-set="mid" t-value="'addServiceModalGuest%s' % res.id"/>
+                                    <t t-set="rsv" t-value="res"/>
+                                    <t t-set="title" t-value="'Service order on reservation'"/>
+                                    <t t-set="btn" t-value="'Order'"/>
+                                </t>
+                                <t t-if="res.amount_due &gt; 0">
+                                    <t t-call="hotel_erp.hx_advance_modal">
+                                        <t t-set="mid" t-value="'advancePaymentModalGuest%s' % res.id"/>
+                                        <t t-set="rsv" t-value="res"/>
+                                        <t t-set="cur" t-value="'USD'"/>
+                                        <t t-set="show_guest" t-value="False"/>
+                                    </t>
+                                </t>
+                            </t>
+                        </t>
+                    </t>
+
+                </div>
             </div>
         </t>
     </template>

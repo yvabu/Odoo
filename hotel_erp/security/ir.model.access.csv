@@ -19,3 +19,8 @@ access_account_move_receptionist,account.move receptionist read,account.model_ac
 access_account_move_line_manager,account.move.line manager,account.model_account_move_line,hotel_erp.group_hotel_manager,1,1,1,1
 access_account_move_line_receptionist,account.move.line receptionist,account.model_account_move_line,hotel_erp.group_hotel_user,1,1,1,0
 access_account_payment_manager,access_account.payment,account.model_account_payment,hotel_erp.group_hotel_manager,1,1,1,1
+access_cancel_wizard_all,access.cancel.wizard.all,model_hotel_reservation_cancel_wizard,,1,1,1,1
+access_hotel_room_image,access.hotel.room.image,model_hotel_room_images,,1,1,1,1
+access_hotel_room_images_public,access.hotel.room.images.public,model_hotel_room_images,base.group_public,1,1,1,0
+access_hotel_room_public,access.hotel.room.public,model_hotel_room,base.group_public,1,1,1,0
+access_hotel_room_public,access.hotel.room.public,model_hotel_room,,1,0,0,0

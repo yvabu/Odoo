@@ -1,7 +1,13 @@
 <odoo>
+    <record id="action_hotel_dashboard" model="ir.actions.client">
+        <field name="name">Dashboard</field>
+        <field name="tag">hotel_erp.dashboard</field>
+    </record>
+
     <menuitem
       id="hotel_erp_menu_root"
       name="Hotel ERP"
+      web_icon="hotel_erp,static/description/hotel_icon.svg"
       sequence='10'
     />
 
@@ -27,6 +33,13 @@
     sequence="3"
     />
     <menuitem
+      id="hotel_pending_reservation_menu"
+      name="Pending Reservations"
+      parent="hotel_erp_menu_root"
+      action="hotel_pending_reservation_window_action"
+      sequence="4"
+    />
+    <menuitem
       id="hotel_service_menu"
       name="Hotel Service"
       parent="hotel_erp_menu_root"
@@ -38,4 +51,11 @@
        name="Hotel Employees"
        parent="hotel_erp_menu_root"
        action="hotel_employee_window_action"/>
+
+    <menuitem
+      id="menu_hotel_dashboard"
+      name="Dashboard"
+      parent="hotel_erp_menu_root"
+      action="action_hotel_dashboard"
+      sequence="1"/>
 </odoo>

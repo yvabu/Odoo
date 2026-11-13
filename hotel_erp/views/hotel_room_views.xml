@@ -1,55 +1,111 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-<!-- kanban view -->
-   <record id="hotel_room_kanban_view" model="ir.ui.view">
-       <field name="name">hotel.room.kanban.view</field>
-       <field name="model">hotel.room</field>
-       <field name="arch" type="xml">
-           <kanban default_group_by="room_status" quick_create="false">
-               <field name="id"/>
-               <field name="room_number"/>
-               <field name="room_type"/>
-               <field name="capacity"/>
-               <field name="currency_id" invisible="1"/>
-               <field name="room_price" widget="monetary"/>
-               <field name="room_status"/>
-               <field name="housekeeping_status"/>
-               <field name="is_occupied_now"/>
-               <templates>
-               <t t-name="kanban-box">
-                   <div class="oe_kanban_global_click">
-                       <div class="oe_kanban_details">
-                           <strong class="o_kanban_record_title">
-                               <span>ოთახი N:<field name="room_number"/></span>
-                           </strong>
-                           <div>
-                               <span>ტიპი:<field name="room_type"/></span>
-                           </div>
-                           <div>
-                               <span>ტევადობა:<field name="capacity"/></span>
-                           </div>
-                           <div>
-                               <span>ფასი:<field name="room_price" widget="monetary"/></span>
-                           </div>
-                           <div class="mt-1">
-                               <field name="room_status" widget="badge"
-                                      invisible="is_occupied_now"
-                                      decoration-success="room_status == 'available'"
-                                      decoration-warning="room_status == 'maintenance'"
-                                      decoration-muted="room_status == 'inactive'"/>
-                               <span t-if="record.is_occupied_now.raw_value" class="badge text-bg-danger ms-1">Occupied</span>
-                           </div>
-                           <div class="mt-1">
-                               <field name="housekeeping_status" widget="badge" decoration-success="housekeeping_status=='clean'" decoration-danger="housekeeping_status=='dirty'" decoration-warning="housekeeping_status=='cleaning'"/>
-                           </div>
-                       </div>
-                   </div>
-               </t>
-               </templates>
-           </kanban>
-       </field>
-   </record>
-<!--tree view-->
+<!-- kanban view-->
+    <record id="hotel_room_kanban_view" model="ir.ui.view">
+        <field name="name">hotel.room.kanban.view</field>
+        <field name="model">hotel.room</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="room_status" quick_create="false">
+                <field name="id"/>
+                <field name="room_number"/>
+                <field name="room_type"/>
+                <field name="capacity"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="room_price"/>
+                <field name="room_status"/>
+                <field name="housekeeping_status"/>
+                <field name="is_occupied_now"/>
+                <field name="image_1920"/>
+                <field name="image_ids"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click p-0 shadow-sm rounded-3 border-0 overflow-hidden bg-white mb-3">
+                            <div class="position-relative bg-dark">
+                                <t t-if="record.image_ids.raw_value.length &gt; 0">
+                                    <div t-att-id="'room_carousel_' + record.id.raw_value" class="carousel slide" data-bs-ride="false">
+                                        <div class="carousel-inner">
+                                            <t t-foreach="record.image_ids.raw_value" t-as="img_id">
+                                                <div t-attf-class="carousel-item #{img_id_index == 0 and 'active' or ''}">
+                                                    <img t-att-src="'/web/image/hotel.room.images/' + img_id + '/image_1920'"
+                                                         class="d-block w-100"
+                                                         style="height: 160px; object-fit: cover;"/>
+                                                </div>
+                                            </t>
+                                        </div>
+                                        <a class="carousel-control-prev" role="button" t-att-data-bs-target="'#room_carousel_' + record.id.raw_value" data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"/>
+                                        </a>
+                                        <a class="carousel-control-next" role="button" t-att-data-bs-target="'#room_carousel_' + record.id.raw_value" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"/>
+                                        </a>
+                                    </div>
+                                </t>
+                                <t t-elif="record.image_1920.raw_value">
+                                    <img t-att-src="kanban_image('hotel.room', 'image_1920', record.id.raw_value)"
+                                         class="w-100" style="height: 160px; object-fit: cover;"/>
+                                </t>
+
+                                <t t-else="">
+                                    <div class="d-flex align-items-center justify-content-center bg-light text-muted" style="height: 160px;">
+                                        <i class="fa fa-bed fa-3x opacity-25"/>
+                                    </div>
+                                </t>
+                            </div>
+                            <div class="p-3">
+
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h5 class="fw-bold m-0 text-dark">
+                                        Room N:<field name="room_number"/>
+                                    </h5>
+                                </div>
+                                <div class="row g-2 mb-2 text-muted small">
+                                    <div class="col-6">
+                                        <i class="fa fa-bed text-primary me-1"/>
+                                        <field name="room_type"/>
+                                    </div>
+                                    <div class="col-6">
+                                        <i class="fa fa-users text-info me-1"/>
+                                        <field name="capacity"/> Guest
+                                    </div>
+                                </div>
+
+
+                                <div class="d-flex flex-wrap gap-1 my-2">
+
+                                    <field name="room_status" widget="badge"
+                                           invisible="is_occupied_now"
+                                           decoration-success="room_status == 'available'"
+                                           decoration-warning="room_status == 'maintenance'"
+                                           decoration-muted="room_status == 'inactive'"/>
+
+                                    <span t-if="record.is_occupied_now.raw_value" class="badge rounded-pill bg-danger">
+                                        Occupied
+                                    </span>
+
+
+                                    <field name="housekeeping_status" widget="badge"
+                                           decoration-success="housekeeping_status=='clean'"
+                                           decoration-danger="housekeeping_status=='dirty'"
+                                           decoration-warning="housekeeping_status=='cleaning'"/>
+                                </div>
+
+
+                                <div class="d-flex justify-content-between align-items-center pt-2 mt-2 border-top">
+                                    <span class="text-muted small">Price:</span>
+                                    <span class="fs-6 fw-bold text-primary">
+                                        <field name="room_price" widget="monetary"/>
+                                        <small class="text-muted fw-normal">/Night</small>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+<!-- list view-->
     <record id="hotel_room_tree_view" model="ir.ui.view">
         <field name="name">hotel.room.tree.view</field>
         <field name="model">hotel.room</field>
@@ -67,21 +123,21 @@
             </list>
         </field>
     </record>
-<!--form view-->
+
+<!-- form view-->
     <record id="hotel_room_form_view" model="ir.ui.view">
         <field name="name">hotel.room.form.view</field>
         <field name="model">hotel.room</field>
         <field name="arch" type="xml">
             <form>
                 <header>
-                   <button name="action_set_available" string="Set Available" type="object" class="oe_highlight" invisible="room_status not in ('maintenance','inactive')"/>
-                   <button name="action_set_maintenance" string="Set Maintenance" type="object" invisible="room_status != 'available'"/>
-                   <button name="action_set_inactive" string="Set Inactive" type="object" invisible="room_status != 'available'"/>
-                   <button name="action_copy_room" string="Copy room" type="object" class="oe_highlight"/>
-                   <button name="action_set_cleaning" string="Start Cleaning" type="object" invisible="housekeeping_status != 'dirty'"/>
-                   <button name="action_set_clean" string="Set Clean" type="object" class="btn-primary" invisible="housekeeping_status != 'cleaning'"/>
-                   <button name="action_set_dirty" string="Set Dirty" type="object" invisible="housekeeping_status != 'clean'"/>
-
+                    <button name="action_set_available" string="Set Available" type="object" class="oe_highlight" invisible="room_status not in ('maintenance','inactive')"/>
+                    <button name="action_set_maintenance" string="Set Maintenance" class="oe_highlight" type="object" invisible="room_status != 'available'"/>
+                    <button name="action_set_inactive" string="Set Inactive" class="oe_highlight" type="object" invisible="room_status != 'available'"/>
+                    <button name="action_copy_room" string="Copy room" type="object" class="oe_highlight"/>
+                    <button name="action_set_cleaning" string="Start Cleaning" class="oe_highlight" type="object" invisible="housekeeping_status != 'dirty'"/>
+                    <button name="action_set_clean" string="Set Clean" type="object" class="btn-primary" invisible="housekeeping_status != 'cleaning'"/>
+                    <button name="action_set_dirty" string="Set Dirty" type="object" class="oe_highlight" invisible="housekeeping_status != 'clean'"/>
 
                     <field name="room_status" widget="statusbar" statusbar_visible="available,maintenance,inactive"/>
                     <field name="housekeeping_status" widget="statusbar" statusbar_visible="clean,dirty,cleaning"/>
@@ -93,74 +149,93 @@
                             <field name="reservation_count" widget="statinfo" string="Reservations"/>
                         </button>
                     </div>
-                    <field name="image" widget="image" class="oe_avatar"/>
+                    <field name="image_1920" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <label for="room_number"/>
+                        <h1>
+                            <field name="room_number" placeholder="enter room number"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="room_type"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="room_price" widget="monetary"/>
+                            <field name="floor"/>
+                            <field name="capacity"/>
+                        </group>
+                        <group>
+                            <field name="room_status" readonly="1"/>
+                            <field name="is_occupied_now"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
 
-                <div class="oe_title">
-                  <label for="room_number"/>
-                    <h1>
-                        <field name="room_number" placeholder="enter room number"/>
-                    </h1>
-                </div>
-                <group>
-                     <group>
-                       <field name="room_type"/>
-                       <field name="currency_id" invisible="1"/>
-                       <field name="room_price" widget="monetary"/>
-                       <field name="floor"/>
-                       <field name="capacity"/>
-                     </group>
-                     <group>
-                       <field name="room_status" readonly="1"/>
-                       <field name="is_occupied_now"/>
-                       <field name="active" widget="boolean_toggle"/>
-                     </group>
-                </group>
-                <notebook>
-                    <page string="Mosanishnebi" name="mosanishnebi">
-                      <group>
-                          <group>
-                              <field name="is_wifi"/>
-                              <field name="is_air_conditioning"/>
-                          </group>
-                          <group>
-                              <field name="is_smoking"/>
-                              <field name="balcony_count"/>
-                          </group>
-                      </group>
-                    </page>
-                    <page string="description" name="description">
-                        <field name="description" placeholder="Room details.."/>
-                    </page>
-
-                    <page string="Room Reservation" name="reservation">
-                        <field name="reservation_ids">
-                            <form>
-                               <header>
-                                   <button name="action_confirm" string="Set Confirm" type="object" class="oe_highlight" invisible="state != 'pending'"/>
-                                   <button name="action_cancel" string="Set Cancel" type="object" invisible="state not in ('draft','pending','confirmed')"/>
-
-                                   <field name="state" widget="statusbar" statusbar_visible="draft,pending,confirmed,cancelled"/>
-                               </header>
+                    <notebook>
+                        <page string="Mosanishnebi" name="mosanishnebi">
+                            <group>
                                 <group>
-                                    <group>
-                                        <field name="name" readonly="1"/>
-                                        <field name="guest_id"/>
-                                        <field name="room_id" readonly="1"/>
-                                    </group>
-                                    <group>
-                                        <field name="check_in"/>
-                                        <field name="check_out"/>
-                                        <field name="total_price" readonly="1"/>
-                                    </group>
+                                    <field name="is_wifi"/>
+                                    <field name="is_air_conditioning"/>
                                 </group>
-                            </form>
-                        </field>
-                    </page>
-                </notebook>
+                                <group>
+                                    <field name="is_smoking"/>
+                                    <field name="balcony_count"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page string="description" name="description">
+                            <field name="description" placeholder="Room details.."/>
+                        </page>
+
+                        <page string="Room Reservation" name="reservation">
+                            <field name="reservation_ids">
+                                <form>
+                                    <header>
+                                        <button name="action_confirm" string="Set Confirm" type="object" class="oe_highlight" invisible="state != 'pending'"/>
+                                        <button name="action_open_cancel_wizard" string="Cancel Reservation" type="object" invisible="state not in ('draft','pending','confirmed')"/>
+                                        <field name="state" widget="statusbar" statusbar_visible="draft,pending,confirmed,cancelled"/>
+                                    </header>
+                                    <group>
+                                        <group>
+                                            <field name="name" readonly="1"/>
+                                            <field name="guest_id"/>
+                                            <field name="room_id" readonly="1"/>
+                                        </group>
+                                        <group>
+                                            <field name="check_in"/>
+                                            <field name="check_out"/>
+                                            <field name="total_price" readonly="1"/>
+                                        </group>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+
+                        <page string="Gallery / Photos" name="gallery">
+                            <field name="image_ids" mode="kanban">
+                                <kanban>
+                                    <field name="id"/>
+                                    <field name="image_1920"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div class="oe_kanban_global_click p-1">
+                                                <img t-att-src="kanban_image('hotel.room.images', 'image_1920', record.id.raw_value)"
+                                                     style="width: 120px; height: 120px; object-fit: cover;"
+                                                     class="rounded border shadow-sm"/>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
     </record>
+
 <!-- search view-->
     <record id="hotel_room_search_view" model="ir.ui.view">
         <field name="name">hotel.room.search.view</field>
@@ -179,7 +254,6 @@
                 <filter name="occupied_rooms" string="Occupied Rooms" domain="[('reservation_ids.state','=','checked_in')]"/>
                 <filter name="maintenance_rooms" string="Maintenance" domain="[('room_status','=','maintenance')]"/>
 
-
                 <group expand="0" string="Group By">
                     <filter name="group_by_room_type" string="Room Type" context="{'group_by':'room_type'}"/>
                     <filter name="group_by_floor" string="Floor" context="{'group_by':'floor'}"/>
@@ -188,10 +262,12 @@
             </search>
         </field>
     </record>
+
 <!--window action-->
     <record id="hotel_room_window_action" model="ir.actions.act_window">
         <field name="name">Rooms</field>
         <field name="res_model">hotel.room</field>
         <field name="view_mode">kanban,list,form</field>
     </record>
+
 </odoo>

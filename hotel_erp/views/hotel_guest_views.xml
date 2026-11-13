@@ -35,7 +35,6 @@
                             <field name="active"/>
                         </group>
                         <group name="reservation" string="Reservations">
-                            <!-- 🛑 ამოღებულია პრობლემური context="{'default_guest_id':id}" -->
                             <field name="reservation_ids"/>
                         </group>
                     </group>

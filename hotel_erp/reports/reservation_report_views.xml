@@ -70,7 +70,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <!-- 3. ჯამური თანხის ბლოკი (როგორც ფოტოზეა მარჯვნივ) -->
+                    <!-- 3. ჯამური თანხის ბლოკი  -->
                    <div class="row justify-content-end mt-3">
                        <div class="col-4">
                           <table class="table table-sm border-top border-dark">
@@ -91,7 +91,12 @@
                                   <td class="text-end">
                                     <strong t-field="o.amount_due" t-options='{"widget": "monetary", "display_currency": o.env.company.currency_id}'/>
                                   </td>
-
+                              </tr>
+                               <tr class="border-top border-dark">
+                                  <td><strong>დასაბრუნებელი ხურდა</strong></td>
+                                  <td class="text-end">
+                                    <strong t-field="o.change_to_return" t-options='{"widget": "monetary", "display_currency": o.env.company.currency_id}'/>
+                                  </td>
                               </tr>
                           </table>
                        </div>

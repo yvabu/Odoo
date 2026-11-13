@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="hotel_room_card" name="Hotel Room Card">
+
+        <article class="hx-card">
+
+            <t t-set="date_qs" t-value="'?check_in=%s&amp;check_out=%s' % (check_in, check_out) if check_in and check_out else ''"/>
+            <!-- ROOM IMAGE CAROUSEL -->
+            <t t-set="carousel_id" t-value="'hxRoomCarousel_%s' % r.id"/>
+            <t t-set="has_main_image" t-value="bool(r.image_1920)"/>
+            <t t-set="photo_count" t-value="len(r.image_ids) + (1 if has_main_image else 0)"/>
+
+            <div t-att-id="carousel_id"
+                 class="carousel slide hx-card-carousel"
+                 data-bs-ride="carousel"
+                 data-bs-interval="4000">
+
+                <div class="carousel-inner">
+
+                    <!-- MAIN IMAGE -->
+                    <t t-if="has_main_image">
+                        <div class="carousel-item active">
+                            <a t-attf-href="/room/#{r.id}#{date_qs}" class="hx-card-image-link">
+                                <img t-attf-src="/web/image/hotel.room/#{r.id}/image_1920"
+                                     t-att-alt="r.room_number"
+                                     class="hx-card-image"
+                                     loading="lazy"/>
+                            </a>
+                        </div>
+                    </t>
+
+                    <!-- ADDITIONAL IMAGES -->
+                    <t t-foreach="r.image_ids" t-as="photo">
+                        <div t-attf-class="carousel-item #{'active' if not has_main_image and photo_index == 0 else ''}">
+                            <a t-attf-href="/room/#{r.id}#{date_qs}" class="hx-card-image-link">
+                                <img t-attf-src="/web/image/hotel.room.images/#{photo.id}/image_1920"
+                                     t-att-alt="r.room_number"
+                                     class="hx-card-image"
+                                     loading="lazy"/>
+                            </a>
+                        </div>
+                    </t>
+
+                    <!-- NO IMAGE -->
+                    <t t-if="not photo_count">
+                        <div class="carousel-item active">
+                            <div class="hx-card-ph">
+                                <i class="fa fa-bed"></i>
+                            </div>
+                        </div>
+                    </t>
+
+                </div>
+
+                <!-- INDICATORS -->
+                <t t-if="photo_count &gt; 1">
+                    <div class="carousel-indicators hx-card-indicators">
+                        <t t-foreach="range(photo_count)" t-as="index">
+                            <button type="button"
+                                    t-attf-data-bs-target="##{carousel_id}"
+                                    t-attf-data-bs-slide-to="#{index}"
+                                    t-att-class="'active' if index == 0 else ''"
+                                    t-att-aria-label="'Slide %s' % (index + 1)">
+                            </button>
+                        </t>
+                    </div>
+
+                    <!-- PREVIOUS -->
+                    <button class="carousel-control-prev hx-card-control"
+                            type="button"
+                            t-attf-data-bs-target="##{carousel_id}"
+                            data-bs-slide="prev"
+                            aria-label="Previous image">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    </button>
+
+                    <!-- NEXT -->
+                    <button class="carousel-control-next hx-card-control"
+                            type="button"
+                            t-attf-data-bs-target="##{carousel_id}"
+                            data-bs-slide="next"
+                            aria-label="Next image">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    </button>
+                </t>
+
+                <!-- ROOM TYPE -->
+                <span class="hx-tag">
+                    <t t-out="r.room_type"/>
+                </span>
+
+            </div>
+
+            <!-- CARD BODY -->
+            <div class="hx-card-body">
+
+                <h3>
+                    Room <t t-out="r.room_number"/>
+                </h3>
+
+                <div class="hx-meta">
+
+                    <span>
+                        <i class="fa fa-users"></i>
+                        <t t-out="r.capacity"/> guests
+                    </span>
+
+                    <span t-if="r.is_wifi">
+                        <i class="fa fa-wifi"></i> Wi-Fi
+                    </span>
+
+                    <span t-if="r.is_air_conditioning">
+                        <i class="fa fa-snowflake-o"></i> A/C
+                    </span>
+
+                </div>
+
+                <div class="hx-card-foot">
+
+                    <div class="hx-price">
+                        <small>from</small>
+                        <b>$<t t-out="r.room_price"/></b>
+                        <span>/ night</span>
+                    </div>
+
+                    <a t-attf-href="/room/#{r.id}#{date_qs}" class="hx-btn hx-btn-dark">
+                        View room
+                    </a>
+
+                </div>
+
+            </div>
+
+        </article>
+
+    </template>
+</odoo>

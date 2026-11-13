@@ -20,6 +20,7 @@
                      decoration-warning="state == 'checked_out'"
                      decoration-muted="state in ('expired','cancelled')"
                      decoration-danger="state == 'no_show'"/>
+              <field name="hold_expires_at" optional="hide"/>
           </list>
         </field>
     </record>
@@ -35,14 +36,16 @@
                     <button name="action_check_in" string="Check In" type="object" class="oe_highlight" invisible="state !='confirmed'"/>
                     <button name="action_check_out" string="Check Out" type="object" class="oe_highlight" invisible="state !='checked_in'"/>
                     <!-- 🆕 წინასწარი გადახდის ღილაკი -->
-                    <button name="action_register_advance_payment" string="წინასწარი გადახდა" type="object" class="btn-primary" invisible="state in ('cancelled','checked_out','expired','no_show') or payment_status in ('paid','overpaid') or amount_due &lt;= 0"/>
+                    <button name="action_register_advance_payment" string="Advance Payment" type="object" class="btn-primary" invisible="state in ('cancelled','checked_out','expired','no_show') or payment_status in ('paid','overpaid') or amount_due &lt;= 0"/>
 
-                    <button name="action_cancel" string="Set cancelled" type="object" invisible="state not in ('draft','pending','confirmed')"/>
+                    <button name="action_open_cancel_wizard" string="Cancel Reservation" type="object" invisible="state not in ('draft','pending','confirmed')"/>
                     <button name="action_create_invoice" string="Create Invoice" type="object" class="oe_highlight" invisible="invoice_id or state!='checked_in'"/>
-                    <button name="action_no_show" string="No Show" type="object" class="oe_highlight" invisible="state !='confirmed'"/>
 
                     <!-- 🆕 სერვისის ინვოისის შექმნის ღილაკი -->
-                    <button name="action_create_service_invoice" string="სერვისის ინვოისის შექმნა" type="object" class="oe_highlight" invisible="invoice_id or  state not in ('checked_in', 'checked_out')"/>
+                    <button name="action_create_service_invoice" string="Creating a Service Invoice" type="object" class="oe_highlight" invisible="invoice_id or  state not in ('checked_in', 'checked_out')"/>
+
+                    <!--დასაბრუნებელი თანხის ღილაკი-->
+                    <button name="action_refund" string="Refund" type="object" class="oe_highlight" invisible="change_to_return &lt;= 0"/>
 
                     <field name="state" widget="statusbar" statusbar_visible="draft,pending,confirmed,checked_in,checked_out"/>
                     <field name="payment_status" widget="badge" decoration-danger="payment_status=='unpaid'" decoration-warning="payment_status=='partial'" decoration-success="payment_status=='paid'" decoration-info="payment_status=='overpaid'" />
@@ -131,7 +134,6 @@
                             </field>
                             <group class="oe_subtotal_footer oe_right">
                                 <field name="paid_amount" widget="monetary"/>
-                                <field name="residual_amount" widget="monetary" class="oe_subtotal_footer_separator"/>
                                 <field name="amount_due" widget="monetary" invisible="amount_due == 0" class="text-danger fw-bold"/>
                                 <field name="change_to_return" widget="monetary" invisible="change_to_return == 0" class="text-warning fw-bold"/>
                             </group>
@@ -170,14 +172,17 @@
                 <filter name="confirmed" string="Confirmed" domain="[('state','=','confirmed')]"/>
                 <filter name="checked_in" string="Checked In" domain="[('state','=','checked_in')]"/>
                 <filter name="invoiced" string="Invoiced" domain="[('invoice_id','!=',False)]"/>
-                <filter name="archived" string="Archived" domain="[('active','=',False)]"/>
-                <filter name="no_show" string="No Show" domain="[('state','=','no_show')]"/>
+                <filter name="archived" string="Archived" domain="[('active','=',False)]" context="{'active_test':False}"/>
+                <filter name="canceled" string="Canceled Reservations" domain="[('state','=','cancelled')]" context="{'active_test':False}"/>
                 <separator/>
                 <group expand="0" string="Group By">
                     <filter name="status" string="Status" context="{'group_by': 'state'}"/>
                     <filter name="room" string="Room" context="{'group_by': 'room_id'}"/>
                     <filter name="guest" string="Guest" context="{'group_by': 'guest_id'}"/>
                 </group>
+                <searchpanel>
+                    <field name="state" expand="1" icon="fa-area-chart" select="multi" color="#875A7B" enable_counters="1"/>
+                </searchpanel>
             </search>
         </field>
     </record>
@@ -191,7 +196,7 @@
                 <field name="check_in" interval="month"/>
                 <field name="total_price" type="measure"/>
                 <field name="paid_amount" type="measure"/>
-                <field name="residual_amount" type="measure"/>
+                <field name="amount_due" type="measure"/>
                 <field name="room_id"/>
             </graph>
         </field>
@@ -228,11 +233,39 @@
             </calendar>
         </field>
     </record>
+<!-- Pending სიის ვიუ: ვადის მიხედვით დახარისხებული -->
 
+    <record id="hotel_reservation_pending_tree_view" model="ir.ui.view">
+        <field name="name">hotel.reservation.pending.tree.view</field>
+        <field name="model">hotel.reservation</field>
+        <field name="inherit_id" ref="hotel_reservation_tree_view"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <list position="attributes">
+                <attribute name="default_order">hold_expires_at asc</attribute>
+            </list>
+        </field>
+    </record>
+<!-- Pending ჯავშნების action -->
+    <record id="hotel_pending_reservation_window_action" model="ir.actions.act_window">
+        <field name="name">Pending Reservations</field>
+        <field name="res_model">hotel.reservation</field>
+        <field name="domain">[('state','=','pending')]</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+<!-- action-ს მივაბით დახარისხებული სიის ვიუ -->
+    <record id="hotel_pending_reservation_action_list" model="ir.actions.act_window.view">
+        <field name="sequence">1</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="hotel_reservation_pending_tree_view"/>
+        <field name="act_window_id" ref="hotel_pending_reservation_window_action"/>
+    </record>
 <!--window action -->
     <record id="hotel_reservation_window_action" model="ir.actions.act_window">
         <field name="name">Booking</field>
         <field name="res_model">hotel.reservation</field>
         <field name="view_mode">list,form,calendar,graph,pivot</field>
+        <field name="domain">[('state','in',('draft','pending','confirmed','checked_in','checked_out','cancelled','expired'))]</field>
     </record>
 </odoo>

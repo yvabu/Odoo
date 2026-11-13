@@ -4,168 +4,88 @@
         <t t-call="website.layout">
             <head>
                 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"/>
-                <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_blue.css"/>
-                <link rel="stylesheet" type="text/css" href="/hotel_erp/static/src/css/flatpickr_custom.css"/>
+                <link rel="stylesheet" type="text/css" href="/hotel_erp/static/src/css/hotel_theme.css"/>
             </head>
 
-            <div id="wrap" class="oe_structure oe_empty">
+            <div id="wrap" class="hx-page oe_structure oe_empty">
 
-                <!-- ============ AVAILABILITY SEARCH HEADER ============ -->
-                <div class="bg-dark py-5 mb-5">
-                    <div class="container">
-                        <div class="text-center mb-4">
-                            <h1 class="display-4 fw-bold text-white mb-2">All Available Rooms</h1>
-                            <p class="text-white-50 fs-5">აირჩიეთ თარიღები — დაგანახებთ მხოლოდ იმ დღეებში თავისუფალ ოთახებს</p>
-                        </div>
+                <section class="hx-search-head">
+                    <div class="hx-container">
+                        <h1>Available rooms</h1>
+                        <p>Select dates — I will show you rooms available only on those days.</p>
+                    </div>
+                </section>
 
-                        <form action="/rooms" method="get" id="availability_search_form">
-                            <div class="row g-3 justify-content-center align-items-end bg-white rounded-4 shadow p-4 mx-auto" style="max-width: 800px;">
-                                <div class="col-md-5">
-                                    <label class="form-label fw-semibold text-secondary small text-uppercase mb-1">Check-In</label>
-                                    <input type="text" name="check_in" id="search_check_in"
-                                           class="form-control form-control-lg bg-light border-0"
-                                           placeholder="Select date" t-att-value="check_in" autocomplete="off" required="1"/>
-                                </div>
-                                <div class="col-md-5">
-                                    <label class="form-label fw-semibold text-secondary small text-uppercase mb-1">Check-Out</label>
-                                    <input type="text" name="check_out" id="search_check_out"
-                                           class="form-control form-control-lg bg-light border-0"
-                                           placeholder="Select date" t-att-value="check_out" autocomplete="off" required="1"/>
-                                </div>
-                                <div class="col-md-2">
-                                    <button type="submit" class="btn btn-warning btn-lg fw-bold rounded-3 w-100 d-inline-flex align-items-center justify-content-center gap-2">
-                                        <i class="fa fa-search"></i>
-                                        <span>ძებნა</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
+                <form action="/rooms" method="get" id="availability_search_form" class="hx-search">
+                    <div class="hx-field">
+                        <label for="search_check_in">CHECK-IN</label>
+                        <input type="text" name="check_in" id="search_check_in" placeholder="Select date" t-att-value="check_in" autocomplete="off" required="1"/>
+                    </div>
+                    <div class="hx-field">
+                        <label for="search_check_out">CHECK-OUT</label>
+                        <input type="text" name="check_out" id="search_check_out" placeholder="Select date" t-att-value="check_out" autocomplete="off" required="1"/>
+                    </div>
+                    <button type="submit" class="hx-btn hx-btn-gold"><i class="fa fa-search"/> Search</button>
+                </form>
+
+                <section class="hx-section" style="padding-top:40px">
+                    <div class="hx-container">
 
                         <t t-if="date_error">
-                            <div class="alert alert-warning text-center mx-auto mt-3" style="max-width: 800px;">
-                                <t t-if="date_error == 'checkout_before_checkin'">
-                                    Check-out თარიღი უნდა იყოს Check-in-ზე გვიან.
-                                </t>
-                                <t t-else="">
-                                    გთხოვთ სწორად აირჩიოთ თარიღები.
-                                </t>
+                            <div class="alert alert-warning text-center">
+                                <t t-if="date_error == 'checkout_before_checkin'">The check-out date must be later than the check-in date.</t>
+                                <t t-else="">Please select the dates correctly.</t>
                             </div>
                         </t>
-                    </div>
-                </div>
 
-                <!-- ============ ROOM CARDS ============ -->
-                <div class="container mb-5">
+                        <t t-if="filtered">
+                            <p class="text-muted mb-4">
+                                <i class="fa fa-check-circle text-success me-1"/>
+                                <t t-out="len(hotel_rooms)"/> The room is available.
+                                <strong><t t-out="check_in"/></strong> — <strong><t t-out="check_out"/></strong> პერიოდში.
+                            </p>
+                        </t>
 
-                    <t t-if="filtered">
-                        <p class="text-muted mb-4">
-                            <i class="fa fa-check-circle text-success me-1"></i>
-                            <t t-out="len(hotel_rooms)"/> ოთახი ხელმისაწვდომია
-                            <strong><t t-out="check_in"/></strong> — <strong><t t-out="check_out"/></strong> პერიოდში.
-                        </p>
-                    </t>
-
-                    <t t-if="not hotel_rooms">
-                        <div class="text-center py-5">
-                            <i class="fa fa-bed fa-3x text-muted mb-3"></i>
-                            <h4 class="text-muted">ამ თარიღებისთვის თავისუფალი ოთახი ვერ მოიძებნა</h4>
-                            <p class="text-muted">სცადეთ სხვა თარიღები.</p>
-                        </div>
-                    </t>
-                    <div class="row g-4">
-                    <t t-foreach="hotel_rooms" t-as="r">
-                        <div class="col-md-6 col-lg-4">
-                            <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden card-hover position-relative">
-
-                                <!-- ROOM CARD SLIDER -->
-                                <div t-attf-id="roomCarousel_#{r.id}" class="carousel slide position-relative overflow-hidden style-card-img-container" data-bs-ride="carousel" data-bs-interval="3000">
-                                    <div class="carousel-indicators mb-1" style="z-index: 5;">
-                                        <button type="button" t-attf-data-bs-target="#roomCarousel_#{r.id}" data-bs-slide-to="0" class="active"></button>
-                                        <button type="button" t-attf-data-bs-target="#roomCarousel_#{r.id}" data-bs-slide-to="1"></button>
-                                        <button type="button" t-attf-data-bs-target="#roomCarousel_#{r.id}" data-bs-slide-to="2"></button>
-                                    </div>
-
-                                    <div class="carousel-inner h-100">
-                                        <div class="carousel-item active h-100">
-                                            <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&amp;fit=crop&amp;w=800&amp;q=80" class="d-block w-100 h-100 object-fit-cover transition-zoom" alt="Room 1"/>
-                                        </div>
-                                        <div class="carousel-item h-100">
-                                            <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&amp;fit=crop&amp;w=800&amp;q=80" class="d-block w-100 h-100 object-fit-cover transition-zoom" alt="Room 2"/>
-                                        </div>
-                                        <div class="carousel-item h-100">
-                                            <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&amp;fit=crop&amp;w=800&amp;q=80" class="d-block w-100 h-100 object-fit-cover transition-zoom" alt="Room 3"/>
-                                        </div>
-                                    </div>
-
-                                    <button class="carousel-control-prev" type="button" t-attf-data-bs-target="#roomCarousel_#{r.id}" data-bs-slide="prev" style="z-index: 5;">
-                                        <span class="carousel-control-prev-icon" style="width: 20px; height: 20px;"></span>
-                                    </button>
-                                    <button class="carousel-control-next" type="button" t-attf-data-bs-target="#roomCarousel_#{r.id}" data-bs-slide="next" style="z-index: 5;">
-                                        <span class="carousel-control-next-icon" style="width: 20px; height: 20px;"></span>
-                                    </button>
-
-                                    <span class="position-absolute top-0 end-0 m-3 badge rounded-pill bg-dark bg-opacity-75 px-3 py-2 fs-6" style="z-index: 5;">
-                                        $<t t-out="r.room_price"/> / night
-                                    </span>
-                                </div>
-
-                                <!-- Card Body -->
-                                <div class="card-body p-4 d-flex flex-column">
-                                    <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <h4 class="card-title fw-bold text-dark mb-0"><t t-out="r.room_number"/></h4>
-                                        <span class="badge bg-info text-dark px-2 py-1"><t t-out="r.room_type"/></span>
-                                    </div>
-
-                                    <ul class="list-unstyled text-muted my-3 flex-grow-1">
-                                        <li class="mb-2"><i class="fa fa-users me-2 text-warning"></i>Capacity: <strong><t t-out="r.capacity"/> guests</strong></li>
-                                        <li class="mb-2"><i class="fa fa-check-circle me-2 text-success"></i>Status: <strong><t t-out="r.room_status"/></strong></li>
-                                        <li class="mb-2"><i class="fa fa-magic me-2 text-primary"></i>Cleanliness: <strong><t t-out="r.housekeeping_status"/></strong></li>
-                                    </ul>
-
-                                    <div class="d-flex gap-2 mt-auto">
-                                        <a t-attf-href="/room/#{r.id}" class="btn btn-outline-dark rounded-3 flex-fill fw-semibold stretched-link">
-                                            Details
-                                        </a>
-                                        <a t-attf-href="/booking?room_id=#{r.id}" class="btn btn-warning rounded-3 flex-fill fw-bold position-relative" style="z-index: 5;">
-                                            Book Now
-                                        </a>
-                                    </div>
-                                </div>
-
+                        <t t-if="not hotel_rooms">
+                            <div class="text-center py-5">
+                                <i class="fa fa-bed fa-3x text-muted mb-3"/>
+                                <h4>No room could be found for these dates.</h4>
+                                <p class="text-muted">Try other dates.</p>
                             </div>
+                        </t>
+
+                        <div class="hx-grid">
+                            <t t-foreach="hotel_rooms" t-as="room">
+                                <t t-call="hotel_erp.hotel_room_card">
+                                    <t t-set="r" t-value="room"/>
+                                </t>
+                            </t>
                         </div>
-                    </t>
-                </div>
-                </div>
+                    </div>
+                </section>
             </div>
 
-            <!-- JS: flatpickr on the header search bar -->
             <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
             <script>
                 document.addEventListener("DOMContentLoaded", function () {
-                    let ciPicker, coPicker;
-
+                    var ciPicker, coPicker;
                     coPicker = flatpickr("#search_check_out", {
-                        minDate: "today",
-                        dateFormat: "Y-m-d",
-                        onChange: function (selectedDates) {
-                            if (selectedDates.length &gt; 0 &amp;&amp; ciPicker.selectedDates.length &gt; 0) {
+                        minDate: "today", dateFormat: "Y-m-d",
+                        onChange: function (sel) {
+                            if (sel.length &gt; 0 &amp;&amp; ciPicker.selectedDates.length &gt; 0) {
                                 document.getElementById("availability_search_form").submit();
                             }
                         }
                     });
-
                     ciPicker = flatpickr("#search_check_in", {
-                        minDate: "today",
-                        dateFormat: "Y-m-d",
-                        onChange: function (selectedDates) {
-                            if (selectedDates.length &gt; 0) {
-                                let nextDay = new Date(selectedDates[0]);
-                                nextDay.setDate(nextDay.getDate() + 1);
-                                coPicker.set("minDate", nextDay);
-                                if (coPicker.selectedDates[0] &amp;&amp; coPicker.selectedDates[0] &lt; nextDay) {
-                                    coPicker.clear();
-                                }
+                        minDate: "today", dateFormat: "Y-m-d",
+                        onChange: function (sel) {
+                            if (sel.length &gt; 0) {
+                                var next = new Date(sel[0]);
+                                next.setDate(next.getDate() + 1);
+                                coPicker.set("minDate", next);
+                                if (coPicker.selectedDates[0] &amp;&amp; coPicker.selectedDates[0] &lt; next) { coPicker.clear(); }
+                                coPicker.open();
                             }
                         }
                     });
